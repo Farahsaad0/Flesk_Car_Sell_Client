@@ -1,34 +1,38 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import '../styles/profile.css';
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import "../styles/profile.css";
 
 const ProfilePage = () => {
   const [userData, setUserData] = useState(null);
   const [updatedData, setUpdatedData] = useState({
-    Nom: '',
-    Prenom: '',
-    Email: '',
-    Password: '',
-    Role: 'Utilisateur'
+    Nom: "",
+    Prenom: "",
+    Email: "",
+    Password: "",
+    NewPassword: "",
+    Role: "Utilisateur",
   });
 
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const token = localStorage.getItem('token');
+        const token = localStorage.getItem("token");
         if (!token) {
-          console.error('Aucun token d\'authentification disponible');
+          console.error("Aucun token d'authentification disponible");
           return;
         }
-        const response = await axios.get('http://localhost:8000/getUserData', {
+        const response = await axios.get("http://localhost:8000/getUserData", {
           headers: {
-            Authorization: `Bearer ${token}`
-          }
+            Authorization: `Bearer ${token}`,
+          },
         });
         setUserData(response.data);
         setUpdatedData(response.data);
       } catch (error) {
-        console.error('Erreur lors de la récupération des données utilisateur : ', error);
+        console.error(
+          "Erreur lors de la récupération des données utilisateur : ",
+          error
+        );
       }
     };
 
@@ -38,20 +42,28 @@ const ProfilePage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const token = localStorage.getItem('token');
+      const token = localStorage.getItem("token");
       if (!token) {
-        console.error('Aucun token d\'authentification disponible');
+        console.error("Aucun token d'authentification disponible");
         return;
       }
-      const response = await axios.put("http://localhost:8000/updateUserData/:id", updatedData, {
-        headers: {
-          Authorization: `Bearer ${token}`
+      if (!updatedData.Password) {
+        console.error("____Veuillez entrer votre mot de passe actuel.");
+        return;
+      }
+      const response = await axios.put(
+        `http://localhost:8000/updateUserData/${updatedData._id}`,
+        updatedData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         }
-      });
-      console.log('Réponse du serveur:', response.data);
+      );
+      console.log("Réponse du serveur:", response.data);
       setUserData(updatedData); // Mettre à jour les données utilisateur dans le frontend avec les nouvelles données modifiées
     } catch (error) {
-      console.error('Erreur lors de la soumission du formulaire :', error);
+      console.error("Erreur lors de la soumission du formulaire :", error);
     }
   };
 
@@ -74,20 +86,30 @@ const ProfilePage = () => {
                 <div className="col-sm-4 bg-c-lite-green user-profile">
                   <div className="card-block text-center text-white">
                     <div className="m-b-25">
-                      <img src="https://img.icons8.com/bubbles/100/000000/user.png" className="img-radius" alt="User-Profile-Image" />
+                      <img
+                        src="https://img.icons8.com/bubbles/100/000000/user.png"
+                        className="img-radius"
+                        alt="User-Profile-Image"
+                      />
                     </div>
-                    <h6 className="f-w-600">{userData.Nom} {userData.Prenom}</h6>
+                    <h6 className="f-w-600">
+                      {userData.Nom} {userData.Prenom}
+                    </h6>
                     <p>{userData.Role}</p>
                     <i className=" mdi mdi-square-edit-outline feather icon-edit m-t-10 f-16"></i>
                   </div>
                 </div>
                 <div className="col-sm-8">
                   <div className="card-block">
-                    <h6 className="m-b-20 p-b-5 b-b-default f-w-600">Information</h6>
+                    <h6 className="m-b-20 p-b-5 b-b-default f-w-600">
+                      Information
+                    </h6>
                     <form onSubmit={handleSubmit}>
                       <div className="row">
                         <div className="col-sm-6">
-                          <label htmlFor="nom" className="m-b-10 f-w-600">Nom</label>
+                          <label htmlFor="nom" className="m-b-10 f-w-600">
+                            Nom
+                          </label>
                           <input
                             type="text"
                             id="nom"
@@ -98,7 +120,9 @@ const ProfilePage = () => {
                           />
                         </div>
                         <div className="col-sm-6">
-                          <label htmlFor="prenom" className="m-b-10 f-w-600">Prénom</label>
+                          <label htmlFor="prenom" className="m-b-10 f-w-600">
+                            Prénom
+                          </label>
                           <input
                             type="text"
                             id="prenom"
@@ -111,7 +135,9 @@ const ProfilePage = () => {
                       </div>
                       <div className="row">
                         <div className="col-sm-6">
-                          <label htmlFor="email" className="m-b-10 f-w-600">Email</label>
+                          <label htmlFor="email" className="m-b-10 f-w-600">
+                            Email
+                          </label>
                           <input
                             type="email"
                             id="email"
@@ -122,20 +148,41 @@ const ProfilePage = () => {
                           />
                         </div>
                         <div className="col-sm-6">
-                          <label htmlFor="password" className="m-b-10 f-w-600">Password</label>
+                          <label htmlFor="Password" className="m-b-10 f-w-600">
+                            Mot de passe actuel*
+                          </label>
                           <input
                             type="password"
-                            id="password"
+                            id="Password"
                             name="Password"
-                            value={updatedData.Password}
+                            // value={updatedData.Password}
                             onChange={handleChange}
                             className="form-control"
+                            required // Rendre obligatoire
                           />
                         </div>
                       </div>
                       <div className="row">
                         <div className="col-sm-6">
-                          <label htmlFor="role" className="m-b-10 f-w-600">Rôle</label>
+                          <label
+                            htmlFor="newPassword"
+                            className="m-b-10 f-w-600"
+                          >
+                            Nouveau Mot de Passe*
+                          </label>
+                          <input
+                            type="password"
+                            id="newPassword"
+                            name="NewPassword"
+                            value={updatedData.NewPassword}
+                            onChange={handleChange}
+                            className="form-control"
+                          />
+                        </div>
+                        <div className="col-sm-6">
+                          <label htmlFor="role" className="m-b-10 f-w-600">
+                            Rôle
+                          </label>
                           <select
                             id="role"
                             name="Role"
@@ -145,11 +192,15 @@ const ProfilePage = () => {
                           >
                             <option value="Utilisateur">Utilisateur</option>
                             <option value="Expert">Expert</option>
-                            <option value="Administrateur">Administrateur</option>
+                            <option value="Administrateur">
+                              Administrateur
+                            </option>
                           </select>
                         </div>
                       </div>
-                      <button type="submit" className="btn btn-primary mt-3">Enregistrer</button>
+                      <button type="submit" className="btn btn-primary mt-3">
+                        Enregistrer
+                      </button>
                     </form>
                   </div>
                 </div>

@@ -18,11 +18,14 @@ const CarItem = ({ car }) => {
     annee,
     photo,
     sponsorship,
+    dateCreation, // Ajout de la propriété dateCreation
   } = car;
 
   // Construire l'URL de l'image en utilisant la nouvelle structure
   const imageUrl = `/public/uploads/${photo}`;
 
+  // Formater la date de création au format souhaité (par exemple, format de date standard)
+  const formattedDate = new Date(dateCreation).toLocaleDateString();
 
   return (
     <Col lg="4" md="4" sm="6" className="mb-5">
@@ -37,7 +40,7 @@ const CarItem = ({ car }) => {
           <p className="description">{description}</p>{" "}
           {/* Utilisez description ici */}
           <h6 className="rent__price text-center mt-">
-            {prix}.00 
+            {prix}
           </h6>
           <div className="car__item-info d-flex align-items-center justify-content-between mt-3 mb-4">
             <span className=" d-flex align-items-center gap-1">
@@ -49,6 +52,9 @@ const CarItem = ({ car }) => {
             </span>
             <span className=" d-flex align-items-center gap-1">
               <i className="ri-timer-flash-line"></i> {sponsorship}
+            </span>
+            <span className=" d-flex align-items-center gap-1">
+              <i className="ri-calendar-line"></i> Created on: {formattedDate}
             </span>
           </div>
           <button className=" w-50 car__item-btn car__btn-rent">
