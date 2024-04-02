@@ -24,7 +24,14 @@ const CreateAdForm = () => {
 
   const handleChange = (e) => {
     const { name, value, type, files } = e.target;
-    const newValue = type === "file" ? files[0] : value;
+    let newValue = value;
+    if (type === "date" && value) {
+      // Format the date to match backend requirements, for example: YYYY-MM-DD
+      const formattedDate = new Date(value).toISOString().split('T')[0];
+      newValue = formattedDate;
+    }
+
+    newValue = type === "file" ? files[0] : value;
     setFormData((prevFormData) => ({
       ...prevFormData,
       [name]: newValue,
@@ -40,8 +47,8 @@ const CreateAdForm = () => {
         formDataToSend.append(key, formData[key]);
       }
 
-      formDataToSend.append("date", new Date().toISOString());
 
+      
       const response = await axios.post("http://localhost:8000/carAds", formDataToSend, {
         headers: {
           "Content-Type": "multipart/form-data",

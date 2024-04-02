@@ -22,7 +22,7 @@ const CarItem = ({ car }) => {
   } = car;
 
   // Construire l'URL de l'image en utilisant la nouvelle structure
-  const imageUrl = `/public/uploads/${photo}`;
+  const imageUrl = `http://localhost:8000/images/${photo}`;
 
   // Formater la date de création au format souhaité (par exemple, format de date standard)
   const formattedDate = new Date(dateCreation).toLocaleDateString();
@@ -31,7 +31,7 @@ const CarItem = ({ car }) => {
     <Col lg="4" md="4" sm="6" className="mb-5">
       <div className="car__item">
         <div className="car__img">
-          <img src={imageUrl} alt={marque} className="w-100" />
+          <img src={imageUrl} alt={photo} className="w-100" />
         </div>
 
         <div className="car__item-content mt-4">

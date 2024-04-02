@@ -2,13 +2,14 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh;
+  /* height: 100vh; */
 }
 
 .create-ad-form {
-  max-width: 400px; /* Réduit la largeur maximale */
+  max-width: 30rem; /* Réduit la largeur maximale */
   width: 100%; /* Utilise toute la largeur disponible */
-  padding: 20px;
+  padding: 2rem;
+  margin-block: 2rem;
   border: 1px solid #ccc;
   border-radius: 5px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Ajoute une légère ombre pour un effet de profondeur */
@@ -44,5 +45,7 @@
 }
 
 .create-ad-form input[type="date"] {
-  width: calc(100% - 10px); /* Réduit légèrement la largeur pour éviter les débordements */
+  width: calc(
+    100% - 10px
+  ); /* Réduit légèrement la largeur pour éviter les débordements */
 }
