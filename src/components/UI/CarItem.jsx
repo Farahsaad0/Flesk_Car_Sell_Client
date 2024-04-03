@@ -6,7 +6,7 @@ import "../../styles/car-item.css";
 const CarItem = ({ car }) => {
   // Vérifiez si car est défini avant de tenter de le déstructurer
   if (!car) {
-    return <div>mafamma chay ya 5ra</div> ; // Ou tout autre composant de chargement ou message d'erreur approprié
+    return <div>mafamma chay!!</div>; // Ou tout autre composant de chargement ou message d'erreur approprié
   }
 
   const {
@@ -18,14 +18,14 @@ const CarItem = ({ car }) => {
     annee,
     photo,
     sponsorship,
-    dateCreation, // Ajout de la propriété dateCreation
+    date, // Ajout de la propriété dateCreation
   } = car;
 
   // Construire l'URL de l'image en utilisant la nouvelle structure
   const imageUrl = `http://localhost:8000/images/${photo}`;
 
   // Formater la date de création au format souhaité (par exemple, format de date standard)
-  const formattedDate = new Date(dateCreation).toLocaleDateString();
+  const formattedDate = new Date(date).toLocaleDateString();
 
   return (
     <Col lg="4" md="4" sm="6" className="mb-5">
@@ -35,16 +35,14 @@ const CarItem = ({ car }) => {
         </div>
 
         <div className="car__item-content mt-4">
-          <h4 className="section__title text-center">{titre}</h4>{" "}
+          <h4 className="section__title text-center">{titre}</h4>
           {/* Utilisez titre ici */}
-          <p className="description">{description}</p>{" "}
+          <p className="description">{description}</p>
           {/* Utilisez description ici */}
-          <h6 className="rent__price text-center mt-">
-            {prix}
-          </h6>
+          <h6 className="rent__price text-center mt-">{prix}</h6>
           <div className="car__item-info d-flex align-items-center justify-content-between mt-3 mb-4">
             <span className=" d-flex align-items-center gap-1">
-              <i className="ri-car-line"></i> {marque} {modele}{" "}
+              <i className="ri-car-line"></i> {marque} {modele}
               {/* Utilisez marque et modele ici */}
             </span>
             <span className=" d-flex align-items-center gap-1">
@@ -61,7 +59,7 @@ const CarItem = ({ car }) => {
             <Link to={`/cars/${car._id}`}>Rent</Link>
           </button>
           <button className=" w-50 car__item-btn car__btn-details">
-            <Link to={`/cars/${car._id}`}>Details</Link>
+            <Link to={`/cars/${car._id}`}>Details </Link>
           </button>
         </div>
       </div>

@@ -7,7 +7,7 @@ import "../styles/CreateAdForm.css";
 const CreateAdForm = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const userId = location.state?.userId;
+  const userId = JSON.parse(localStorage.getItem("userData"))._id;
 
   const [formData, setFormData] = useState({
     titre: "",
@@ -27,7 +27,7 @@ const CreateAdForm = () => {
     let newValue = value;
     if (type === "date" && value) {
       // Format the date to match backend requirements, for example: YYYY-MM-DD
-      const formattedDate = new Date(value).toISOString().split('T')[0];
+      const formattedDate = new Date(value).toISOString().split("T")[0];
       newValue = formattedDate;
     }
 
@@ -47,13 +47,15 @@ const CreateAdForm = () => {
         formDataToSend.append(key, formData[key]);
       }
 
-
-      
-      const response = await axios.post("http://localhost:8000/carAds", formDataToSend, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
+      const response = await axios.post(
+        "http://localhost:8000/carAds",
+        formDataToSend,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
 
       console.log("Réponse du serveur:", response.data);
       navigate("/");
@@ -65,7 +67,11 @@ const CreateAdForm = () => {
 
   return (
     <div className="create-ad-form-container">
-      <Form onSubmit={handleSubmit} className="create-ad-form" encType="multipart/form-data">
+      <Form
+        onSubmit={handleSubmit}
+        className="create-ad-form"
+        encType="multipart/form-data"
+      >
         <h2>Créer une annonce</h2>
         <FormGroup>
           <Label for="titre">Titre</Label>

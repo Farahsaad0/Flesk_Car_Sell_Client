@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Form, FormGroup } from "reactstrap";
-import axios from 'axios';
+import axios from "axios";
 import CarItem from "./CarItem"; // Importer le composant CarItem
 import "../../styles/find-car-form.css";
 
@@ -28,12 +28,15 @@ const FindCarForm = ({ cars }) => {
           prixTo: prixMax || undefined,
           anneeFrom: anneeMin || undefined,
           anneeTo: anneeMax || undefined,
-          adresse: adresse || undefined
-        }
+          adresse: adresse || undefined,
+        },
       });
       setSearchResults(response.data); // Mettre à jour les résultats de la recherche
     } catch (error) {
-      console.error('Erreur lors de la recherche des annonces de voiture :', error);
+      console.error(
+        "Erreur lors de la recherche des annonces de voiture :",
+        error
+      );
       setSearchResults([]); // Réinitialiser les résultats de la recherche en cas d'erreur
     }
   };
@@ -53,7 +56,7 @@ const FindCarForm = ({ cars }) => {
             type="text"
             placeholder="Adresse"
             value={adresse}
-            onChange={e => setAdresse(e.target.value)}
+            onChange={(e) => setAdresse(e.target.value)}
           />
         </FormGroup>
 
@@ -62,7 +65,7 @@ const FindCarForm = ({ cars }) => {
             type="text"
             placeholder="Marque"
             value={marque}
-            onChange={e => setMarque(e.target.value)}
+            onChange={(e) => setMarque(e.target.value)}
           />
         </FormGroup>
 
@@ -71,7 +74,7 @@ const FindCarForm = ({ cars }) => {
             type="date"
             placeholder="Date"
             value={date}
-            onChange={e => setDate(e.target.value)}
+            onChange={(e) => setDate(e.target.value)}
           />
         </FormGroup>
 
@@ -81,7 +84,7 @@ const FindCarForm = ({ cars }) => {
             type="number"
             placeholder="Prix min"
             value={prixMin}
-            onChange={e => setPrixMin(e.target.value)}
+            onChange={(e) => setPrixMin(e.target.value)}
           />
         </FormGroup>
 
@@ -91,7 +94,7 @@ const FindCarForm = ({ cars }) => {
             type="number"
             placeholder="Prix max"
             value={prixMax}
-            onChange={e => setPrixMax(e.target.value)}
+            onChange={(e) => setPrixMax(e.target.value)}
           />
         </FormGroup>
 
@@ -101,7 +104,7 @@ const FindCarForm = ({ cars }) => {
             type="number"
             placeholder="Année min"
             value={anneeMin}
-            onChange={e => setAnneeMin(e.target.value)}
+            onChange={(e) => setAnneeMin(e.target.value)}
           />
         </FormGroup>
 
@@ -111,7 +114,7 @@ const FindCarForm = ({ cars }) => {
             type="number"
             placeholder="Année max"
             value={anneeMax}
-            onChange={e => setAnneeMax(e.target.value)}
+            onChange={(e) => setAnneeMax(e.target.value)}
           />
         </FormGroup>
 
@@ -120,18 +123,20 @@ const FindCarForm = ({ cars }) => {
             type="text"
             placeholder="Modèle"
             value={modele}
-            onChange={e => setModele(e.target.value)}
+            onChange={(e) => setModele(e.target.value)}
           />
         </FormGroup>
 
         <FormGroup className="form__group">
-          <button type="submit" className="btn find__car-btn">Rechercher</button>
+          <button type="submit" className="btn find__car-btn">
+            Rechercher
+          </button>
         </FormGroup>
       </div>
 
       {/* Afficher les résultats de la recherche */}
       <div className="row">
-        {searchResults.map(car => (
+        {searchResults.map((car) => (
           <CarItem key={car._id} car={car} />
         ))}
       </div>

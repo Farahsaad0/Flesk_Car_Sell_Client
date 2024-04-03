@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import CarItem from "./CarItem";
 import "../../styles/car-item.css";
+import { Row } from "reactstrap";
 
 const CarList = () => {
   const [cars, setCars] = useState([]);
@@ -19,20 +20,18 @@ const CarList = () => {
         setLoading(false);
       }
     };
-  
+
     fetchCars();
   }, []);
 
   return (
-    <div className="car-list">
+    <Row className="car-list">
       {loading ? (
         <div>Loading...</div>
       ) : (
-        cars.map((car) => (
-          <CarItem key={car._id} car={car} />
-        ))
+        cars.map((car) => <CarItem key={car._id} car={car} />)
       )}
-    </div>
+    </Row>
   );
 };
 
