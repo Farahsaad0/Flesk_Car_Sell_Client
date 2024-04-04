@@ -61,6 +61,7 @@ const CarItem = ({ car }) => {
           <button className=" w-50 car__item-btn car__btn-details">
             <Link to={`/cars/${car._id}`}>Details </Link>
           </button>
+          
         </div>
       </div>
     </Col>

@@ -15,7 +15,7 @@
 .slider__item-02 {
   background: linear-gradient(rgb(0, 13, 107, 0), rgb(255, 13, 107, 0)),
     /* background: linear-gradient(rgb(0, 13, 107, 0.5), rgb(255, 13, 107, 0.5)), */
-      url("../assets/all-images/slider-img/slider-2.jpg");
+      url("../assets/all-images/slider-img/wallys.jpg");
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
@@ -24,7 +24,7 @@
 .slider__item-03 {
   background: linear-gradient(rgb(0, 13, 107, 0), rgb(0, 13, 107, 0)),
   /* background: linear-gradient(rgb(0, 13, 107, 0.5), rgb(0, 13, 107, 0.5)), */
-    url("../assets/all-images/slider-img/slider-3.jpg");
+    url("../assets/all-images/slider-img/mateusz-delegacz-1Ah8CAwk3vM-unsplash.jpg");
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;

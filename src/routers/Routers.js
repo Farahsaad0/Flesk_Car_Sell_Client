@@ -12,6 +12,7 @@ import CreateAdForm from "../pages/CreateAd";
 import Signup from "../Auth/Singup";
 import Login from "../Auth/Login";
 import ProfilePage from "../pages/Profilepage";
+import UserCarList from "../components/UI/Myads";
 
 // import VerificationPage from "../Auth/Signup/verificationPage";
 // import Main from "../Auth/Main";
@@ -29,7 +30,7 @@ const Routers = () => {
       <Route path="/blogs/:slug" element={<BlogDetails />} />
       <Route path="/contact" element={<Contact />} />
       <Route path="*" element={<NotFound />} />
-    
+      <Route path="/myads" element={<UserCarList/>} />
 
       {/* <Route path="/" exact element={<Main />} /> */}
       <Route path="/signup" exact element={<Signup />} />

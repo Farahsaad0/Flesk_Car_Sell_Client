@@ -25,6 +25,10 @@ const navLinks = [
     path: "/contact",
     display: "Contact",
   },
+  {
+    path: "/myads", // Ajout de la NavLink pour "Mes annonces"
+    display: "Mes annonces",
+  },
 ];
 
 const Header = () => {
@@ -187,15 +191,30 @@ const Header = () => {
             <div className="navigation" ref={menuRef} onClick={toggleMenu}>
               <div className="menu">
                 {navLinks.map((item, index) => (
-                  <NavLink
-                    to={item.path}
-                    className={(navClass) =>
-                      navClass.isActive ? "nav__active nav__item" : "nav__item"
-                    }
-                    key={index}
-                  >
-                    {item.display}
-                  </NavLink>
+                  // Affichage de la NavLink uniquement si l'utilisateur est connecté
+                  (item.path === "/myads" && isLoggedIn) ? (
+                    <NavLink
+                      to={item.path}
+                      className={(navClass) =>
+                        navClass.isActive ? "nav__active nav__item" : "nav__item"
+                      }
+                      key={index}
+                    >
+                      {item.display}
+                    </NavLink>
+                  ) : ( // Sinon, n'affiche pas la NavLink
+                    item.path !== "/myads" && (
+                      <NavLink
+                        to={item.path}
+                        className={(navClass) =>
+                          navClass.isActive ? "nav__active nav__item" : "nav__item"
+                        }
+                        key={index}
+                      >
+                        {item.display}
+                      </NavLink>
+                    )
+                  )
                 ))}
               </div>
             </div>
