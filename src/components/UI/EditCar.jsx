@@ -23,7 +23,7 @@ const EditCarAd = () => {
   useEffect(() => {
     const fetchCarAd = async () => {
       try {
-        const response = await axios.get(`http://localhost:8000/carAds`);
+        const response = await axios.get(`http://localhost:8000/carAds/${id}`);
         setCarData(response.data);
         setLoading(false);
       } catch (error) {
@@ -31,9 +31,10 @@ const EditCarAd = () => {
         setLoading(false);
       }
     };
-
     fetchCarAd();
   }, [id]);
+
+  const imageUrl = `http://localhost:8000/images/${carData.photo}`;
 
   const handleChange = (e) => {
     const { name, value, files } = e.target;
@@ -43,17 +44,28 @@ const EditCarAd = () => {
       ...prevCarData,
       [name]: newValue,
     }));
+
+    if (name === "photo" && files.length > 0) {
+      const photoURL = URL.createObjectURL(files[0]);
+      setCarData((prevCarData) => ({
+        ...prevCarData,
+        photoURL: photoURL,
+      }));
+    }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+  
     try {
       const formDataToSend = new FormData();
       for (let key in carData) {
+        if (key === "photo" && carData[key] === null) {
+          continue;
+        }
         formDataToSend.append(key, carData[key]);
       }
-
+  
       const response = await axios.put(
         `http://localhost:8000/${id}`,
         formDataToSend,
@@ -63,9 +75,9 @@ const EditCarAd = () => {
           },
         }
       );
-
-      console.log("Réponse du serveur:", response.data);
-      navigate(`/car/${id}`);
+  
+      console.log("Server response:", response.data);
+      navigate(`/myads`);
     } catch (error) {
       console.error("Error updating car ad:", error);
     }
@@ -162,13 +174,13 @@ const EditCarAd = () => {
             <div>
               <h3>Aperçu de l'image :</h3>
               <img
-                src={URL.createObjectURL(carData.photo)}
+                src={carData.photoURL || imageUrl}
                 alt="Aperçu"
                 style={{ maxWidth: "100%", maxHeight: "200px" }}
               />
             </div>
           )}
-          <Button color="primary" type="submit">
+          <Button color="primary" type="submit" className="mt-3">
             Modifier
           </Button>
         </Form>
