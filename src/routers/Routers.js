@@ -13,7 +13,7 @@ import Signup from "../Auth/Singup";
 import Login from "../Auth/Login";
 import ProfilePage from "../pages/Profilepage";
 import UserCarList from "../components/UI/Myads";
-
+import EditCarAd from "../components/UI/EditCar";
 // import VerificationPage from "../Auth/Signup/verificationPage";
 // import Main from "../Auth/Main";
 
@@ -31,6 +31,8 @@ const Routers = () => {
       <Route path="/contact" element={<Contact />} />
       <Route path="*" element={<NotFound />} />
       <Route path="/myads" element={<UserCarList/>} />
+      <Route path="/edit-car/:id" element={<EditCarAd/>} />
+
 
       {/* <Route path="/" exact element={<Main />} /> */}
       <Route path="/signup" exact element={<Signup />} />

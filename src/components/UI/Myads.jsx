@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import CarItem from "./CarItem";
 import { Row, Button } from "reactstrap";
+import { BsPencilSquare, BsTrash } from "react-icons/bs";
+import { useNavigate } from "react-router-dom"; // Importez useNavigate
+import CarItem from "./CarItem";
 
 const UserCarList = () => {
   const [cars, setCars] = useState([]);
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate(); // Obtenez la fonction de navigation
 
   useEffect(() => {
     const fetchUserCars = async () => {
@@ -41,27 +44,27 @@ const UserCarList = () => {
 
   const handleEdit = (id) => {
     // Rediriger l'utilisateur vers la page de modification de l'annonce avec l'ID spécifié
-    // Vous pouvez utiliser React Router pour cela
+    navigate(`/edit-car/${id}`); // Utilisez useNavigate pour la redirection
   };
 
   return (
     <div className="container">
       <h1>Mes annonces</h1>
-      <Row className="car-list">
-        {loading ? (
-          <div>Loading...</div>
-        ) : cars.length === 0 ? (
-          <div>No car ads found.</div>
-        ) : (
-          cars.map((car) => (
-            <div key={car._id}>
-              <CarItem car={car} />
-              <Button onClick={() => handleEdit(car._id)}>Modifier</Button>
-              <Button onClick={() => handleDelete(car._id)}>Supprimer</Button>
+      {loading ? (
+        <div>Loading...</div>
+      ) : cars.length === 0 ? (
+        <div>No car ads found.</div>
+      ) : (
+        cars.map((car) => (
+          <div key={car._id} className="mb-3 d-flex align-items-center justify-content-between">
+            <CarItem car={car} />
+            <div>
+              <Button color="secondary" size="sm" className="me-2" onClick={() => handleEdit(car._id)}><BsPencilSquare /></Button>
+              <Button color="danger" size="sm" onClick={() => handleDelete(car._id)}><BsTrash /></Button>
             </div>
-          ))
-        )}
-      </Row>
+          </div>
+        ))
+      )}
     </div>
   );
 };

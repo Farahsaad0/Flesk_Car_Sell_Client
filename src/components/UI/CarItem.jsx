@@ -55,9 +55,7 @@ const CarItem = ({ car }) => {
               <i className="ri-calendar-line"></i> Created on: {formattedDate}
             </span>
           </div>
-          <button className=" w-50 car__item-btn car__btn-rent">
-            <Link to={`/cars/${car._id}`}>Rent</Link>
-          </button>
+         
           <button className=" w-50 car__item-btn car__btn-details">
             <Link to={`/cars/${car._id}`}>Details </Link>
           </button>
