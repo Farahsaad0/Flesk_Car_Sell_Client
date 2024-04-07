@@ -162,7 +162,7 @@ const CreateAdForm = () => {
         {formData.photo && (
           <div>
             <h3>Aperçu de l'image :</h3>
-            <img src={URL.createObjectURL(formData.photo)} alt="Aperçu" />
+            <img src={URL.createObjectURL(formData.photo)} alt="Aperçu" style={{ maxWidth: "100%" }}/>
           </div>
         )}
         <Button type="submit" color="primary">

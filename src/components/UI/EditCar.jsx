@@ -56,7 +56,7 @@ const EditCarAd = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-  
+
     try {
       const formDataToSend = new FormData();
       for (let key in carData) {
@@ -65,7 +65,7 @@ const EditCarAd = () => {
         }
         formDataToSend.append(key, carData[key]);
       }
-  
+
       const response = await axios.put(
         `http://localhost:8000/${id}`,
         formDataToSend,
@@ -75,7 +75,7 @@ const EditCarAd = () => {
           },
         }
       );
-  
+
       console.log("Server response:", response.data);
       navigate(`/myads`);
     } catch (error) {
@@ -106,6 +106,7 @@ const EditCarAd = () => {
               type="textarea"
               name="description"
               id="description"
+              style={{ height: "auto", minHeight: "100px" }}
               value={carData.description}
               onChange={handleChange}
             />
@@ -176,7 +177,7 @@ const EditCarAd = () => {
               <img
                 src={carData.photoURL || imageUrl}
                 alt="Aperçu"
-                style={{ maxWidth: "100%", maxHeight: "200px" }}
+                style={{ maxWidth: "100%", maxHeight: "250px" }}
               />
             </div>
           )}
