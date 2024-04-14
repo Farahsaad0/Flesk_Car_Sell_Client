@@ -34,7 +34,7 @@ const Signup = () => {
       // Inclure toujours le champ Role, même s'il est vide
       const postData = { 
         ...data, 
-        Role: data.Role || "Utilisateur" // Convertir en minuscules ici
+        Role: data.Role || "Utilisateur" 
       };
       const { data: res } = await axios.post(url, postData);
       setMsg(res.message);

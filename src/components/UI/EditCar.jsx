@@ -177,7 +177,7 @@ const EditCarAd = () => {
               <img
                 src={carData.photoURL || imageUrl}
                 alt="Aperçu"
-                style={{ maxWidth: "100%", maxHeight: "250px" }}
+                style={{ maxWidth: "100%", maxHeight: "350px" }}
               />
             </div>
           )}

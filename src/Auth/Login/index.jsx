@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import axios from "../../api/axios";
 import { Link, useNavigate } from "react-router-dom";
 import styles from "./styles.module.css";
+import VerificationPage from "../Singup/verificationPage";
 // import AuthContext from "../../context/AuthProvider";
 
 const LOGIN_URL = "/login";
@@ -12,6 +13,7 @@ const Login = () => {
   const [data, setData] = useState({ Email: "", Password: "" });
   const [error, setError] = useState("");
   const navigate = useNavigate();
+  const [isNotVerified, setIsNotVerified] = useState(false);
 
   const handleChange = ({ currentTarget: input }) => {
     setData({ ...data, [input.name]: input.value });
@@ -55,13 +57,17 @@ const Login = () => {
     e.preventDefault();
     try {
       const response = await axios.post(LOGIN_URL, data);
-      const { _id, Nom, Prenom, Email, Role, token, Statut } = response.data;
+      const { _id, Nom, Prenom, Email, Verified, Role, token, Statut } =
+        response.data;
 
       if (Statut === "En attente") {
         setError(
           "Votre compte est en attente d'approbation par l'administrateur."
         );
-      } else if (Statut === "Approuvé") {
+      } else if (!Verified) {
+        setIsNotVerified(true);
+        // } else if (Statut === "Approuvé") {
+      } else {
         // Stocker les détails de l'utilisateur dans le stockage local
         localStorage.setItem(
           "userData",
@@ -87,43 +93,47 @@ const Login = () => {
 
   return (
     <div className={styles.login_container}>
-      <div className={styles.login_form_container}>
-        <div className={styles.left}>
-          <form className={styles.form_container} onSubmit={handleSubmit}>
-            <h1>Se Connecter</h1>
-            <input
-              type="email"
-              placeholder="Email"
-              name="Email"
-              onChange={handleChange}
-              value={data.Email}
-              required
-              className={styles.input}
-            />
-            <input
-              type="password"
-              placeholder="Mot de passe "
-              name="Password"
-              onChange={handleChange}
-              value={data.Password}
-              required
-              className={styles.input}
-            />
-            {error && <div className={styles.error_msg}>{error}</div>}
-            <button type="submit" className={styles.green_btn}>
-              Se connecter
-            </button>
-          </form>
+      {isNotVerified ? (
+        <VerificationPage email={data.Email} onSuccess={() => setIsNotVerified(false)} />
+      ) : (
+        <div className={styles.login_form_container}>
+          <div className={styles.left}>
+            <form className={styles.form_container} onSubmit={handleSubmit}>
+              <h1>Se Connecter</h1>
+              <input
+                type="email"
+                placeholder="Email"
+                name="Email"
+                onChange={handleChange}
+                value={data.Email}
+                required
+                className={styles.input}
+              />
+              <input
+                type="password"
+                placeholder="Mot de passe "
+                name="Password"
+                onChange={handleChange}
+                value={data.Password}
+                required
+                className={styles.input}
+              />
+              {error && <div className={styles.error_msg}>{error}</div>}
+              <button type="submit" className={styles.green_btn}>
+                Se connecter
+              </button>
+            </form>
+          </div>
+          <div className={styles.right}>
+            <h1>Nouveau Compte?</h1>
+            <Link to="/signup">
+              <button type="button" className={styles.white_btn}>
+                S'inscrire
+              </button>
+            </Link>
+          </div>
         </div>
-        <div className={styles.right}>
-          <h1>Nouveau Compte?</h1>
-          <Link to="/signup">
-            <button type="button" className={styles.white_btn}>
-              S'inscrire
-            </button>
-          </Link>
-        </div>
-      </div>
+      )}
     </div>
   );
 };

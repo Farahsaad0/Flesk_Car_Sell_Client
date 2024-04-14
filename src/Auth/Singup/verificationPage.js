@@ -1,27 +1,26 @@
-   
 import { useState } from "react";
-import axios from "axios";
+// import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import styles from "./styles.module.css";
-
+import axios from "../../api/axios";
 
 const VerificationPage = ({ email, onSuccess }) => {
   const [verificationCode, setVerificationCode] = useState("");
   const [error, setError] = useState("");
   const [msg, setMsg] = useState("");
   const navigate = useNavigate();
+  const url = "/verify";
 
   const handleVerificationSubmit = async (e) => {
     e.preventDefault();
     try {
-      const url = "http://localhost:8000/verify";
       const { data: res } = await axios.post(url, {
         email,
         verificationCode,
       });
       setMsg(res.message);
       onSuccess(); // Appel à la fonction onSuccess pour signaler la réussite de la vérification
-      navigate('/login'); // Rediriger vers la page de connexion après la vérification réussie
+      navigate("/login"); // Rediriger vers la page de connexion après la vérification réussie
     } catch (error) {
       setError("Code de vérification invalide.");
     }
