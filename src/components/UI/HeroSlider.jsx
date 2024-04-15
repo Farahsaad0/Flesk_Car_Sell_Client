@@ -29,7 +29,7 @@ const HeroSlider = () => {
               chaque clic!
             </h1>
             <button className="btn reserve__btn mt-4">
-              <Link to="/cars">Acheter Maintenant</Link>
+              <Link to="/cars">Nos voitures</Link>
             </button>
             <button className="btn create__ad-btn mt-4">
               <Link to="/create-ad">Créer annonce</Link>
@@ -50,7 +50,7 @@ const HeroSlider = () => {
               chaque clic!
             </h1>
             <button className="btn reserve__btn mt-4">
-              <Link to="/cars">Acheter Maintenant</Link>
+              <Link to="/cars">Nos voitures</Link>
             </button>
             <button className="btn create__ad-btn mt-4">
               <Link to="/create-ad">Créer annonce</Link>
@@ -70,7 +70,7 @@ const HeroSlider = () => {
               chaque clic!
             </h1>
             <button className="btn reserve__btn mt-4">
-              <Link to="/cars">Acheter Maintenant</Link>
+              <Link to="/cars">Nos voitures</Link>
             </button>
             <button className="btn create__ad-btn mt-4">
               <Link to="/create-ad">Créer annonce</Link>
