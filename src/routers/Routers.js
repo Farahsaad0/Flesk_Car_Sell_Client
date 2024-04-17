@@ -14,6 +14,7 @@ import Login from "../Auth/Login";
 import ProfilePage from "../pages/Profilepage";
 import UserCarList from "../components/UI/Myads";
 import EditCarAd from "../components/UI/EditCar";
+import ExpertsDemande from "../components/UI/DemandeExpertise";
 // import VerificationPage from "../Auth/Signup/verificationPage";
 // import Main from "../Auth/Main";
 
@@ -30,14 +31,14 @@ const Routers = () => {
       <Route path="/blogs/:slug" element={<BlogDetails />} />
       <Route path="/contact" element={<Contact />} />
       <Route path="*" element={<NotFound />} />
-      <Route path="/myads" element={<UserCarList/>} />
-      <Route path="/edit-car/:id" element={<EditCarAd/>} />
-
+      <Route path="/myads" element={<UserCarList />} />
+      <Route path="/edit-car/:id" element={<EditCarAd />} />
+      <Route path="/demande" element={<ExpertsDemande />} />
 
       {/* <Route path="/" exact element={<Main />} /> */}
       <Route path="/signup" exact element={<Signup />} />
       <Route path="/login" exact element={<Login />} />
-      <Route path="/profile" element ={<ProfilePage/>} />
+      <Route path="/profile" element={<ProfilePage />} />
       {/* <Route path="/" element={<Navigate replace to="/login" />} /> */}
       {/* <Route path="/verification" component={<VerificationPage />} /> */}
     </Routes>

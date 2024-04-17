@@ -26,8 +26,12 @@ const navLinks = [
     display: "Contact",
   },
   {
-    path: "/myads", // Ajout de la NavLink pour "Mes annonces"
+    path: "/myads",
     display: "Mes annonces",
+  },
+  {
+    path: "/demande",
+    display: "Demande d'expertise",
   },
 ];
 
@@ -35,7 +39,8 @@ const Header = () => {
   const menuRef = useRef(null);
   const [userData, setUserData] = useState(null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const navigate = useNavigate(); // Utilisation de useNavigate pour la navigation
+  const [userRole, setUserRole] = useState(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const checkLoggedIn = async () => {
@@ -51,7 +56,9 @@ const Header = () => {
             }
           );
           setUserData(response.data);
+          setUserRole(response.data.Role);
           setIsLoggedIn(true);
+          console.log("User role:", response.data.Role); // Ajout de la console.log
         }
       } catch (error) {
         console.error(
@@ -68,7 +75,8 @@ const Header = () => {
     localStorage.removeItem("token");
     setUserData(null);
     setIsLoggedIn(false);
-    navigate("/"); // Utilisation de navigate pour rediriger vers la page d'accueil
+    setUserRole(null);
+    navigate("/");
   };
 
   const toggleMenu = () => menuRef.current.classList.toggle("menu__active");
@@ -160,8 +168,8 @@ const Header = () => {
                   <i className="ri-time-line"></i>
                 </span>
                 <div className="header__location-content">
-                  <h4>Sunday to Friday</h4>
-                  <h6>10am - 7pm</h6>
+                  <h4>temp de travail</h4>
+                  <h6>24h/7j</h6>
                 </div>
               </div>
             </Col>
@@ -190,20 +198,16 @@ const Header = () => {
             </span>
             <div className="navigation" ref={menuRef} onClick={toggleMenu}>
               <div className="menu">
-                {navLinks.map((item, index) => (
-                  // Affichage de la NavLink uniquement si l'utilisateur est connecté
-                  (item.path === "/myads" && isLoggedIn) ? (
-                    <NavLink
-                      to={item.path}
-                      className={(navClass) =>
-                        navClass.isActive ? "nav__active nav__item" : "nav__item"
-                      }
-                      key={index}
-                    >
-                      {item.display}
-                    </NavLink>
-                  ) : ( // Sinon, n'affiche pas la NavLink
-                    item.path !== "/myads" && (
+                {navLinks.map((item, index) => {
+                  console.log("isLoggedIn:", isLoggedIn);
+                  console.log("userRole:", userRole);
+                  console.log("item.path:", item.path);
+                  if (
+                    userRole === "Expert" &&
+                    item.path === "/demande"
+                  ) {
+                    console.log("case one ____________________________")
+                    return (
                       <NavLink
                         to={item.path}
                         className={(navClass) =>
@@ -213,9 +217,33 @@ const Header = () => {
                       >
                         {item.display}
                       </NavLink>
-                    )
-                  )
-                ))}
+                    );
+                  } else if (
+                    !isLoggedIn &&
+                    (item.path === "/myads" || item.path === "/demande")
+                  ) {
+                    return null;
+                    
+                  } else if (
+                    isLoggedIn && userRole !== "Expert" && item.path === "/demande"
+                  ) {
+                    return null;
+                  } else {
+                    return (
+                      <NavLink
+                        to={item.path}
+                        className={(navClass) =>
+                          navClass.isActive ? "nav__active nav__item" : "nav__item"
+                        }
+                        key={index}
+                      >
+                        {item.display}
+                      </NavLink>
+                    );
+                  }
+                  
+                  
+                })}
               </div>
             </div>
             <div className="nav__right">
