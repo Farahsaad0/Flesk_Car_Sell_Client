@@ -12,6 +12,8 @@ const Signup = () => {
     Password: "",
     Role: "",
     Spécialité: "",
+    prix: "",
+    experience: "",
   });
   const [error, setError] = useState("");
   const [msg, setMsg] = useState("");
@@ -32,13 +34,13 @@ const Signup = () => {
     try {
       const url = "http://localhost:8000/register";
       // Inclure toujours le champ Role, même s'il est vide
-      const postData = { 
-        ...data, 
-        Role: data.Role || "Utilisateur" 
+      const postData = {
+        ...data,
+        Role: data.Role || "Utilisateur",
       };
       const { data: res } = await axios.post(url, postData);
       setMsg(res.message);
-  
+
       // Stocker l'ID de l'utilisateur dans le stockage local après l'inscription réussie
       localStorage.setItem("userId", res._id);
     } catch (error) {
@@ -52,7 +54,6 @@ const Signup = () => {
     }
     setIsRegistered(true); // Toujours exécuté après la soumission du formulaire
   };
-  
 
   return (
     <div className={styles.signup_container}>
@@ -123,15 +124,35 @@ const Signup = () => {
                 </label>
               </div>
               {data.Role === "Expert" && (
-                <input
-                  type="text"
-                  placeholder="Spécialité"
-                  name="Spécialité"
-                  onChange={handleChange}
-                  value={data.Spécialité}
-                  required
-                  className={styles.input}
-                />
+                <>
+                  <input
+                    type="text"
+                    placeholder="Spécialité"
+                    name="Spécialité"
+                    onChange={handleChange}
+                    value={data.Spécialité}
+                    required
+                    className={styles.input}
+                  />
+                  <input
+                    type="number"
+                    placeholder="prix par consultation"
+                    name="prix"
+                    onChange={handleChange}
+                    value={data.prix}
+                    required
+                    className={styles.input}
+                  />
+                  <input
+                    type="number"
+                    placeholder="experience"
+                    name="experience"
+                    onChange={handleChange}
+                    value={data.experience}
+                    required
+                    className={styles.input}
+                  />
+                </>
               )}
               {error && <div className={styles.error_msg}>{error}</div>}
               {msg && <div className={styles.success_msg}>{msg}</div>}

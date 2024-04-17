@@ -1,20 +1,58 @@
 import React, { useEffect, useState } from "react";
 
 import carData from "../assets/data/carData";
-import { Container, Row, Col } from "reactstrap";
+import {
+  Container,
+  Row,
+  Col,
+  Accordion,
+  AccordionItem,
+  AccordionHeader,
+  AccordionBody,
+} from "reactstrap";
 import Helmet from "../components/Helmet/Helmet";
 import { useParams } from "react-router-dom";
 import BookingForm from "../components/UI/BookingForm";
 import PaymentMethod from "../components/UI/PaymentMethod";
 import axios from "../api/axios";
+import ExpertItem from "../components/UI/ExpertItem";
 
 const CarDetails = () => {
   const { id } = useParams();
-  const [singleCarItem, setSingleCarItem] = useState([]);
+  const [singleCarItem, setSingleCarItem] = useState({});
+  const [experts, setExperts] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [expertsLoading, setExpertsLoading] = useState(true);
+  const [open, setOpen] = useState(1);
+
+  // const toggle = () => {
+  //   if (experts.length === 0) {
+  //     fetchExperts();
+  //   }
+  //   setOpen(!open);
+  // };
+  const toggle = (id) => {
+    if (open === id) {
+      setOpen();
+    } else {
+      setOpen(id);
+      fetchExperts();
+    }
+  };
+
+  const fetchExperts = async () => {
+    try {
+      const response = await axios.get("http://localhost:8000/experts");
+      setExperts(response.data.approvedExperts);
+      setExpertsLoading(false);
+    } catch (error) {
+      console.error("Error fetching experts: ", error);
+      setExpertsLoading(false);
+    }
+  };
 
   useEffect(() => {
-    const fetchCars = async () => {
+    const fetchCar = async () => {
       try {
         const response = await axios.get(`http://localhost:8000/carAds/${id}`);
         console.log(response.data);
@@ -26,12 +64,12 @@ const CarDetails = () => {
       }
     };
 
-    fetchCars();
+    fetchCar();
   }, []);
 
-  const imageUrl = `http://localhost:8000/images/${singleCarItem.photo}`;
-
-  // const singleCarItem = carData.find((item) => item.carName === id);
+  const imageUrl = singleCarItem
+    ? `http://localhost:8000/images/${singleCarItem.photo}`
+    : "";
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -58,7 +96,7 @@ const CarDetails = () => {
                       {singleCarItem.prix} TND
                     </h6>
 
-                    <span className=" d-flex align-items-center gap-2">
+                    {/* <span className=" d-flex align-items-center gap-2">
                       <span style={{ color: "#f9a826" }}>
                         <i className="ri-star-s-fill"></i>
                         <i className="ri-star-s-fill"></i>
@@ -67,12 +105,8 @@ const CarDetails = () => {
                         <i className="ri-star-s-fill"></i>
                       </span>
                       ({singleCarItem.rating} ratings)
-                    </span>
+                    </span> */}
                   </div>
-
-                  <p className="section__description">
-                    {singleCarItem.description}
-                  </p>
 
                   <div
                     className=" d-flex align-items-center mt-3"
@@ -131,10 +165,13 @@ const CarDetails = () => {
                       {singleCarItem.marque}
                     </span>
                   </div>
+                  <p className="section__description">
+                    {singleCarItem.description}
+                  </p>
                 </div>
               </Col>
 
-              <Col lg="7" className="mt-5">
+              {/* <Col lg="7" className="mt-5">
                 <div className="booking-info mt-5">
                   <h5 className="mb-4 fw-bold ">Booking Information</h5>
                   <BookingForm />
@@ -146,8 +183,29 @@ const CarDetails = () => {
                   <h5 className="mb-4 fw-bold ">Payment Information</h5>
                   <PaymentMethod />
                 </div>
-              </Col>
+              </Col> */}
             </Row>
+
+            <Accordion flush  open={open} toggle={toggle} className="mt-5">
+              <AccordionItem>
+                <AccordionHeader targetId="1">
+                  Consulter des Expert
+                </AccordionHeader>
+                <AccordionBody accordionId="1">
+                  <Row>
+                    {expertsLoading ? (
+                      <div>Loading...</div>
+                    ) : (
+                      experts.map((expert) => (
+                        <ExpertItem key={expert._id} expert={expert} carAdId={id} />
+                      ))
+                    )}
+                  </Row>
+                </AccordionBody>
+              </AccordionItem>
+            </Accordion>
+
+            {/* </Col> */}
           </Container>
         </section>
       )}
