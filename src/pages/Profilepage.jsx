@@ -1,76 +1,83 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
 import "../styles/profile.css";
+import useAuth from "../hooks/useAuth";
+import useAxiosPrivate from "../hooks/useAxiosPrivate";
 
 const ProfilePage = () => {
-  const [userData, setUserData] = useState(null);
-  const [updatedData, setUpdatedData] = useState({
+  const { auth } = useAuth();
+  const axiosPrivate = useAxiosPrivate();
+
+  const [userData, setUserData] = useState({
     Nom: "",
     Prenom: "",
     Email: "",
-    Password: "",
-    NewPassword: "",
-    Role: "Utilisateur",
+    Role: "",
+    photo: null,
   });
 
   useEffect(() => {
-    const fetchUserData = async () => {
-      try {
-        const token = localStorage.getItem("token");
-        if (!token) {
-          console.error("Aucun token d'authentification disponible");
-          return;
-        }
-        const response = await axios.get("http://localhost:8000/getUserData", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-        setUserData(response.data);
-        setUpdatedData(response.data);
-      } catch (error) {
-        console.error(
-          "Erreur lors de la récupération des données utilisateur : ",
-          error
-        );
-      }
-    };
-
     fetchUserData();
-  }, []);
+  }, [auth]);
+
+  const fetchUserData = async () => {
+    try {
+      const response = await axiosPrivate.get(`/getUserData/${auth._id}`);
+      setUserData(response.data);
+    } catch (error) {
+      console.error(
+        "Erreur lors de la récupération des données utilisateur : ",
+        error
+      );
+    }
+  };
+  
+  const imageUrl = userData.photo ? `http://localhost:8000/images/${userData.photo}` : null;
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const token = localStorage.getItem("token");
-      if (!token) {
-        console.error("Aucun token d'authentification disponible");
-        return;
+      const formDataToSend = new FormData();
+  
+      for (let key in userData) {
+        formDataToSend.append(key, userData[key]);
       }
-      if (!updatedData.Password) {
-        console.error("____Veuillez entrer votre mot de passe actuel.");
-        return;
-      }
-      const response = await axios.put(
-        `http://localhost:8000/updateUserData/${updatedData._id}`,
-        updatedData,
+  
+      const response = await axiosPrivate.put(
+        `/updateUserData/${userData._id}`,
+        formDataToSend,
         {
           headers: {
-            Authorization: `Bearer ${token}`,
+            "Content-Type": "multipart/form-data",
           },
         }
       );
       console.log("Réponse du serveur:", response.data);
-      setUserData(updatedData); // Mettre à jour les données utilisateur dans le frontend avec les nouvelles données modifiées
     } catch (error) {
       console.error("Erreur lors de la soumission du formulaire :", error);
     }
   };
+  
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
-    setUpdatedData({ ...updatedData, [name]: value });
+    const { name, value, files } = e.target;
+    const newValue = name === "photo" ? files[0] : value;
+  
+    if (name === "photo" && files.length > 0) {
+      const photoURL = URL.createObjectURL(files[0]);
+      setUserData((prevData) => ({
+        ...prevData,
+        [name]: files[0],
+        photoURL: photoURL,
+      }));
+    } else {
+      setUserData((prevData) => ({
+        ...prevData,
+        [name]: newValue,
+      }));
+    }
   };
+  
 
   if (!userData) {
     return <div>Chargement en cours...</div>;
@@ -80,16 +87,16 @@ const ProfilePage = () => {
     <div className="page-content page-container" id="page-content">
       <div className="padding">
         <div className="row container d-flex justify-content-center">
-          <div className="col-xl-6 col-md-12">
+          <div className="col-xl-8 col-md-12">
             <div className="card user-card-full">
               <div className="row m-l-0 m-r-0">
                 <div className="col-sm-4 bg-c-lite-green user-profile">
                   <div className="card-block text-center text-white">
                     <div className="m-b-25">
                       <img
-                        src="https://img.icons8.com/bubbles/100/000000/user.png"
+                        src={userData.photoURL || imageUrl}
                         className="img-radius"
-                        alt="User-Profile-Image"
+                        alt="User"
                       />
                     </div>
                     <h6 className="f-w-600">
@@ -114,7 +121,7 @@ const ProfilePage = () => {
                             type="text"
                             id="nom"
                             name="Nom"
-                            value={updatedData.Nom}
+                            value={userData.Nom}
                             onChange={handleChange}
                             className="form-control"
                           />
@@ -127,7 +134,7 @@ const ProfilePage = () => {
                             type="text"
                             id="prenom"
                             name="Prenom"
-                            value={updatedData.Prenom}
+                            value={userData.Prenom}
                             onChange={handleChange}
                             className="form-control"
                           />
@@ -142,7 +149,7 @@ const ProfilePage = () => {
                             type="email"
                             id="email"
                             name="Email"
-                            value={updatedData.Email}
+                            value={userData.Email}
                             onChange={handleChange}
                             className="form-control"
                           />
@@ -155,10 +162,9 @@ const ProfilePage = () => {
                             type="password"
                             id="Password"
                             name="Password"
-                            // value={updatedData.Password}
                             onChange={handleChange}
                             className="form-control"
-                            required // Rendre obligatoire
+                            required
                           />
                         </div>
                       </div>
@@ -174,7 +180,6 @@ const ProfilePage = () => {
                             type="password"
                             id="newPassword"
                             name="NewPassword"
-                            value={updatedData.NewPassword}
                             onChange={handleChange}
                             className="form-control"
                           />
@@ -186,7 +191,7 @@ const ProfilePage = () => {
                           <select
                             id="role"
                             name="Role"
-                            value={updatedData.Role}
+                            value={userData.Role}
                             onChange={handleChange}
                             className="form-control"
                           >
@@ -196,6 +201,21 @@ const ProfilePage = () => {
                               Administrateur
                             </option>
                           </select>
+                        </div>
+                      </div>
+                      <div className="row">
+                        <div className="col-sm-6">
+                          <label htmlFor="photo" className="m-b-10 f-w-600">
+                            Photo
+                          </label>
+                          <input
+                            type="file"
+                            id="photo"
+                            name="photo"
+                            onChange={handleChange}
+                            className="form-control"
+                            accept="image/*"
+                          />
                         </div>
                       </div>
                       <button type="submit" className="btn btn-primary mt-3">

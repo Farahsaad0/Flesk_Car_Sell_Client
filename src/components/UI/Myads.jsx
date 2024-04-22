@@ -1,25 +1,28 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
 import { Row, Button } from "reactstrap";
 import { BsPencilSquare, BsTrash } from "react-icons/bs";
 import { useNavigate } from "react-router-dom"; 
 import CarItem from "./CarItem";
+import axios from "../../api/axios";
+import useAuth from "../../hooks/useAuth";
+import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 
 const UserCarList = () => {
   const [cars, setCars] = useState([]);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate(); 
+  const {auth} = useAuth()
+  const axiosPrivate = useAxiosPrivate();
 
   useEffect(() => {
     const fetchUserCars = async () => {
+      const userId = auth._id
       try {
-        const userId = JSON.parse(localStorage.getItem("userData"))._id;
         if (!userId) {
           throw new Error("User not authenticated");
         }
 
-        const response = await axios.get(
-          `http://localhost:8000/getCarAdByUserId/${userId}`
+        const response = await axios.get(`/getCarAdByUserId/${userId}`
         );
 
         console.log(response.data);
@@ -36,7 +39,7 @@ const UserCarList = () => {
 
   const handleDelete = async (id) => {
     try {
-      const response = await axios.delete(`http://localhost:8000/carAds/${id}`);
+      const response = await axiosPrivate.delete(`/carAds/${id}`);
       console.log(response.data);
       setCars(cars.filter((car) => car._id !== id));
     } catch (error) {

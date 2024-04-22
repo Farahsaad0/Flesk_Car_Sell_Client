@@ -1,8 +1,10 @@
 import React, { useRef, useState, useEffect } from "react";
 import { Container, Row, Col } from "reactstrap";
-import { Link, NavLink, useNavigate } from "react-router-dom";
+import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 import "../../styles/header.css";
+import useAuth from "../../hooks/useAuth";
+import useLogout from "../../hooks/useLogout";
 
 const navLinks = [
   {
@@ -37,46 +39,50 @@ const navLinks = [
 
 const Header = () => {
   const menuRef = useRef(null);
-  const [userData, setUserData] = useState(null);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [userRole, setUserRole] = useState(null);
+  const [userData, setUserData] = useState({
+    Nom: "",
+    Prenom: "",
+    Role: "",
+  });
+  // const [isLoggedIn, setIsLoggedIn] = useState(false);
   const navigate = useNavigate();
+  const deconnecter = useLogout();
+  const location = useLocation();
+  const from = location.state?.from || { pathname: "/" };
+
+  const { auth } = useAuth();
 
   useEffect(() => {
-    const checkLoggedIn = async () => {
-      try {
-        const token = localStorage.getItem("token");
-        if (token) {
-          const response = await axios.get(
-            "http://localhost:8000/getUserData",
-            {
-              headers: {
-                Authorization: `Bearer ${token}`,
-              },
-            }
-          );
-          setUserData(response.data);
-          setUserRole(response.data.Role);
-          setIsLoggedIn(true);
-          console.log("User role:", response.data.Role); // Ajout de la console.log
-        }
-      } catch (error) {
-        console.error(
-          "Erreur lors de la vérification de la connexion de l'utilisateur :",
-          error
-        );
-      }
-    };
+    fetchUserData();
+  }, [auth]); // eslint-disable-line react-hooks/exhaustive-deps
 
-    checkLoggedIn();
-  }, []);
+  const fetchUserData = async () => {
+    try {
+      const user = auth;
 
-  const handleLogout = () => {
-    localStorage.removeItem("token");
-    setUserData(null);
-    setIsLoggedIn(false);
-    setUserRole(null);
-    navigate("/");
+      console.log(user);
+      console.log(user);
+      // Update state with admin user info
+      setUserData({
+        Nom: user.Nom,
+        Prenom: user.Prenom,
+        Role: user.Role,
+      });
+      // setIsLoggedIn(true);
+    } catch (error) {
+      console.error("Error fetching admin user info:", error);
+    }
+  };
+
+  const handleLogout = async () => {
+    await deconnecter();
+    setUserData({
+      Nom: "",
+      Prenom: "",
+      Role: "",
+    });
+    // setIsLoggedIn(false);
+    navigate(from, { replace: true });
   };
 
   const toggleMenu = () => menuRef.current.classList.toggle("menu__active");
@@ -97,14 +103,14 @@ const Header = () => {
 
             <Col lg="6" md="6" sm="6">
               <div className="header__top__right d-flex align-items-center justify-content-end gap-3">
-                {isLoggedIn ? (
+                {userData.Nom ? (
                   <>
                     <Link
                       to="/profile"
                       className="d-flex align-items-center gap-1 profile_icon"
                     >
                       <i className="ri-user-line"></i>
-                      {userData && userData.Nom && userData.Prenom
+                      {userData
                         ? `${userData.Nom} ${userData.Prenom}`
                         : "Profile"}
                     </Link>
@@ -199,19 +205,23 @@ const Header = () => {
             <div className="navigation" ref={menuRef} onClick={toggleMenu}>
               <div className="menu">
                 {navLinks.map((item, index) => {
-                  console.log("isLoggedIn:", isLoggedIn);
-                  console.log("userRole:", userRole);
+                  {
+                    /* console.log("isLoggedIn:", isLoggedIn); */
+                  }
+                  console.log("user Name:", userData.Nom);
+                  console.log("user Role:", userData.Role);
                   console.log("item.path:", item.path);
-                  if (
-                    userRole === "Expert" &&
-                    item.path === "/demande"
-                  ) {
-                    console.log("case one ____________________________")
+                  if (userData.Role === "Expert" && item.path === "/demande") {
+                    console.log(
+                      "__________________________ CASE ONE ____________________________"
+                    );
                     return (
                       <NavLink
                         to={item.path}
                         className={(navClass) =>
-                          navClass.isActive ? "nav__active nav__item" : "nav__item"
+                          navClass.isActive
+                            ? "nav__active nav__item"
+                            : "nav__item"
                         }
                         key={index}
                       >
@@ -219,21 +229,33 @@ const Header = () => {
                       </NavLink>
                     );
                   } else if (
-                    !isLoggedIn &&
+                    !userData.Nom &&
                     (item.path === "/myads" || item.path === "/demande")
                   ) {
+                    console.log(
+                      "__________________________ CASE TWO ____________________________"
+                    );
                     return null;
-                    
                   } else if (
-                    isLoggedIn && userRole !== "Expert" && item.path === "/demande"
+                    userData.Nom &&
+                    userData.Role !== "Expert" &&
+                    item.path === "/demande"
                   ) {
+                    console.log(
+                      "__________________________ CASE THREE ____________________________"
+                    );
                     return null;
                   } else {
+                    console.log(
+                      "__________________________ CASE FOUR ____________________________"
+                    );
                     return (
                       <NavLink
                         to={item.path}
                         className={(navClass) =>
-                          navClass.isActive ? "nav__active nav__item" : "nav__item"
+                          navClass.isActive
+                            ? "nav__active nav__item"
+                            : "nav__item"
                         }
                         key={index}
                       >
@@ -241,8 +263,6 @@ const Header = () => {
                       </NavLink>
                     );
                   }
-                  
-                  
                 })}
               </div>
             </div>

@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
 import CarItem from "./CarItem";
 import "../../styles/car-item.css";
 import { Row } from "reactstrap";
+import axios from "../../api/axios";
 
 const CarList = () => {
   const [cars, setCars] = useState([]);
@@ -11,7 +11,7 @@ const CarList = () => {
   useEffect(() => {
     const fetchCars = async () => {
       try {
-        const response = await axios.get("http://localhost:8000/carAds");
+        const response = await axios.get("/carAds");
         console.log(response.data);
         setCars(response.data);
         setLoading(false);

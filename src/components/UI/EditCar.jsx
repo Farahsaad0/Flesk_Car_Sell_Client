@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
 import { useParams, useNavigate } from "react-router-dom";
 import { Button, Form, FormGroup, Label, Input } from "reactstrap";
+import axios from "../../api/axios";
+import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 
 const EditCarAd = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+  const axiosPrivate = useAxiosPrivate();
 
   const [carData, setCarData] = useState({
     titre: "",
@@ -23,7 +25,7 @@ const EditCarAd = () => {
   useEffect(() => {
     const fetchCarAd = async () => {
       try {
-        const response = await axios.get(`http://localhost:8000/carAds/${id}`);
+        const response = await axios.get(`/carAds/${id}`);
         setCarData(response.data);
         setLoading(false);
       } catch (error) {
@@ -66,8 +68,8 @@ const EditCarAd = () => {
         formDataToSend.append(key, carData[key]);
       }
 
-      const response = await axios.put(
-        `http://localhost:8000/${id}`,
+      const response = await axiosPrivate.put(
+        `/${id}`,
         formDataToSend,
         {
           headers: {
