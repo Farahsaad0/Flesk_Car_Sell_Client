@@ -54,10 +54,70 @@ const ProfilePage = () => {
       );
       console.log("Réponse du serveur:", response.data);
     } catch (error) {
-      console.error("Erreur lors de la soumission du formulaire :", error);
+      setError("Erreur lors de la soumission du formulaire");
+      setLoading(false);
     }
   };
   
+
+  const handleChange = (e) => {
+    const { name, value, files } = e.target;
+    const newValue = name === "photo" ? files[0] : value;
+  
+    if (name === "photo" && files.length > 0) {
+      const photoURL = URL.createObjectURL(files[0]);
+      setUserData((prevData) => ({
+        ...prevData,
+        [name]: files[0],
+        photoURL: photoURL,
+      }));
+    } else {
+      setUserData((prevData) => ({
+        ...prevData,
+        [name]: newValue,
+      }));
+    }
+  };
+  
+
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setUpdatedData({
+          ...updatedData,
+          photo: reader.result,
+          photoFile: file,
+        });
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const uploadPhoto = async () => {
+    try {
+      setLoading(true);
+      const formData = new FormData();
+      formData.append("photo", updatedData.photoFile);
+      const token = localStorage.getItem("token");
+      const response = await axios.put(
+        `http://localhost:8000/updateUserData/${updatedData._id}`,
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+      setUpdatedData({ ...updatedData, photo: response.data.photoUrl });
+      setLoading(false);
+    } catch (error) {
+      setError("Erreur lors du téléchargement de l'image");
+      setLoading(false);
+    }
+  };
 
   const handleChange = (e) => {
     const { name, value, files } = e.target;
@@ -100,9 +160,9 @@ const ProfilePage = () => {
                       />
                     </div>
                     <h6 className="f-w-600">
-                      {userData.Nom} {userData.Prenom}
+                      {updatedData.Nom} {updatedData.Prenom}
                     </h6>
-                    <p>{userData.Role}</p>
+                    <p>{updatedData.Role}</p>
                     <i className=" mdi mdi-square-edit-outline feather icon-edit m-t-10 f-16"></i>
                   </div>
                 </div>
@@ -111,6 +171,7 @@ const ProfilePage = () => {
                     <h6 className="m-b-20 p-b-5 b-b-default f-w-600">
                       Information
                     </h6>
+                    {error && <div className="error-message">{error}</div>}
                     <form onSubmit={handleSubmit}>
                       <div className="row">
                         <div className="col-sm-6">
@@ -197,10 +258,35 @@ const ProfilePage = () => {
                           >
                             <option value="Utilisateur">Utilisateur</option>
                             <option value="Expert">Expert</option>
-                            <option value="Administrateur">
-                              Administrateur
-                            </option>
+                            <option value="Administrateur">Administrateur</option>
                           </select>
+                        </div>
+                        <div className="col-sm-6">
+                          <label htmlFor="photo" className="m-b-10 f-w-600">
+                            Photo de profil
+                          </label>
+                          <input
+                            type="file"
+                            id="photo"
+                            name="photo"
+                            onChange={handleImageChange}
+                            className="form-control"
+                          />
+                        </div>
+                      </div>
+                      <div className="row">
+                        <div className="col-sm-6">
+                          <label htmlFor="photo" className="m-b-10 f-w-600">
+                            Photo
+                          </label>
+                          <input
+                            type="file"
+                            id="photo"
+                            name="photo"
+                            onChange={handleChange}
+                            className="form-control"
+                            accept="image/*"
+                          />
                         </div>
                       </div>
                       <div className="row">
