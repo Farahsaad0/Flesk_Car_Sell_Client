@@ -94,7 +94,10 @@ const Login = () => {
   return (
     <div className={styles.login_container}>
       {isNotVerified ? (
-        <VerificationPage email={data.Email} onSuccess={() => setIsNotVerified(false)} />
+        <VerificationPage
+          email={data.Email}
+          onSuccess={() => setIsNotVerified(false)}
+        />
       ) : (
         <div className={styles.login_form_container}>
           <div className={styles.left}>

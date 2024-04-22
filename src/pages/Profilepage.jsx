@@ -3,22 +3,16 @@ import axios from "axios";
 import "../styles/profile.css";
 
 const ProfilePage = () => {
-  const [userData, setUserData] = useState(null);
-  const [updatedData, setUpdatedData] = useState({
-    Nom: "",
-    Prenom: "",
-    Email: "",
-    Password: "",
-    NewPassword: "",
-    Role: "Utilisateur",
-  });
+  const [updatedData, setUpdatedData] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     const fetchUserData = async () => {
       try {
         const token = localStorage.getItem("token");
         if (!token) {
-          console.error("Aucun token d'authentification disponible");
+          setError("Aucun token d'authentification disponible");
           return;
         }
         const response = await axios.get("http://localhost:8000/getUserData", {
@@ -26,13 +20,9 @@ const ProfilePage = () => {
             Authorization: `Bearer ${token}`,
           },
         });
-        setUserData(response.data);
         setUpdatedData(response.data);
       } catch (error) {
-        console.error(
-          "Erreur lors de la récupération des données utilisateur : ",
-          error
-        );
+        setError("Erreur lors de la récupération des données utilisateur");
       }
     };
 
@@ -42,15 +32,21 @@ const ProfilePage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      setLoading(true);
       const token = localStorage.getItem("token");
       if (!token) {
-        console.error("Aucun token d'authentification disponible");
+        setError("Aucun token d'authentification disponible");
+        setLoading(false);
         return;
       }
-      if (!updatedData.Password) {
-        console.error("____Veuillez entrer votre mot de passe actuel.");
-        return;
+
+      // Si une nouvelle photo a été sélectionnée, téléchargez-la d'abord
+      if (updatedData.photoFile) {
+        await uploadPhoto();
       }
+
+      // Une fois que la photo est téléchargée (ou si aucune nouvelle photo n'est sélectionnée),
+      // mettez à jour le reste des informations du profil
       const response = await axios.put(
         `http://localhost:8000/updateUserData/${updatedData._id}`,
         updatedData,
@@ -60,10 +56,11 @@ const ProfilePage = () => {
           },
         }
       );
-      console.log("Réponse du serveur:", response.data);
-      setUserData(updatedData); // Mettre à jour les données utilisateur dans le frontend avec les nouvelles données modifiées
+      setUpdatedData(response.data);
+      setLoading(false);
     } catch (error) {
-      console.error("Erreur lors de la soumission du formulaire :", error);
+      setError("Erreur lors de la soumission du formulaire");
+      setLoading(false);
     }
   };
 
@@ -72,7 +69,46 @@ const ProfilePage = () => {
     setUpdatedData({ ...updatedData, [name]: value });
   };
 
-  if (!userData) {
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setUpdatedData({
+          ...updatedData,
+          photo: reader.result,
+          photoFile: file,
+        });
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const uploadPhoto = async () => {
+    try {
+      setLoading(true);
+      const formData = new FormData();
+      formData.append("photo", updatedData.photoFile);
+      const token = localStorage.getItem("token");
+      const response = await axios.put(
+        `http://localhost:8000/updateUserData/${updatedData._id}`,
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+      setUpdatedData({ ...updatedData, photo: response.data.photoUrl });
+      setLoading(false);
+    } catch (error) {
+      setError("Erreur lors du téléchargement de l'image");
+      setLoading(false);
+    }
+  };
+
+  if (!updatedData) {
     return <div>Chargement en cours...</div>;
   }
 
@@ -86,16 +122,20 @@ const ProfilePage = () => {
                 <div className="col-sm-4 bg-c-lite-green user-profile">
                   <div className="card-block text-center text-white">
                     <div className="m-b-25">
-                      <img
-                        src="https://img.icons8.com/bubbles/100/000000/user.png"
-                        className="img-radius"
-                        alt="User-Profile-Image"
-                      />
+                      {updatedData.photo ? (
+                        <img
+                          src={updatedData.photo}
+                          className="img-radius"
+                          alt="User-Profile-Image"
+                        />
+                      ) : (
+                        <p>Aucune image sélectionnée</p>
+                      )}
                     </div>
                     <h6 className="f-w-600">
-                      {userData.Nom} {userData.Prenom}
+                      {updatedData.Nom} {updatedData.Prenom}
                     </h6>
-                    <p>{userData.Role}</p>
+                    <p>{updatedData.Role}</p>
                     <i className=" mdi mdi-square-edit-outline feather icon-edit m-t-10 f-16"></i>
                   </div>
                 </div>
@@ -104,6 +144,7 @@ const ProfilePage = () => {
                     <h6 className="m-b-20 p-b-5 b-b-default f-w-600">
                       Information
                     </h6>
+                    {error && <div className="error-message">{error}</div>}
                     <form onSubmit={handleSubmit}>
                       <div className="row">
                         <div className="col-sm-6">
@@ -155,30 +196,13 @@ const ProfilePage = () => {
                             type="password"
                             id="Password"
                             name="Password"
-                            // value={updatedData.Password}
                             onChange={handleChange}
                             className="form-control"
-                            required // Rendre obligatoire
+                            required
                           />
                         </div>
                       </div>
                       <div className="row">
-                        <div className="col-sm-6">
-                          <label
-                            htmlFor="newPassword"
-                            className="m-b-10 f-w-600"
-                          >
-                            Nouveau Mot de Passe*
-                          </label>
-                          <input
-                            type="password"
-                            id="newPassword"
-                            name="NewPassword"
-                            value={updatedData.NewPassword}
-                            onChange={handleChange}
-                            className="form-control"
-                          />
-                        </div>
                         <div className="col-sm-6">
                           <label htmlFor="role" className="m-b-10 f-w-600">
                             Rôle
@@ -192,15 +216,39 @@ const ProfilePage = () => {
                           >
                             <option value="Utilisateur">Utilisateur</option>
                             <option value="Expert">Expert</option>
-                            <option value="Administrateur">
-                              Administrateur
-                            </option>
+                            <option value="Administrateur">Administrateur</option>
                           </select>
                         </div>
+                        <div className="col-sm-6">
+                          <label htmlFor="photo" className="m-b-10 f-w-600">
+                            Photo de profil
+                          </label>
+                          <input
+                            type="file"
+                            id="photo"
+                            name="photo"
+                            onChange={handleImageChange}
+                            className="form-control"
+                          />
+                        </div>
                       </div>
-                      <button type="submit" className="btn btn-primary mt-3">
-                        Enregistrer
-                      </button>
+                      {updatedData.photo && (
+                        <div>
+                          <h3>Aperçu de l'image :</h3>
+                          <img
+                            src={updatedData.photo}
+                            alt="Aperçu"
+                            style={{ maxWidth: "100%" }}
+                          />
+                        </div>
+                      )}
+                      <div className="row mt-3">
+                        <div className="col-sm-12">
+                          <button type="submit" className="btn btn-primary" disabled={loading}>
+                            Enregistrer
+                          </button>
+                        </div>
+                      </div>
                     </form>
                   </div>
                 </div>

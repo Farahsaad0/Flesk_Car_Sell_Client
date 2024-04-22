@@ -11,6 +11,8 @@ const Signup = () => {
     Email: "",
     Password: "",
     Role: "",
+    Numéro: "",
+    Adresse:"",
     Spécialité: "",
     prix: "",
     experience: "",
@@ -99,6 +101,24 @@ const Signup = () => {
                 name="Email"
                 onChange={handleChange}
                 value={data.Email}
+                required
+                className={styles.input}
+              />
+              <input
+                type="text"
+                placeholder="Numéro de téléphone"
+                name="Numéro"
+                onChange={handleChange}
+                value={data.Numéro}
+                required
+                className={styles.input}
+              />
+              <input
+                type="text"
+                placeholder="Votre Adresse"
+                name="Adresse"
+                onChange={handleChange}
+                value={data.Adresse}
                 required
                 className={styles.input}
               />
