@@ -15,6 +15,7 @@ import ProfilePage from "../pages/Profilepage";
 import UserCarList from "../components/UI/Myads";
 import EditCarAd from "../components/UI/EditCar";
 import ExpertsDemande from "../components/UI/DemandeExpertise";
+import ExpertsPage from "../components/UI/Experts";
 // import VerificationPage from "../Auth/Signup/verificationPage";
 // import Main from "../Auth/Main";
 
@@ -25,6 +26,7 @@ const Routers = () => {
       <Route path="/home" element={<Home />} />
       <Route path="/about" element={<About />} />
       <Route path="/cars" element={<CarListing />} />
+      <Route path="/Experts" element={<ExpertsPage/>} />
       <Route path="/create-ad" element={<CreateAdForm />} />
       <Route path="/cars/:id" element={<CarDetails />} />
       <Route path="/blogs" element={<Blog />} />

@@ -132,6 +132,7 @@ const ExpertItem = ({ expert, carAdId }) => {
     return <div>aucune expert a la moment!!</div>;
   }
 
+  const imageUrl = expert.photo ? `http://localhost:8000/images/${expert.photo}` : null;
   const hireExpert = async () => {
     try {
       const clientId = auth._id;
@@ -188,11 +189,13 @@ const ExpertItem = ({ expert, carAdId }) => {
               </p>
             </div>
             <div className="col-5 text-center">
-              <img
-                src="../../dist/img/user1-128x128.jpg"
-                alt="user-avatar"
-                className="img-circle img-fluid"
-              />
+            <img
+  src={imageUrl}
+  alt="user-avatar"
+  className="img-circle img-fluid"
+/>
+
+
             </div>
           </div>
         </div>
