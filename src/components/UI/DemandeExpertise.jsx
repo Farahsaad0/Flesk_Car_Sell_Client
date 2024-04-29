@@ -2,13 +2,15 @@ import React, { useState, useEffect } from "react";
 import { Button, Row, Col, Table, Card, CardTitle, CardBody } from "reactstrap";
 import ReactPaginate from "react-paginate";
 import axios from "../../api/axios";
+import useAuth from "../../hooks/useAuth";
 
 const ExpertsDemande = () => {
   const [jobs, setJobs] = useState([]);
   const [pageNumber, setPageNumber] = useState(0); // Numéro de la page actuelle
   const [totalPages, setTotalPages] = useState(0);
+  const { auth } = useAuth();
 
-  const expertId = JSON.parse(localStorage.getItem("userData"))._id;
+  const expertId = auth._id;
 
   useEffect(() => {
     // Récupérer les données des demandes d'expertise depuis le serveur lorsque le composant est monté

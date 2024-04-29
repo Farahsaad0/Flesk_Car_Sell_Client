@@ -42,7 +42,7 @@ const CarDetails = () => {
 
   const fetchExperts = async () => {
     try {
-      const response = await axios.get("http://localhost:8000/experts");
+      const response = await axios.get("/experts");
       setExperts(response.data.approvedExperts);
       setExpertsLoading(false);
     } catch (error) {
@@ -54,7 +54,7 @@ const CarDetails = () => {
   useEffect(() => {
     const fetchCar = async () => {
       try {
-        const response = await axios.get(`http://localhost:8000/carAds/${id}`);
+        const response = await axios.get(`/carAds/${id}`);
         console.log(response.data);
         setSingleCarItem(response.data);
         setLoading(false);

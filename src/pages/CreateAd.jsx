@@ -1,14 +1,41 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { Form, FormGroup, Label, Input, Button } from "reactstrap";
-import axios from "axios";
+import {
+  Form,
+  FormGroup,
+  Label,
+  Input,
+  Button,
+  Accordion,
+  AccordionItem,
+  AccordionHeader,
+  AccordionBody,
+  Row,
+  Offcanvas,
+  OffcanvasHeader,
+  OffcanvasBody,
+  Modal,
+  ModalHeader,
+  ModalBody,
+  ModalFooter,
+} from "reactstrap";
+import axios from "../api/axios";
 import "../styles/CreateAdForm.css";
+import useAuth from "../hooks/useAuth";
+import SubscriptionItem from "../components/subscription/SubscriptionItem";
 
 const CreateAdForm = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const userId = JSON.parse(localStorage.getItem("userData"))._id;
+  const { auth } = useAuth();
+  const userId = auth._id;
+  // const [open, setOpen] = useState(1);
+  const [modal, setModal] = useState(false);
 
+  const toggle = () => setModal(!modal);
+
+  const [subscriptions, setSubscriptions] = useState([]);
+  const [sponsorships, setSponsorships] = useState([]);
   const [formData, setFormData] = useState({
     titre: "",
     description: "",
@@ -18,9 +45,50 @@ const CreateAdForm = () => {
     annee: "",
     photo: null,
     sponsorship: "Gold",
-    userId: userId,
+    utilisateur: userId,
     date: "",
   });
+
+  useEffect(() => {
+    fetchCarAdCache();
+    fetchSubscriptions();
+    fetchInactivatedSponsorship();
+  }, []);
+
+  const fetchSubscriptions = async () => {
+    try {
+      const response = await axios.get("/subscriptions");
+      setSubscriptions(response.data);
+    } catch (error) {
+      console.error("Error fetching subscriptions:", error);
+    }
+  };
+
+  const fetchCarAdCache = async () => {
+    try {
+      const response = await axios.get(`/carAdCache/${userId}`);
+      setFormData(response.data);
+    } catch (error) {
+      console.error();
+    }
+  };
+
+  const fetchInactivatedSponsorship = async () => {
+    try {
+      const response = await axios.get(`/sponsorships/available/${userId}`);
+      setSponsorships(response.data);
+    } catch (error) {
+      console.error();
+    }
+  };
+  // const toggle = (id) => {
+  //   if (open === id) {
+  //     setOpen();
+  //   } else {
+  //     setOpen(id);
+  //     // fetchExperts();
+  //   }
+  // };
 
   const handleChange = (e) => {
     const { name, value, type, files } = e.target;
@@ -47,15 +115,11 @@ const CreateAdForm = () => {
         formDataToSend.append(key, formData[key]);
       }
 
-      const response = await axios.post(
-        "http://localhost:8000/carAds",
-        formDataToSend,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      );
+      const response = await axios.post("/carAds", formDataToSend, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
 
       console.log("Réponse du serveur:", response.data);
       navigate("/");
@@ -64,6 +128,18 @@ const CreateAdForm = () => {
       // Gérer les erreurs ici
     }
   };
+
+  const handleSponsorshipChange = (e) => {
+    const { value } = e.target;
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      sponsorship: value,
+    }));
+  };
+
+  // const toggle = () => {
+  //   setIsOpen(!isOpen);
+  // };
 
   return (
     <div className="create-ad-form-container">
@@ -162,13 +238,87 @@ const CreateAdForm = () => {
         {formData.photo && (
           <div>
             <h3>Aperçu de l'image :</h3>
-            <img src={URL.createObjectURL(formData.photo)} alt="Aperçu" style={{ maxWidth: "100%" }}/>
+            <img
+              src={URL.createObjectURL(formData.photo)}
+              alt="Aperçu"
+              style={{ maxWidth: "100%" }}
+            />
           </div>
         )}
+
+        <FormGroup>
+          <Label for="sponsorshipSelect">Sponsorship Plan:</Label>
+          <Input
+            id="sponsorshipSelect"
+            name="select"
+            type="select"
+            value={formData.sponsorship}
+            onChange={handleSponsorshipChange}
+          >
+            <option value="">Sélectionnez un plan</option>
+            {sponsorships.map((sponsorship) => (
+              <option key={sponsorship._id} value={sponsorship._id}>
+                {sponsorship.sponsorship}
+              </option>
+            ))}
+          </Input>
+        </FormGroup>
+        <Button color="primary" onClick={toggle}>
+          Open
+        </Button>
+        {/* <Accordion flush open={open} toggle={toggle} className="mt-5">
+          <AccordionItem>
+            <AccordionHeader targetId="1">Consulter des Expert</AccordionHeader>
+            <AccordionBody accordionId="1">
+              <Row> */}
+        {/* {expertsLoading ? (
+                      <div>Loading...</div>
+                    ) : (
+                      experts.map((expert) => (
+                        <ExpertItem key={expert._id} expert={expert} carAdId={id} />
+                      ))
+                    )} */}
+        {/* </Row>
+            </AccordionBody>
+          </AccordionItem>
+        </Accordion> */}
+
         <Button type="submit" color="primary">
           Créer annonce
         </Button>
       </Form>
+      {/* <Offcanvas isOpen={isOpen} toggle={toggle} style={{ minWidth: "600px" }}>
+        <OffcanvasHeader toggle={toggle}>Our sponsorship Plans: </OffcanvasHeader>
+        <OffcanvasBody>
+          {subscriptions.map((subscription) => (
+            <SubscriptionItem
+              key={subscription._id}
+              subscription={subscription}
+              refreshSubscriptions={fetchSubscriptions}
+            />
+          ))}
+        </OffcanvasBody>
+      </Offcanvas> */}
+
+      <Modal isOpen={modal} toggle={toggle} size="xl">
+        <ModalHeader toggle={toggle}>Nos plans de sponsorships:</ModalHeader>
+        <ModalBody>
+          <Row>
+            {subscriptions.map((subscription) => (
+              <SubscriptionItem
+                key={subscription._id}
+                subscription={subscription}
+                formData={formData}
+              />
+            ))}
+          </Row>
+        </ModalBody>
+        <ModalFooter>
+          <Button color="secondary" onClick={toggle}>
+            Annuler
+          </Button>
+        </ModalFooter>
+      </Modal>
     </div>
   );
 };
