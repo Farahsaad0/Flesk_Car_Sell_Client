@@ -54,7 +54,7 @@ const CarDetails = () => {
   useEffect(() => {
     const fetchCar = async () => {
       try {
-        const response = await axios.get(`/carAds/${id}`);
+        const response = await axios.get(`/carAds/details/${id}`);
         console.log(response.data);
         setSingleCarItem(response.data);
         setLoading(false);

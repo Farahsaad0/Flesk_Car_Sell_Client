@@ -16,6 +16,7 @@ import UserCarList from "../components/UI/Myads";
 import EditCarAd from "../components/UI/EditCar";
 import ExpertsDemande from "../components/UI/DemandeExpertise";
 import ExpertsPage from "../components/UI/Experts";
+import Form from "../components/UI/DevenirExpert";
 // import VerificationPage from "../Auth/Signup/verificationPage";
 // import Main from "../Auth/Main";
 
@@ -36,7 +37,7 @@ const Routers = () => {
       <Route path="/myads" element={<UserCarList />} />
       <Route path="/edit-car/:id" element={<EditCarAd />} />
       <Route path="/demande" element={<ExpertsDemande />} />
-
+       <Route path="/DevenirExpert" element={<Form/> } />
       {/* <Route path="/" exact element={<Main />} /> */}
       <Route path="/signup" exact element={<Signup />} />
       <Route path="/login" exact element={<Login />} />
