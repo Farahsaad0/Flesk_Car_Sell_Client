@@ -158,8 +158,6 @@ const ExpertItem = ({ expert, carAdId }) => {
     }
   };
 
-  const imageUrl = `http://localhost:8000/images/${expert.photo}`;
-
   return (
     <div className="col-12 col-sm-6 col-md-4 d-flex align-items-stretch flex-column">
       <div className="card bg-light d-flex flex-fill">
