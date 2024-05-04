@@ -132,6 +132,7 @@ const ExpertItem = ({ expert, carAdId }) => {
     return <div>aucune expert a la moment!!</div>;
   }
 
+  const imageUrl = expert.photo ? `http://localhost:8000/images/${expert.photo}` : null;
   const hireExpert = async () => {
     try {
       const clientId = auth._id;

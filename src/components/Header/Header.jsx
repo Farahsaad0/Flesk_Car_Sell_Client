@@ -32,6 +32,10 @@ const navLinks = [
     display: "Mes annonces",
   },
   {
+    path: "/Experts",
+    display: "Nos Experts",
+  },
+  {
     path: "/demande",
     display: "Demande d'expertise",
   },

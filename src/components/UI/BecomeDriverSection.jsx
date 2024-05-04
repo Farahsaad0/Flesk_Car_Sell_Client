@@ -1,7 +1,7 @@
 import React from "react";
 import "../../styles/become-driver.css";
 import { Container, Row, Col } from "reactstrap";
-
+import { Link } from "react-router-dom";
 import driverImg from "../../assets/all-images/expert.jpeg";
 
 const BecomeDriverSection = () => {
@@ -18,8 +18,11 @@ const BecomeDriverSection = () => {
             Souhaitez-vous devenir un expert sur notre site ? Rejoignez-nous dès maintenant et commencez à gagner avec nous !
             </h2>
 
-            <button className="btn become__driver-btn mt-4">
-            Devenir Expert            </button>
+            <Link to="/DevenirExpert" className="btn become__driver-btn mt-4">
+              <button className="btn become__driver-btn">
+                Devenir Expert
+              </button>
+            </Link>
           </Col>
         </Row>
       </Container>
