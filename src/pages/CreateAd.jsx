@@ -32,11 +32,11 @@ const CreateAdForm = () => {
   // const [open, setOpen] = useState(1);
   const [modal, setModal] = useState(false);
 
-  const [files, setFiles] = useState([]);
   const toggle = () => setModal(!modal);
 
   const [subscriptions, setSubscriptions] = useState([]);
   const [sponsorships, setSponsorships] = useState([]);
+  const [photos, setPhotos] = useState([]);
   const [formData, setFormData] = useState({
     titre: "",
     description: "",
@@ -44,10 +44,10 @@ const CreateAdForm = () => {
     marque: "",
     modele: "",
     annee: "",
-    photo: null,
+    location: "",
+    photos: [null],
     sponsorship: "Gold",
     utilisateur: userId,
-    date: "",
   });
 
   useEffect(() => {
@@ -82,25 +82,14 @@ const CreateAdForm = () => {
       console.error();
     }
   };
-  // const toggle = (id) => {
-  //   if (open === id) {
-  //     setOpen();
-  //   } else {
-  //     setOpen(id);
-  //     // fetchExperts();
-  //   }
-  // };
 
   const handleChange = (e) => {
-    const { name, value, type, files } = e.target;
+    const { name, value, type } = e.target;
     let newValue = value;
     if (type === "date" && value) {
-      // Format the date to match backend requirements, for example: YYYY-MM-DD
       const formattedDate = new Date(value).toISOString().split("T")[0];
       newValue = formattedDate;
     }
-
-    newValue = type === "file" ? setFiles(e.target.files) : value;
     setFormData((prevFormData) => ({
       ...prevFormData,
       [name]: newValue,
@@ -112,9 +101,23 @@ const CreateAdForm = () => {
 
     try {
       const formDataToSend = new FormData();
-      Object.values(files).forEach(file=>{
-        formDataToSend.append("photos", file);
+      for (let key in formData) {
+        formDataToSend.append(key, formData[key]);
+      }
+
+      photos.forEach((photo, index) => {
+        formDataToSend.append(`photos`, photo);
       });
+      // for (let key in formData) {
+      //   if (key === "photos") {
+      //     // Append each photo to FormData
+      //     photos.forEach((photo, index) => {
+      //       formDataToSend.append(`${key}[${index}]`, photo);
+      //     });
+      //   } else {
+      //     formDataToSend.append(key, formData[key]);
+      //   }
+      // }
 
       const response = await axios.post("/carAds", formDataToSend, {
         headers: {
@@ -138,9 +141,12 @@ const CreateAdForm = () => {
     }));
   };
 
-  // const toggle = () => {
-  //   setIsOpen(!isOpen);
-  // };
+  const handlePhotosChange = (e) => {
+    const { files } = e.target;
+    const selectedPhotos = Array.from(files);
+
+    setPhotos(selectedPhotos);
+  };
 
   return (
     <div className="create-ad-form-container">
@@ -217,50 +223,44 @@ const CreateAdForm = () => {
           />
         </FormGroup>
         <FormGroup>
-          <Label for="date">Date</Label>
+          <Label for="location">Location</Label>
           <Input
-            type="date"
-            name="date"
-            value={formData.date}
+            type="text"
+            name="location"
+            value={formData.location}
             onChange={handleChange}
+            placeholder="ou ete vous ?"
             required
           />
         </FormGroup>
         <FormGroup>
-          <Label for="photo">Photo</Label>
+          <Label for="photos">Photos</Label>
           <Input
             type="file"
-            name="photo"
-            onChange={handleChange}
+            name="photos"
+            onChange={handlePhotosChange}
             accept="image/*"
+            multiple
             required
           />
         </FormGroup>
-        {files &&
-          Array.isArray(files) &&
-          files.map((photo, index) => (
-            <div key={index}>
-              <h3>Aperçu de l'image {index + 1} :</h3>
-            <img
-                src={URL.createObjectURL(photo)}
-                alt={`Aperçu ${index + 1}`}
-                style={{ maxWidth: "100%" }}
-              />
-            </div>
-          ))}
-        {/* {formData.photos &&
-          Array.isArray(formData.photos) &&
-          formData.photos.map((photo, index) => (
-            <div key={index}>
-              <h3>Aperçu de l'image {index + 1} :</h3>
-              <img
-                src={URL.createObjectURL(photo)}
-                alt={`Aperçu ${index + 1}`}
-              style={{ maxWidth: "100%" }}
-            />
-          </div>
+        {photos.length > 0 && (
+          <FormGroup>
+            <Label>Prévisualisation des photos:</Label>
+            <Row>
+              {photos.map((photo, index) => (
+                <div key={index} className="photo-preview">
+                  <img
+                    src={URL.createObjectURL(photo)}
+                    alt={`Prévisualisation ${index + 1}`}
+                    style={{ maxWidth: "100%", marginBottom: "10px" }}
+                  />
+                </div>
+              ))}
+            </Row>
+          </FormGroup>
         )}
-
+        
         <FormGroup>
           <Label for="sponsorshipSelect">Sponsorship Plan:</Label>
           <Input
@@ -281,39 +281,11 @@ const CreateAdForm = () => {
         <Button color="primary" onClick={toggle}>
           Open
         </Button>
-        {/* <Accordion flush open={open} toggle={toggle} className="mt-5">
-          <AccordionItem>
-            <AccordionHeader targetId="1">Consulter des Expert</AccordionHeader>
-            <AccordionBody accordionId="1">
-              <Row> */}
-        {/* {expertsLoading ? (
-                      <div>Loading...</div>
-                    ) : (
-                      experts.map((expert) => (
-                        <ExpertItem key={expert._id} expert={expert} carAdId={id} />
-                      ))
-                    )} */}
-        {/* </Row>
-            </AccordionBody>
-          </AccordionItem>
-        </Accordion> */}
 
         <Button type="submit" color="primary">
           Créer annonce
         </Button>
       </Form>
-      {/* <Offcanvas isOpen={isOpen} toggle={toggle} style={{ minWidth: "600px" }}>
-        <OffcanvasHeader toggle={toggle}>Our sponsorship Plans: </OffcanvasHeader>
-        <OffcanvasBody>
-          {subscriptions.map((subscription) => (
-            <SubscriptionItem
-              key={subscription._id}
-              subscription={subscription}
-              refreshSubscriptions={fetchSubscriptions}
-            />
-          ))}
-        </OffcanvasBody>
-      </Offcanvas> */}
 
       <Modal isOpen={modal} toggle={toggle} size="xl">
         <ModalHeader toggle={toggle}>Nos plans de sponsorships:</ModalHeader>

@@ -17,27 +17,50 @@ const CarItem = ({ car }) => {
     modele,
     annee,
     photo,
-    sponsorship,
+    photos,
     date, // Ajout de la propriété dateCreation
   } = car;
-
+  const firstPhoto = photo || photos[0];
   // Construire l'URL de l'image en utilisant la nouvelle structure
-  const imageUrl = `http://localhost:8000/images/${photo}`;
+  const imageUrl = `http://localhost:8000/images/${firstPhoto}`;
 
   // Formater la date de création au format souhaité (par exemple, format de date standard)
   const formattedDate = new Date(date).toLocaleDateString();
 
   return (
-    <Col lg="4" md="4" sm="6" className="mb-5">
+    <Col lg="3" md="4" sm="6" className="mb-2">
       <div className="car__item">
-        <div className="car__img">
-          <img src={imageUrl} alt={photo} className="w-100" />
-        </div>
+        <Link to={`/cars/${car._id}`}>
+          <div
+            className="car__img"
+            style={{
+              width: "100%",
+              height: 0,
+              paddingBottom: "100%",
+              position: "relative",
+              overflow: "hidden",
+              background: "#ddd",
+            }}
+          >
+            <img
+              src={imageUrl}
+              alt={firstPhoto}
+              className="w-100 h-100 position-absolute "
+              style={{ objectFit: "contain" }}
+            />
+          </div>
+        </Link>
 
         <div className="car__item-content mt-4">
           <h4 className="section__title text-center">{titre}</h4>
           {/* Utilisez titre ici */}
-          <p className="description">{description}</p>
+          <div
+            className="description-container"
+            style={{ height: "3em", overflowY: "auto" }}
+          >
+            <p className="description">{description}</p>
+          </div>
+
           {/* Utilisez description ici */}
           <h6 className="rent__price text-center mt-">{prix}</h6>
           <div className="car__item-info d-flex align-items-center justify-content-between mt-3 mb-4">
@@ -48,11 +71,11 @@ const CarItem = ({ car }) => {
             <span className=" d-flex align-items-center gap-1">
               <i className="ri-settings-2-line"></i> {annee}
             </span>
-            <span className=" d-flex align-items-center gap-1">
+            {/* <span className=" d-flex align-items-center gap-1">
               <i className="ri-timer-flash-line"></i> {sponsorship}
-            </span>
+            </span> */}
             <span className=" d-flex align-items-center gap-1">
-              <i className="ri-calendar-line"></i> Created on: {formattedDate}
+              <i className="ri-calendar-line"></i> publier le: {formattedDate}
             </span>
           </div>
           <Link to={`/cars/${car._id}`}>

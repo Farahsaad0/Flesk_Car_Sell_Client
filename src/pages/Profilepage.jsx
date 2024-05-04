@@ -206,22 +206,6 @@ const ProfilePage = () => {
                             className="form-control"
                           />
                         </div>
-                        <div className="col-sm-6">
-                          <label htmlFor="role" className="m-b-10 f-w-600">
-                            Rôle
-                          </label>
-                          <select
-                            id="role"
-                            name="Role"
-                            value={userData.Role}
-                            onChange={handleChange}
-                            className="form-control"
-                          >
-                            <option value="Utilisateur">Utilisateur</option>
-                            <option value="Expert">Expert</option>
-                            <option value="Administrateur">Administrateur</option>
-                          </select>
-                        </div>
                         
                       </div>
                       <div className="row">

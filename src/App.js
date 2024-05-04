@@ -27,7 +27,7 @@ function App() {
     <Routes>
       <Route element={<PersistLogin />}>
         <Route path="/" element={<Layout />}>
-          <Route path="/" element={<Navigate to="/home" />} />
+          <Route index element={<Navigate to="/home" />} />
           <Route path="/home" element={<Home />} />
           <Route path="/about" element={<About />} />
           <Route path="/cars" element={<CarListing />} />
@@ -39,7 +39,11 @@ function App() {
 
         {/*//* "Expert" and "Utilisateur" routes */}
         <Route
-          element={<RequireAuth allowedRoles={["Utilisateur", "Expert","Administrateur"]} />}
+          element={
+            <RequireAuth
+              allowedRoles={["Utilisateur", "Expert", "Administrateur"]}
+            />
+          }
         >
           <Route path="/" element={<Layout />}>
             <Route path="/profile" element={<ProfilePage />} />

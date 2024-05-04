@@ -208,13 +208,7 @@ const Header = () => {
                   {
                     /* console.log("isLoggedIn:", isLoggedIn); */
                   }
-                  console.log("user Name:", userData.Nom);
-                  console.log("user Role:", userData.Role);
-                  console.log("item.path:", item.path);
                   if (userData.Role === "Expert" && item.path === "/demande") {
-                    console.log(
-                      "__________________________ CASE ONE ____________________________"
-                    );
                     return (
                       <NavLink
                         to={item.path}
@@ -232,23 +226,17 @@ const Header = () => {
                     !userData.Nom &&
                     (item.path === "/myads" || item.path === "/demande")
                   ) {
-                    console.log(
-                      "__________________________ CASE TWO ____________________________"
-                    );
+                    
                     return null;
                   } else if (
                     userData.Nom &&
                     userData.Role !== "Expert" &&
                     item.path === "/demande"
                   ) {
-                    console.log(
-                      "__________________________ CASE THREE ____________________________"
-                    );
+                    
                     return null;
                   } else {
-                    console.log(
-                      "__________________________ CASE FOUR ____________________________"
-                    );
+                    
                     return (
                       <NavLink
                         to={item.path}
