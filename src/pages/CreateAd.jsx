@@ -32,6 +32,7 @@ const CreateAdForm = () => {
   // const [open, setOpen] = useState(1);
   const [modal, setModal] = useState(false);
 
+  const [files, setFiles] = useState([]);
   const toggle = () => setModal(!modal);
 
   const [subscriptions, setSubscriptions] = useState([]);
@@ -99,7 +100,7 @@ const CreateAdForm = () => {
       newValue = formattedDate;
     }
 
-    newValue = type === "file" ? files[0] : value;
+    newValue = type === "file" ? setFiles(e.target.files) : value;
     setFormData((prevFormData) => ({
       ...prevFormData,
       [name]: newValue,
@@ -111,9 +112,9 @@ const CreateAdForm = () => {
 
     try {
       const formDataToSend = new FormData();
-      for (let key in formData) {
-        formDataToSend.append(key, formData[key]);
-      }
+      Object.values(files).forEach(file=>{
+        formDataToSend.append("photos", file);
+      });
 
       const response = await axios.post("/carAds", formDataToSend, {
         headers: {
@@ -235,12 +236,26 @@ const CreateAdForm = () => {
             required
           />
         </FormGroup>
-        {formData.photo && (
-          <div>
-            <h3>Aperçu de l'image :</h3>
+        {files &&
+          Array.isArray(files) &&
+          files.map((photo, index) => (
+            <div key={index}>
+              <h3>Aperçu de l'image {index + 1} :</h3>
             <img
-              src={URL.createObjectURL(formData.photo)}
-              alt="Aperçu"
+                src={URL.createObjectURL(photo)}
+                alt={`Aperçu ${index + 1}`}
+                style={{ maxWidth: "100%" }}
+              />
+            </div>
+          ))}
+        {/* {formData.photos &&
+          Array.isArray(formData.photos) &&
+          formData.photos.map((photo, index) => (
+            <div key={index}>
+              <h3>Aperçu de l'image {index + 1} :</h3>
+              <img
+                src={URL.createObjectURL(photo)}
+                alt={`Aperçu ${index + 1}`}
               style={{ maxWidth: "100%" }}
             />
           </div>
