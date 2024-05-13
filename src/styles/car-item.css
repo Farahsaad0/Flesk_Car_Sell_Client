@@ -1,7 +1,24 @@
 .car__item {
   border: 1px solid #7c8a9736;
   padding: 20px;
+  height: 100%;
   border-radius: 5px;
+  position: relative;
+}
+
+.golden_border {
+  border-style: solid;
+  border-width: 0.125rem;
+  border-color: #ffd700;
+  background-image: linear-gradient(315deg, #f0c929, #ffffff, #f0c929);
+}
+
+.section__title {
+  font-size: clamp(1.5rem, 4vw, 2rem);
+}
+
+.car__item-info {
+  min-height: 3rem;
 }
 
 .car__item-info span i {
@@ -12,9 +29,12 @@
 .car__item-btn {
   border-radius: 0;
   border: none;
+  border-radius: 5rem;
   outline: none;
   background: #000d6b;
   padding: 8px 0px;
+  position: relative;
+  padding-top: auto;
 }
 
 .car__item-btn a {
@@ -28,7 +48,7 @@
 }
 .car__btn-details {
   background: #d80c0c;
-  border-radius: 0px 4px 4px 0px;
+  border-radius: 4px;
 }
 
 .car__btn-rent {

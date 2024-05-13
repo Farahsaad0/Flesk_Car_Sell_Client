@@ -20,6 +20,8 @@ import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/thumbs";
 import "../styles/product-image-slider.scss";
+import useAxiosPrivate from "../hooks/useAxiosPrivate";
+import Loader from "../components/loader/Loader";
 
 const CarDetails = () => {
   const { id } = useParams();
@@ -29,11 +31,14 @@ const CarDetails = () => {
   const [expertsLoading, setExpertsLoading] = useState(true);
   const [open, setOpen] = useState(1);
   const [thumbsSwiper, setThumbsSwiper] = useState(null);
+  const [hiredExpertsForCar, setHiredExpertsForCar] = useState([]);
+  const axiosPrivate = useAxiosPrivate();
 
   const toggle = (id) => {
     if (open === id) {
       setOpen();
     } else {
+      fetchHiredExpertsForCar();
       setOpen(id);
       fetchExperts();
     }
@@ -47,6 +52,22 @@ const CarDetails = () => {
     } catch (error) {
       console.error("Error fetching experts: ", error);
       setExpertsLoading(false);
+    }
+  };
+
+  const fetchHiredExpertsForCar = async () => {
+    try {
+      // Fetch the list of hired experts for the current car
+      const response = await axiosPrivate.get(
+        `/jobs/car/${id}/assigned-experts`
+      );
+      setHiredExpertsForCar(response.data);
+      console.log(hiredExpertsForCar);
+      console.log(hiredExpertsForCar);
+      console.log(hiredExpertsForCar);
+      console.log(hiredExpertsForCar);
+    } catch (error) {
+      console.error("Error fetching hired experts for car: ", error);
     }
   };
 
@@ -66,9 +87,9 @@ const CarDetails = () => {
     fetchCar();
   }, []);
 
-  const imageUrl = singleCarItem?.photos
-    ? `http://localhost:8000/images/${singleCarItem.photos[1]}`
-    : "";
+  // const imageUrl = singleCarItem?.photos
+  //   ? `http://localhost:8000/images/${singleCarItem.photos[1]}`
+  //   : "";
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -77,7 +98,7 @@ const CarDetails = () => {
   return (
     <Helmet title={singleCarItem.carName}>
       {loading ? (
-        <div>Loading...</div>
+        <Loader/>
       ) : (
         <section>
           <Container>
@@ -89,7 +110,7 @@ const CarDetails = () => {
                   navigation={true}
                   modules={[FreeMode, Navigation, Thumbs]}
                   grabCursor={true}
-                  thumbs={thumbsSwiper? { swiper: thumbsSwiper } : undefined}
+                  thumbs={thumbsSwiper ? { swiper: thumbsSwiper } : undefined}
                   className="product-images-slider"
                 >
                   {singleCarItem.photos.map((item, index) => (
@@ -103,8 +124,7 @@ const CarDetails = () => {
                 </Swiper>
                 <Swiper
                   onSwiper={setThumbsSwiper}
-                  loop={true}
-                  spaceBetween={10}
+                  spaceBetween={"10rem"}
                   slidesPerView={4}
                   freeMode={true}
                   watchSlidesProgress={true}
@@ -126,11 +146,19 @@ const CarDetails = () => {
 
               <Col lg="6">
                 <div className="car__info">
-                  <h2 className="section__title">{singleCarItem.titre}</h2>
+                  <h2 className="section__title">
+                    {singleCarItem.titre}{" "}
+                    {singleCarItem.sponsorship && (
+                      <i
+                        style={{ color: "#f9a826" }}
+                        className="ri-star-s-fill"
+                      ></i>
+                    )}{" "}
+                  </h2>
 
                   <div className=" d-flex align-items-center gap-5 mb-4 mt-3">
                     <h6 className="rent__price fw-bold fs-4">
-                      {singleCarItem.prix || <small>aucune prix donnee</small>}{" "}
+                      {singleCarItem.prix || <small>aucune prix donnee</small>}
                       TND
                     </h6>
                   </div>
@@ -225,6 +253,7 @@ const CarDetails = () => {
                           key={expert._id}
                           expert={expert}
                           carAdId={id}
+                          hiredExpertsForCar={hiredExpertsForCar}
                         />
                       ))
                     )}

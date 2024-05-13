@@ -13,6 +13,7 @@ import BecomeDriverSection from "../components/UI/BecomeDriverSection";
 import Testimonial from "../components/UI/Testimonial";
 
 import BlogList from "../components/UI/BlogList";
+import HomepageCarList from "../components/UI/HomePageCarList";
 
 const Home = () => {
   return (
@@ -40,7 +41,7 @@ const Home = () => {
       {/* =========== about section ================ */}
       <AboutSection />
       {/* ========== services section ============ */}
-      <section>
+      {/* <section>
         <Container>
           <Row>
             <Col lg="12" className="mb-5 text-center">
@@ -51,7 +52,7 @@ const Home = () => {
             <ServicesList />
           </Row>
         </Container>
-      </section>
+      </section> */}
       {/* =========== car offer section ============= */}
       <section>
         <Container>
@@ -61,7 +62,7 @@ const Home = () => {
               <h2 className="section__title">Hot Offers</h2>
             </Col>
           </Row>
-          <CarList />
+          <HomepageCarList />
         </Container>
       </section>
       {/* =========== become a driver section ============ */}

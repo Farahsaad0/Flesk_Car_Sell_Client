@@ -6,14 +6,7 @@ import {
   Label,
   Input,
   Button,
-  Accordion,
-  AccordionItem,
-  AccordionHeader,
-  AccordionBody,
   Row,
-  Offcanvas,
-  OffcanvasHeader,
-  OffcanvasBody,
   Modal,
   ModalHeader,
   ModalBody,
@@ -22,7 +15,7 @@ import {
 import axios from "../api/axios";
 import "../styles/CreateAdForm.css";
 import useAuth from "../hooks/useAuth";
-import SubscriptionItem from "../components/subscription/SubscriptionItem";
+import SponsorshipItem from "../components/sponsorship/SponsorshipItem";
 
 const CreateAdForm = () => {
   const navigate = useNavigate();
@@ -34,8 +27,8 @@ const CreateAdForm = () => {
 
   const toggle = () => setModal(!modal);
 
-  const [subscriptions, setSubscriptions] = useState([]);
   const [sponsorships, setSponsorships] = useState([]);
+  const [sponsorship, setSponsorship] = useState([]);
   const [photos, setPhotos] = useState([]);
   const [formData, setFormData] = useState({
     titre: "",
@@ -46,22 +39,22 @@ const CreateAdForm = () => {
     annee: "",
     location: "",
     photos: [null],
-    sponsorship: "Gold",
+    sponsorship: "",
     utilisateur: userId,
   });
 
   useEffect(() => {
     fetchCarAdCache();
-    fetchSubscriptions();
+    fetchSponsorships();
     fetchInactivatedSponsorship();
   }, []);
 
-  const fetchSubscriptions = async () => {
+  const fetchSponsorships = async () => {
     try {
-      const response = await axios.get("/subscriptions");
-      setSubscriptions(response.data);
+      const response = await axios.get("/sponsorships");
+      setSponsorships(response.data);
     } catch (error) {
-      console.error("Error fetching subscriptions:", error);
+      console.error("Error fetching sponsorships:", error);
     }
   };
 
@@ -77,7 +70,7 @@ const CreateAdForm = () => {
   const fetchInactivatedSponsorship = async () => {
     try {
       const response = await axios.get(`/sponsorships/available/${userId}`);
-      setSponsorships(response.data);
+      setSponsorship(response.data);
     } catch (error) {
       console.error();
     }
@@ -260,27 +253,29 @@ const CreateAdForm = () => {
             </Row>
           </FormGroup>
         )}
-        
-        <FormGroup>
-          <Label for="sponsorshipSelect">Sponsorship Plan:</Label>
-          <Input
-            id="sponsorshipSelect"
-            name="select"
-            type="select"
-            value={formData.sponsorship}
-            onChange={handleSponsorshipChange}
-          >
-            <option value="">Sélectionnez un plan</option>
-            {sponsorships.map((sponsorship) => (
-              <option key={sponsorship._id} value={sponsorship._id}>
-                {sponsorship.sponsorship}
-              </option>
-            ))}
-          </Input>
-        </FormGroup>
-        <Button color="primary" onClick={toggle}>
-          Open
-        </Button>
+        {sponsorship.length > 0 ? (
+          <FormGroup>
+            <Label for="sponsorshipSelect">Sponsorship Plan:</Label>
+            <Input
+              id="sponsorshipSelect"
+              name="select"
+              type="select"
+              value={formData.sponsorship}
+              onChange={handleSponsorshipChange}
+            >
+              <option value="">Sélectionnez un plan</option>
+              {sponsorship.map((sponsorship) => (
+                <option key={sponsorship._id} value={sponsorship._id}>
+                  {sponsorship.sponsorship}
+                </option>
+              ))}
+            </Input>
+          </FormGroup>
+        ) : (
+          <Button color="primary" onClick={toggle}>
+            sponsoriser
+          </Button>
+        )}
 
         <Button type="submit" color="primary">
           Créer annonce
@@ -291,10 +286,10 @@ const CreateAdForm = () => {
         <ModalHeader toggle={toggle}>Nos plans de sponsorships:</ModalHeader>
         <ModalBody>
           <Row>
-            {subscriptions.map((subscription) => (
-              <SubscriptionItem
-                key={subscription._id}
-                subscription={subscription}
+            {sponsorships.map((sponsorship) => (
+              <SponsorshipItem
+                key={sponsorship._id}
+                sponsorship={sponsorship}
                 formData={formData}
               />
             ))}

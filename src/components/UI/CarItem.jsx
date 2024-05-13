@@ -2,6 +2,8 @@ import React from "react";
 import { Col } from "reactstrap";
 import { Link } from "react-router-dom";
 import "../../styles/car-item.css";
+import { formatDistanceToNow } from "date-fns";
+import { fr } from "date-fns/locale";
 
 const CarItem = ({ car }) => {
   // Vérifiez si car est défini avant de tenter de le déstructurer
@@ -28,8 +30,8 @@ const CarItem = ({ car }) => {
   const formattedDate = new Date(date).toLocaleDateString();
 
   return (
-    <Col lg="3" md="4" sm="6" className="mb-2">
-      <div className="car__item">
+    <Col lg="3" md="4" sm="6" className="mb-2 ">
+      <div className={`car__item ${car.sponsorship?.redeemed && car.sponsorship?.features.includes("Highlighted Listing") ? "golden_border" : ""}`}>
         <Link to={`/cars/${car._id}`}>
           <div
             className="car__img"
@@ -52,7 +54,7 @@ const CarItem = ({ car }) => {
         </Link>
 
         <div className="car__item-content mt-4">
-          <h4 className="section__title text-center">{titre}</h4>
+          <h4 className="section__title text-center" style={{ height: "2.5em", overflowY: "auto" }}>{titre}</h4>
           {/* Utilisez titre ici */}
           <div
             className="description-container"
@@ -63,7 +65,7 @@ const CarItem = ({ car }) => {
 
           {/* Utilisez description ici */}
           <h6 className="rent__price text-center mt-">{prix}</h6>
-          <div className="car__item-info d-flex align-items-center justify-content-between mt-3 mb-4">
+          <div className="car__item-info d-flex flex-wrap align-items-center justify-content-between mt-3 mb-4">
             <span className=" d-flex align-items-center gap-1">
               <i className="ri-car-line"></i> {marque} {modele}
               {/* Utilisez marque et modele ici */}
@@ -75,10 +77,10 @@ const CarItem = ({ car }) => {
               <i className="ri-timer-flash-line"></i> {sponsorship}
             </span> */}
             <span className=" d-flex align-items-center gap-1">
-              <i className="ri-calendar-line"></i> publier le: {formattedDate}
+              <i className="ri-calendar-line"></i>{formatDistanceToNow(formattedDate, { locale: fr })}
             </span>
           </div>
-          <Link to={`/cars/${car._id}`}>
+          <Link to={`/cars/${car._id}`} className="car__item__button__wrapper">
             <button className=" w-50 car__item-btn car__btn-details">
               Details
             </button>

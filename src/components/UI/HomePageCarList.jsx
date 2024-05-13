@@ -5,14 +5,16 @@ import { Row } from "reactstrap";
 import axios from "../../api/axios";
 import Loader from "../loader/Loader";
 
-const CarList = () => {
+const HomepageCarList = () => {
   const [cars, setCars] = useState([]);
   const [loading, setLoading] = useState(true);
+
+  const feature = "Featured on Homepage"
 
   useEffect(() => {
     const fetchCars = async () => {
       try {
-        const response = await axios.get("/carAds");
+        const response = await axios.get(`/carAds/sponsored?feature=${encodeURIComponent(feature)}`);
         console.log(response.data);
         setCars(response.data);
         setLoading(false);
@@ -36,4 +38,4 @@ const CarList = () => {
   );
 };
 
-export default CarList;
+export default HomepageCarList;

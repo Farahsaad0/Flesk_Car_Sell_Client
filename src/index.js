@@ -7,8 +7,8 @@ import { AuthProvider } from "./context/AuthProvider";
 import "remixicon/fonts/remixicon.css";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-
 import { BrowserRouter, Route, Routes } from "react-router-dom";
+
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(

@@ -5,12 +5,12 @@ import { useState } from "react";
 import useAuth from "../../hooks/useAuth";
 import axios from "../../api/axios";
 
-const SubscriptionItem = ({ subscription, formData }) => {
+const SponsorshipItem = ({ sponsorship, formData }) => {
   const axiosPrivate = useAxiosPrivate();
   const { auth } = useAuth();
   // const [paymentData, setPaymentData] = useState({
   //   userId: auth._id,
-  //   subscription: subscription._id,
+  //   sponsorship: sponsorship._id,
   // });
   const redirectToKonnect = async () => {
     //* caches the form data to be ready for the user after completing the transaction
@@ -32,15 +32,15 @@ const SubscriptionItem = ({ subscription, formData }) => {
 
     const paymentData = {
       userId: auth._id,
-      subscription: subscription._id,
+      sponsorship: sponsorship._id,
     };
 
-      try {
-        const response = await axiosPrivate.post("/init-payment", paymentData);
-        window.location.href = response.data.payUrl; // Redirect to payment page
-      } catch (error) {
-        console.error("Error initializing payment:", error);
-      }
+    try {
+      const response = await axiosPrivate.post("/init-payment", paymentData);
+      window.location.href = response.data.payUrl; // Redirect to payment page
+    } catch (error) {
+      console.error("Error initializing payment:", error);
+    }
   };
 
   return (
@@ -52,20 +52,20 @@ const SubscriptionItem = ({ subscription, formData }) => {
             {new Intl.NumberFormat("en-TN", {
               style: "currency",
               currency: "TND",
-            }).format(subscription.price)}
+            }).format(sponsorship.price)}
             <span className="month">
               {new Intl.NumberFormat("en-TN", {
                 style: "currency",
                 currency: "TND",
-              }).format(subscription.price / subscription.duration)}{" "}
+              }).format(sponsorship.price / sponsorship.duration)}{" "}
               par jour
             </span>
           </div>
         </div>
-        <h3 className="heading">{subscription.type}</h3>
+        <h3 className="heading">{sponsorship.type}</h3>
         <div className="pricing-content">
           <ul>
-            {subscription.features.map((feature, i) => (
+            {sponsorship.features.map((feature, i) => (
               <li key={i}>{feature}</li>
             ))}
           </ul>
@@ -78,4 +78,4 @@ const SubscriptionItem = ({ subscription, formData }) => {
   );
 };
 
-export default SubscriptionItem;
+export default SponsorshipItem;

@@ -2,18 +2,25 @@ import React, { useState, useEffect } from "react";
 import "../styles/profile.css";
 import useAuth from "../hooks/useAuth";
 import useAxiosPrivate from "../hooks/useAxiosPrivate";
+import Loader from "../components/loader/Loader";
+import { toast } from "sonner"; // Import toast function
 
 const ProfilePage = () => {
   const { auth } = useAuth();
+
   const axiosPrivate = useAxiosPrivate();
 
   const [userData, setUserData] = useState({
-    Nom: "",
-    Prenom: "",
-    Email: "",
-    Role: "",
+    nom: "",
+    prenom: "",
+    email: "",
+    role: "",
     photo: null,
   });
+
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [oldPassword, setOldPassword] = useState(""); // Add old password state
 
   useEffect(() => {
     fetchUserData();
@@ -22,27 +29,44 @@ const ProfilePage = () => {
   const fetchUserData = async () => {
     try {
       const response = await axiosPrivate.get(`/getUserData/${auth._id}`);
+
       setUserData(response.data);
     } catch (error) {
-      console.error(
-        "Erreur lors de la récupération des données utilisateur : ",
-        error
-      );
+      console.error("Error fetching user data:", error);
     }
   };
-  
-  const imageUrl = userData.photo ? `http://localhost:8000/images/${userData.photo}` : null;
 
+  const imageUrl = userData.photo
+    ? `http://localhost:8000/images/${userData.photo}`
+    : null;
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/;
+
     try {
+      if (newPassword !== confirmPassword) {
+        toast.error("Error! Passwords do not match.");
+        return;
+      }
+      if (!oldPassword) {
+        toast.error("Error! Old password is required.");
+        return;
+      }
+      if (!passwordRegex.test(newPassword)) {
+        toast.error(
+          "Le mot de passe doit contenir au moins 8 caractères, une lettre majuscule, une lettre minuscule et un chiffre."
+        );
+        return;
+      }
       const formDataToSend = new FormData();
-  
+
       for (let key in userData) {
         formDataToSend.append(key, userData[key]);
       }
-  
+      formDataToSend.append("oldPassword", oldPassword);
+      formDataToSend.append("newPassword", newPassword);
       const response = await axiosPrivate.put(
         `/updateUserData/${userData._id}`,
         formDataToSend,
@@ -52,17 +76,20 @@ const ProfilePage = () => {
           },
         }
       );
-      console.log("Réponse du serveur:", response.data);
+      console.log("Response from server:", response.data);
+      // Show success toast
+      toast.success("Success! Profile updated successfully.");
     } catch (error) {
-      console.error("Erreur lors de la soumission du formulaire :", error);
+      console.error("Error submitting form:", error);
+      // Show error toast
+      toast.error("Error! Failed to update profile.");
     }
   };
-  
 
   const handleChange = (e) => {
     const { name, value, files } = e.target;
     const newValue = name === "photo" ? files[0] : value;
-  
+
     if (name === "photo" && files.length > 0) {
       const photoURL = URL.createObjectURL(files[0]);
       setUserData((prevData) => ({
@@ -77,31 +104,9 @@ const ProfilePage = () => {
       }));
     }
   };
-  
-
-
-  // const handleChange = (e) => {
-  //   const { name, value, files } = e.target;
-  //   const newValue = name === "photo" ? files[0] : value;
-  
-  //   if (name === "photo" && files.length > 0) {
-  //     const photoURL = URL.createObjectURL(files[0]);
-  //     setUserData((prevData) => ({
-  //       ...prevData,
-  //       [name]: files[0],
-  //       photoURL: photoURL,
-  //     }));
-  //   } else {
-  //     setUserData((prevData) => ({
-  //       ...prevData,
-  //       [name]: newValue,
-  //     }));
-  //   }
-  // };
-  
 
   if (!userData) {
-    return <div>Chargement en cours...</div>;
+    return <Loader />;
   }
 
   return (
@@ -132,7 +137,6 @@ const ProfilePage = () => {
                     <h6 className="m-b-20 p-b-5 b-b-default f-w-600">
                       Information
                     </h6>
-                    {/* {error && <div className="error-message">{error}</div>} */}
                     <form onSubmit={handleSubmit}>
                       <div className="row">
                         <div className="col-sm-6">
@@ -184,7 +188,7 @@ const ProfilePage = () => {
                             type="password"
                             id="Password"
                             name="Password"
-                            onChange={handleChange}
+                            onChange={(e) => setOldPassword(e.target.value)}
                             className="form-control"
                             required
                           />
@@ -202,11 +206,27 @@ const ProfilePage = () => {
                             type="password"
                             id="newPassword"
                             name="NewPassword"
-                            onChange={handleChange}
+                            value={newPassword}
+                            onChange={(e) => setNewPassword(e.target.value)}
                             className="form-control"
                           />
                         </div>
-                        
+                        <div className="col-sm-6">
+                          <label
+                            htmlFor="confirmPassword"
+                            className="m-b-10 f-w-600"
+                          >
+                            Confirmer le Mot de Passe*
+                          </label>
+                          <input
+                            type="password"
+                            id="confirmPassword"
+                            name="NewPassword"
+                            value={confirmPassword}
+                            onChange={(e) => setConfirmPassword(e.target.value)}
+                            className="form-control"
+                          />
+                        </div>
                       </div>
                       <div className="row">
                         <div className="col-sm-6">

@@ -21,6 +21,7 @@ const ExpertsDemande = React.lazy(() =>
 const Signup = React.lazy(() => import("./Auth/Singup"));
 const Login = React.lazy(() => import("./Auth/Login"));
 const ProfilePage = React.lazy(() => import("./pages/Profilepage"));
+const ResetPassword = React.lazy(() => import("./Auth/ResetPassword/resetPasswordRequest"));
 
 function App() {
   return (
@@ -64,6 +65,8 @@ function App() {
           <Route path="*" element={<NotFound />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/requestPasswordReset" element={<ResetPassword />} />
+
         </Route>
       </Route>
     </Routes>
