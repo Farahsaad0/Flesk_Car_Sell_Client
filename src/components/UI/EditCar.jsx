@@ -3,6 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { Button, Form, FormGroup, Label, Input } from "reactstrap";
 import axios from "../../api/axios";
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
+import Loader from "../loader/Loader";
 
 const EditCarAd = () => {
   const { id } = useParams();
@@ -89,7 +90,7 @@ const EditCarAd = () => {
     <div className="container">
       <h1>Modifier l'annonce</h1>
       {loading ? (
-        <div>Loading...</div>
+        <Loader/>
       ) : (
         <Form onSubmit={handleSubmit}>
           <FormGroup>

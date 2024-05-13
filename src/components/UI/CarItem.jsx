@@ -2,6 +2,8 @@ import React from "react";
 import { Col } from "reactstrap";
 import { Link } from "react-router-dom";
 import "../../styles/car-item.css";
+import { formatDistanceToNow } from "date-fns";
+import { fr } from "date-fns/locale";
 
 const CarItem = ({ car }) => {
   // Vérifiez si car est défini avant de tenter de le déstructurer
@@ -17,30 +19,53 @@ const CarItem = ({ car }) => {
     modele,
     annee,
     photo,
-    sponsorship,
+    photos,
     date, // Ajout de la propriété dateCreation
   } = car;
-
+  const firstPhoto = photo || photos[0];
   // Construire l'URL de l'image en utilisant la nouvelle structure
-  const imageUrl = `http://localhost:8000/images/${photo}`;
+  const imageUrl = `http://localhost:8000/images/${firstPhoto}`;
 
   // Formater la date de création au format souhaité (par exemple, format de date standard)
   const formattedDate = new Date(date).toLocaleDateString();
 
   return (
-    <Col lg="4" md="4" sm="6" className="mb-5">
-      <div className="car__item">
-        <div className="car__img">
-          <img src={imageUrl} alt={photo} className="w-100" />
-        </div>
+    <Col lg="3" md="4" sm="6" className="mb-2 ">
+      <div className={`car__item ${car.sponsorship?.redeemed && car.sponsorship?.features.includes("Highlighted Listing") ? "golden_border" : ""}`}>
+        <Link to={`/cars/${car._id}`}>
+          <div
+            className="car__img"
+            style={{
+              width: "100%",
+              height: 0,
+              paddingBottom: "100%",
+              position: "relative",
+              overflow: "hidden",
+              background: "#ddd",
+            }}
+          >
+            <img
+              src={imageUrl}
+              alt={firstPhoto}
+              className="w-100 h-100 position-absolute "
+              style={{ objectFit: "contain" }}
+            />
+          </div>
+        </Link>
 
         <div className="car__item-content mt-4">
-          <h4 className="section__title text-center">{titre}</h4>
+          <h4 className="section__title text-center" style={{ height: "2.5em", overflowY: "auto" }}>{titre}</h4>
           {/* Utilisez titre ici */}
-          <p className="description">{description}</p>
+          <div
+            className="description-container"
+            style={{ height: "3em", overflowY: "auto" }}
+          >
+            <p className="description">{description}</p>
+          </div>
+
           {/* Utilisez description ici */}
           <h6 className="rent__price text-center mt-">{prix}</h6>
-          <div className="car__item-info d-flex align-items-center justify-content-between mt-3 mb-4">
+          <div className="car__item-info d-flex flex-wrap align-items-center justify-content-between mt-3 mb-4">
             <span className=" d-flex align-items-center gap-1">
               <i className="ri-car-line"></i> {marque} {modele}
               {/* Utilisez marque et modele ici */}
@@ -48,14 +73,14 @@ const CarItem = ({ car }) => {
             <span className=" d-flex align-items-center gap-1">
               <i className="ri-settings-2-line"></i> {annee}
             </span>
-            <span className=" d-flex align-items-center gap-1">
+            {/* <span className=" d-flex align-items-center gap-1">
               <i className="ri-timer-flash-line"></i> {sponsorship}
-            </span>
+            </span> */}
             <span className=" d-flex align-items-center gap-1">
-              <i className="ri-calendar-line"></i> Created on: {formattedDate}
+              <i className="ri-calendar-line"></i>{formatDistanceToNow(formattedDate, { locale: fr })}
             </span>
           </div>
-          <Link to={`/cars/${car._id}`}>
+          <Link to={`/cars/${car._id}`} className="car__item__button__wrapper">
             <button className=" w-50 car__item-btn car__btn-details">
               Details
             </button>

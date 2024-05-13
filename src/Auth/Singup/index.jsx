@@ -10,9 +10,10 @@ const Signup = () => {
     Nom: "",
     Email: "",
     Password: "",
+    ConfirmPassword: "",
     Role: "",
     Numéro: "",
-    Adresse:"",
+    Adresse: "",
     Spécialité: "",
     prix: "",
     experience: "",
@@ -31,20 +32,31 @@ const Signup = () => {
       [name]: newValue,
     }));
   };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (data.Password !== data.ConfirmPassword) {
+      setError("Les mots de passe ne correspondent pas.");
+      return;
+    }
+
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/;
+    console.log(data.Password);
+    if (!passwordRegex.test(data.Password)) {
+      setError(
+        "Le mot de passe doit contenir au moins 8 caractères, une lettre majuscule, une lettre minuscule et un chiffre."
+      );
+      return;
+    }
+
     try {
       const url = "http://localhost:8000/register";
-      // Inclure toujours le champ Role, même s'il est vide
       const postData = {
         ...data,
         Role: data.Role || "Utilisateur",
       };
       const { data: res } = await axios.post(url, postData);
       setMsg(res.message);
-
-      // Stocker l'ID de l'utilisateur dans le stockage local après l'inscription réussie
-      localStorage.setItem("userId", res._id);
     } catch (error) {
       if (
         error.response &&
@@ -54,7 +66,7 @@ const Signup = () => {
         setError(error.response.data.message);
       }
     }
-    setIsRegistered(true); // Toujours exécuté après la soumission du formulaire
+    setIsRegistered(true);
   };
 
   return (
@@ -76,28 +88,33 @@ const Signup = () => {
           </div>
           <div className={styles.right}>
             <form className={styles.form_container} onSubmit={handleSubmit}>
-              <h1>Créer Compte</h1>
-              <input
-                type="text"
-                placeholder="Prenom"
-                name="Prenom"
-                onChange={handleChange}
-                value={data.Prenom}
-                required
-                className={styles.input}
-              />
-              <input
-                type="text"
-                placeholder="Nom"
-                name="Nom"
-                onChange={handleChange}
-                value={data.Nom}
-                required
-                className={styles.input}
-              />
+              <h1 className="mt-4">Créer Compte</h1>
+              <div style={{ display: "flex", justifyContent: "space-between" }}>
+                <input
+                  style={{ width: "49%" }}
+                  type="text"
+                  placeholder="Prenom"
+                  name="Prenom"
+                  onChange={handleChange}
+                  value={data.Prenom}
+                  className={styles.input}
+                  required
+                />
+
+                <input
+                  style={{ width: "49%" }}
+                  type="text"
+                  placeholder="Nom"
+                  name="Nom"
+                  onChange={handleChange}
+                  value={data.Nom}
+                  className={styles.input}
+                  required
+                />
+              </div>
               <input
                 type="email"
-                placeholder="Email"
+                placeholder="Adresse Email"
                 name="Email"
                 onChange={handleChange}
                 value={data.Email}
@@ -124,10 +141,19 @@ const Signup = () => {
               />
               <input
                 type="password"
-                placeholder="Mot de passe"
+                placeholder="Mot de passe (8 caractères, maj., min., chiffre)"
                 name="Password"
                 onChange={handleChange}
                 value={data.Password}
+                required
+                className={styles.input}
+              />
+              <input
+                type="password"
+                placeholder="Confirmer le mot de passe"
+                name="ConfirmPassword"
+                onChange={handleChange}
+                value={data.ConfirmPassword}
                 required
                 className={styles.input}
               />
@@ -138,7 +164,6 @@ const Signup = () => {
                     name="Role"
                     value="Expert"
                     onChange={handleChange}
-                    checked={data.Role === "Expert"}
                   />
                   Expert
                 </label>
@@ -156,7 +181,7 @@ const Signup = () => {
                   />
                   <input
                     type="number"
-                    placeholder="prix par consultation"
+                    placeholder="Prix par consultation"
                     name="prix"
                     onChange={handleChange}
                     value={data.prix}
@@ -165,7 +190,7 @@ const Signup = () => {
                   />
                   <input
                     type="number"
-                    placeholder="experience"
+                    placeholder="Expérience (années)"
                     name="experience"
                     onChange={handleChange}
                     value={data.experience}
@@ -176,7 +201,7 @@ const Signup = () => {
               )}
               {error && <div className={styles.error_msg}>{error}</div>}
               {msg && <div className={styles.success_msg}>{msg}</div>}
-              <button type="submit" className={styles.green_btn}>
+              <button type="submit" className={`${styles.green_btn} mb-4`}>
                 S'inscrire
               </button>
             </form>

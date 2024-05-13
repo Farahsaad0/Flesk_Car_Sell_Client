@@ -1,29 +1,29 @@
 import React, { useState, useEffect } from "react";
 import { Row, Button } from "reactstrap";
 import { BsPencilSquare, BsTrash } from "react-icons/bs";
-import { useNavigate } from "react-router-dom"; 
+import { useNavigate } from "react-router-dom";
 import CarItem from "./CarItem";
 import axios from "../../api/axios";
 import useAuth from "../../hooks/useAuth";
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
+import Loader from "../loader/Loader";
 
 const UserCarList = () => {
   const [cars, setCars] = useState([]);
   const [loading, setLoading] = useState(true);
-  const navigate = useNavigate(); 
-  const {auth} = useAuth()
+  const navigate = useNavigate();
+  const { auth } = useAuth();
   const axiosPrivate = useAxiosPrivate();
 
   useEffect(() => {
     const fetchUserCars = async () => {
-      const userId = auth._id
+      const userId = auth._id;
       try {
         if (!userId) {
           throw new Error("User not authenticated");
         }
 
-        const response = await axios.get(`/getCarAdByUserId/${userId}`
-        );
+        const response = await axios.get(`/getCarAdByUserId/${userId}`);
 
         console.log(response.data);
         setCars(response.data);
@@ -49,14 +49,14 @@ const UserCarList = () => {
 
   const handleEdit = (id) => {
     // Rediriger l'utilisateur vers la page de modification de l'annonce avec l'ID spécifié
-    navigate(`/edit-car/${id}`); 
+    navigate(`/edit-car/${id}`);
   };
 
   return (
     <div className="container">
       <h1>Mes annonces</h1>
       {loading ? (
-        <div>Loading...</div>
+        <Loader />
       ) : cars.length === 0 ? (
         <div>No car ads found.</div>
       ) : (

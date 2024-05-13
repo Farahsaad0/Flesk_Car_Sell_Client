@@ -6,14 +6,7 @@ import {
   Label,
   Input,
   Button,
-  Accordion,
-  AccordionItem,
-  AccordionHeader,
-  AccordionBody,
   Row,
-  Offcanvas,
-  OffcanvasHeader,
-  OffcanvasBody,
   Modal,
   ModalHeader,
   ModalBody,
@@ -22,7 +15,7 @@ import {
 import axios from "../api/axios";
 import "../styles/CreateAdForm.css";
 import useAuth from "../hooks/useAuth";
-import SubscriptionItem from "../components/subscription/SubscriptionItem";
+import SponsorshipItem from "../components/sponsorship/SponsorshipItem";
 
 const CreateAdForm = () => {
   const navigate = useNavigate();
@@ -34,8 +27,9 @@ const CreateAdForm = () => {
 
   const toggle = () => setModal(!modal);
 
-  const [subscriptions, setSubscriptions] = useState([]);
   const [sponsorships, setSponsorships] = useState([]);
+  const [sponsorship, setSponsorship] = useState([]);
+  const [photos, setPhotos] = useState([]);
   const [formData, setFormData] = useState({
     titre: "",
     description: "",
@@ -43,24 +37,24 @@ const CreateAdForm = () => {
     marque: "",
     modele: "",
     annee: "",
-    photo: null,
-    sponsorship: "Gold",
+    location: "",
+    photos: [null],
+    sponsorship: "",
     utilisateur: userId,
-    date: "",
   });
 
   useEffect(() => {
     fetchCarAdCache();
-    fetchSubscriptions();
+    fetchSponsorships();
     fetchInactivatedSponsorship();
   }, []);
 
-  const fetchSubscriptions = async () => {
+  const fetchSponsorships = async () => {
     try {
-      const response = await axios.get("/subscriptions");
-      setSubscriptions(response.data);
+      const response = await axios.get("/sponsorships");
+      setSponsorships(response.data);
     } catch (error) {
-      console.error("Error fetching subscriptions:", error);
+      console.error("Error fetching sponsorships:", error);
     }
   };
 
@@ -76,30 +70,19 @@ const CreateAdForm = () => {
   const fetchInactivatedSponsorship = async () => {
     try {
       const response = await axios.get(`/sponsorships/available/${userId}`);
-      setSponsorships(response.data);
+      setSponsorship(response.data);
     } catch (error) {
       console.error();
     }
   };
-  // const toggle = (id) => {
-  //   if (open === id) {
-  //     setOpen();
-  //   } else {
-  //     setOpen(id);
-  //     // fetchExperts();
-  //   }
-  // };
 
   const handleChange = (e) => {
-    const { name, value, type, files } = e.target;
+    const { name, value, type } = e.target;
     let newValue = value;
     if (type === "date" && value) {
-      // Format the date to match backend requirements, for example: YYYY-MM-DD
       const formattedDate = new Date(value).toISOString().split("T")[0];
       newValue = formattedDate;
     }
-
-    newValue = type === "file" ? files[0] : value;
     setFormData((prevFormData) => ({
       ...prevFormData,
       [name]: newValue,
@@ -114,6 +97,20 @@ const CreateAdForm = () => {
       for (let key in formData) {
         formDataToSend.append(key, formData[key]);
       }
+
+      photos.forEach((photo, index) => {
+        formDataToSend.append(`photos`, photo);
+      });
+      // for (let key in formData) {
+      //   if (key === "photos") {
+      //     // Append each photo to FormData
+      //     photos.forEach((photo, index) => {
+      //       formDataToSend.append(`${key}[${index}]`, photo);
+      //     });
+      //   } else {
+      //     formDataToSend.append(key, formData[key]);
+      //   }
+      // }
 
       const response = await axios.post("/carAds", formDataToSend, {
         headers: {
@@ -137,9 +134,12 @@ const CreateAdForm = () => {
     }));
   };
 
-  // const toggle = () => {
-  //   setIsOpen(!isOpen);
-  // };
+  const handlePhotosChange = (e) => {
+    const { files } = e.target;
+    const selectedPhotos = Array.from(files);
+
+    setPhotos(selectedPhotos);
+  };
 
   return (
     <div className="create-ad-form-container">
@@ -216,98 +216,80 @@ const CreateAdForm = () => {
           />
         </FormGroup>
         <FormGroup>
-          <Label for="date">Date</Label>
+          <Label for="location">Location</Label>
           <Input
-            type="date"
-            name="date"
-            value={formData.date}
+            type="text"
+            name="location"
+            value={formData.location}
             onChange={handleChange}
+            placeholder="ou ete vous ?"
             required
           />
         </FormGroup>
         <FormGroup>
-          <Label for="photo">Photo</Label>
+          <Label for="photos">Photos</Label>
           <Input
             type="file"
-            name="photo"
-            onChange={handleChange}
+            name="photos"
+            onChange={handlePhotosChange}
             accept="image/*"
+            multiple
             required
           />
         </FormGroup>
-        {formData.photo && (
-          <div>
-            <h3>Aperçu de l'image :</h3>
-            <img
-              src={URL.createObjectURL(formData.photo)}
-              alt="Aperçu"
-              style={{ maxWidth: "100%" }}
-            />
-          </div>
+        {photos.length > 0 && (
+          <FormGroup>
+            <Label>Prévisualisation des photos:</Label>
+            <Row>
+              {photos.map((photo, index) => (
+                <div key={index} className="photo-preview">
+                  <img
+                    src={URL.createObjectURL(photo)}
+                    alt={`Prévisualisation ${index + 1}`}
+                    style={{ maxWidth: "100%", marginBottom: "10px" }}
+                  />
+                </div>
+              ))}
+            </Row>
+          </FormGroup>
         )}
-
-        <FormGroup>
-          <Label for="sponsorshipSelect">Sponsorship Plan:</Label>
-          <Input
-            id="sponsorshipSelect"
-            name="select"
-            type="select"
-            value={formData.sponsorship}
-            onChange={handleSponsorshipChange}
-          >
-            <option value="">Sélectionnez un plan</option>
-            {sponsorships.map((sponsorship) => (
-              <option key={sponsorship._id} value={sponsorship._id}>
-                {sponsorship.sponsorship}
-              </option>
-            ))}
-          </Input>
-        </FormGroup>
-        <Button color="primary" onClick={toggle}>
-          Open
-        </Button>
-        {/* <Accordion flush open={open} toggle={toggle} className="mt-5">
-          <AccordionItem>
-            <AccordionHeader targetId="1">Consulter des Expert</AccordionHeader>
-            <AccordionBody accordionId="1">
-              <Row> */}
-        {/* {expertsLoading ? (
-                      <div>Loading...</div>
-                    ) : (
-                      experts.map((expert) => (
-                        <ExpertItem key={expert._id} expert={expert} carAdId={id} />
-                      ))
-                    )} */}
-        {/* </Row>
-            </AccordionBody>
-          </AccordionItem>
-        </Accordion> */}
+        {sponsorship.length > 0 ? (
+          <FormGroup>
+            <Label for="sponsorshipSelect">Sponsorship Plan:</Label>
+            <Input
+              id="sponsorshipSelect"
+              name="select"
+              type="select"
+              value={formData.sponsorship}
+              onChange={handleSponsorshipChange}
+            >
+              <option value="">Sélectionnez un plan</option>
+              {sponsorship.map((sponsorship) => (
+                <option key={sponsorship._id} value={sponsorship._id}>
+                  {sponsorship.sponsorship}
+                </option>
+              ))}
+            </Input>
+          </FormGroup>
+        ) : (
+          <Button color="primary" onClick={toggle}>
+            sponsoriser
+          </Button>
+        )}
 
         <Button type="submit" color="primary">
           Créer annonce
         </Button>
       </Form>
-      {/* <Offcanvas isOpen={isOpen} toggle={toggle} style={{ minWidth: "600px" }}>
-        <OffcanvasHeader toggle={toggle}>Our sponsorship Plans: </OffcanvasHeader>
-        <OffcanvasBody>
-          {subscriptions.map((subscription) => (
-            <SubscriptionItem
-              key={subscription._id}
-              subscription={subscription}
-              refreshSubscriptions={fetchSubscriptions}
-            />
-          ))}
-        </OffcanvasBody>
-      </Offcanvas> */}
 
       <Modal isOpen={modal} toggle={toggle} size="xl">
         <ModalHeader toggle={toggle}>Nos plans de sponsorships:</ModalHeader>
         <ModalBody>
           <Row>
-            {subscriptions.map((subscription) => (
-              <SubscriptionItem
-                key={subscription._id}
-                subscription={subscription}
+            {sponsorships.map((sponsorship) => (
+              <SponsorshipItem
+                key={sponsorship._id}
+                sponsorship={sponsorship}
                 formData={formData}
               />
             ))}
