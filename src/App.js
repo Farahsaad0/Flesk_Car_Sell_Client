@@ -3,6 +3,7 @@ import { Routes, Route, Navigate } from "react-router-dom";
 import Layout from "./components/Layout/Layout";
 import PersistLogin from "./components/PersistLogin";
 import RequireAuth from "./components/RequireAuth";
+import ChangePassword from "./Auth/ResetPassword/resetPassword";
 
 const Home = React.lazy(() => import("./pages/Home"));
 const About = React.lazy(() => import("./pages/About"));
@@ -21,7 +22,9 @@ const ExpertsDemande = React.lazy(() =>
 const Signup = React.lazy(() => import("./Auth/Singup"));
 const Login = React.lazy(() => import("./Auth/Login"));
 const ProfilePage = React.lazy(() => import("./pages/Profilepage"));
-const ResetPassword = React.lazy(() => import("./Auth/ResetPassword/resetPasswordRequest"));
+const ResetPassword = React.lazy(() =>
+  import("./Auth/ResetPassword/resetPasswordRequest")
+);
 
 function App() {
   return (
@@ -36,37 +39,31 @@ function App() {
           <Route path="/blogs" element={<Blog />} />
           <Route path="/blogs/:slug" element={<BlogDetails />} />
           <Route path="/contact" element={<Contact />} />
-        </Route>
 
-        {/*//* "Expert" and "Utilisateur" routes */}
-        <Route
-          element={
-            <RequireAuth
-              allowedRoles={["Utilisateur", "Expert", "Administrateur"]}
-            />
-          }
-        >
-          <Route path="/" element={<Layout />}>
+          {/*//* "Expert" and "Utilisateur" routes */}
+          <Route
+            element={
+              <RequireAuth
+                allowedRoles={["Utilisateur", "Expert", "Administrateur"]}
+              />
+            }
+          >
             <Route path="/profile" element={<ProfilePage />} />
             <Route path="/create-ad" element={<CreateAdForm />} />
             <Route path="/myads" element={<UserCarList />} />
             <Route path="/edit-car/:id" element={<EditCarAd />} />
           </Route>
-        </Route>
 
-        {/*//* "Expert" only routes */}
-        <Route element={<RequireAuth allowedRoles={["Expert"]} />}>
-          <Route path="/" element={<Layout />}>
+          {/*//* "Expert" only routes */}
+          <Route element={<RequireAuth allowedRoles={["Expert"]} />}>
             <Route path="/demande" element={<ExpertsDemande />} />
           </Route>
-        </Route>
 
-        <Route path="/" element={<Layout />}>
-          <Route path="*" element={<NotFound />} />
+          <Route path="/requestPasswordReset" element={<ResetPassword />} />
+          <Route path="/changePassword/:token" element={<ChangePassword />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/login" element={<Login />} />
-          <Route path="/requestPasswordReset" element={<ResetPassword />} />
-
+          <Route path="*" element={<NotFound />} />
         </Route>
       </Route>
     </Routes>

@@ -1,8 +1,9 @@
 import React, { useState } from "react";
-import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 import VerificationPage from "./verificationPage";
 import styles from "./styles.module.css";
+import { toast } from "sonner";
+import axios from "../../api/axios";
 
 const Signup = () => {
   const [data, setData] = useState({
@@ -50,23 +51,29 @@ const Signup = () => {
     }
 
     try {
-      const url = "http://localhost:8000/register";
+      const url = "/register";
       const postData = {
         ...data,
         Role: data.Role || "Utilisateur",
       };
-      const { data: res } = await axios.post(url, postData);
-      setMsg(res.message);
+      const response = await axios.post(url, postData);
+      if (response.status === 201) {
+        toast.success(response.data.message); // Use response.data.message instead of res.message
+        setIsRegistered(true);
+      } else {
+        toast.error("Registration failed.");
+      }
     } catch (error) {
       if (
         error.response &&
         error.response.status >= 400 &&
         error.response.status <= 500
       ) {
-        setError(error.response.data.message);
+        toast.error(error.response.data.message);
+      } else {
+        toast.error("Registration failed. Please try again later.");
       }
     }
-    setIsRegistered(true);
   };
 
   return (
