@@ -33,7 +33,7 @@ const ProfilePage = () => {
     try {
       const response = await axiosPrivate.get(`/getUserData/${auth._id}`);
 
-      setUserData(response.data.user);
+      setUserData(response.data);
     } catch (error) {
       console.error("Error fetching user data:", error);
     }

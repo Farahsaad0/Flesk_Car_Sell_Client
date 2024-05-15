@@ -86,10 +86,10 @@ const CarDetails = () => {
 
     fetchCar();
   }, []);
-
-  // const imageUrl = singleCarItem?.photos
-  //   ? `http://localhost:8000/images/${singleCarItem.photos[1]}`
-  //   : "";
+  
+  const profileImageUrl = singleCarItem?.utilisateur?.photo
+    ? `http://localhost:8000/images/${singleCarItem.utilisateur.photo}`
+    : "";
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -98,7 +98,7 @@ const CarDetails = () => {
   return (
     <Helmet title={singleCarItem.carName}>
       {loading ? (
-        <Loader/>
+        <Loader />
       ) : (
         <section>
           <Container>
@@ -234,6 +234,16 @@ const CarDetails = () => {
                       <small>aucune description donnee</small>
                     )}
                   </p>
+                </div>
+                <div style={{ position: "absolute", bottom: "0", display:"flex"}}>
+                  <img style={{ width: "3rem", height:"3rem" }} className="img-radius" src={profileImageUrl} alt="" />
+                  <div className="ms-2">
+                    <div className="h7">
+                      {singleCarItem.utilisateur.Nom}{" "}
+                      {singleCarItem.utilisateur.Prenom}
+                    </div>
+                    <p>{singleCarItem.utilisateur.Numéro}</p>
+                  </div>
                 </div>
               </Col>
             </Row>
