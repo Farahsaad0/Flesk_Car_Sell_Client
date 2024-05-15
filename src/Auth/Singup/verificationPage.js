@@ -41,6 +41,8 @@ const VerificationPage = ({ email, onSuccess }) => {
           value={verificationCode}
           required
           className={styles.input}
+          
+          style={{border:"1px solid #ccc"}}
         />
         {error && <div className={styles.error_msg}>{error}</div>}
         {msg && <div className={styles.success_msg}>{msg}</div>}
