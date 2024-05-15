@@ -3,7 +3,6 @@ import { Routes, Route, Navigate } from "react-router-dom";
 import Layout from "./components/Layout/Layout";
 import PersistLogin from "./components/PersistLogin";
 import RequireAuth from "./components/RequireAuth";
-import ChangePassword from "./Auth/ResetPassword/resetPassword";
 
 const Home = React.lazy(() => import("./pages/Home"));
 const About = React.lazy(() => import("./pages/About"));
@@ -25,6 +24,10 @@ const ProfilePage = React.lazy(() => import("./pages/Profilepage"));
 const ResetPassword = React.lazy(() =>
   import("./Auth/ResetPassword/resetPasswordRequest")
 );
+const ChangePassword = React.lazy(() =>
+  import("./Auth/ResetPassword/resetPassword")
+);
+const ExpertiseChat = React.lazy(() => import("./components/UI/ExpertiseChat"));
 
 function App() {
   return (
@@ -52,11 +55,12 @@ function App() {
             <Route path="/create-ad" element={<CreateAdForm />} />
             <Route path="/myads" element={<UserCarList />} />
             <Route path="/edit-car/:id" element={<EditCarAd />} />
+            <Route path="/consultation/:jobId" element={<ExpertiseChat />} />
+            <Route path="/demande" element={<ExpertsDemande />} />
           </Route>
 
           {/*//* "Expert" only routes */}
           <Route element={<RequireAuth allowedRoles={["Expert"]} />}>
-            <Route path="/demande" element={<ExpertsDemande />} />
           </Route>
 
           <Route path="/requestPasswordReset" element={<ResetPassword />} />

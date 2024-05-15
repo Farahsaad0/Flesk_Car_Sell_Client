@@ -1,0 +1,38 @@
+.my-message {
+  background-color: #d9f0ff;
+  padding: 8px;
+  margin-bottom: 4px;
+  margin-left: auto;
+  width: fit-content;
+  max-width: 90%;
+}
+
+.other-message {
+  background-color: #eaf7ff;
+  padding: 8px;
+  margin-bottom: 4px;
+  width: fit-content;
+  max-width: 90%;
+}
+
+.message-container {
+  display: flex;
+  width: 100%;
+}
+
+#message-input {
+  flex: 1; /* Take up remaining space */
+}
+
+.send-button {
+  background-color: #007bff; /* Blue color for the button */
+  color: white; /* White text color */
+  border: none; /* Remove border */
+  padding: 8px 16px; /* Padding for the button */
+  cursor: pointer; /* Add cursor pointer */
+  transition: background-color 0.3s; /* Smooth transition for background color */
+}
+
+.send-button:hover {
+  background-color: #0056b3; /* Darker blue color on hover */
+}

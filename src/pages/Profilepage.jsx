@@ -30,14 +30,14 @@ const ProfilePage = () => {
     try {
       const response = await axiosPrivate.get(`/getUserData/${auth._id}`);
 
-      setUserData(response.data);
+      setUserData(response.data.user);
     } catch (error) {
       console.error("Error fetching user data:", error);
     }
   };
 
-  const imageUrl = userData.photo
-    ? `http://localhost:8000/images/${userData.photo}`
+  const imageUrl = userData?.photo
+    ? `http://localhost:8000/images/${userData?.photo}`
     : null;
 
   const handleSubmit = async (e) => {
@@ -46,19 +46,21 @@ const ProfilePage = () => {
     const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/;
 
     try {
-      if (newPassword !== confirmPassword) {
-        toast.error("Error! Passwords do not match.");
-        return;
-      }
       if (!oldPassword) {
         toast.error("Error! Old password is required.");
         return;
       }
-      if (!passwordRegex.test(newPassword)) {
-        toast.error(
-          "Le mot de passe doit contenir au moins 8 caractères, une lettre majuscule, une lettre minuscule et un chiffre."
-        );
-        return;
+      if (newPassword) {
+        if (newPassword !== confirmPassword) {
+          toast.error("Error! Passwords do not match.");
+          return;
+        }
+        if (!passwordRegex.test(newPassword)) {
+          toast.error(
+            "Le mot de passe doit contenir au moins 8 caractères, une lettre majuscule, une lettre minuscule et un chiffre."
+          );
+          return;
+        }
       }
       const formDataToSend = new FormData();
 
@@ -120,15 +122,15 @@ const ProfilePage = () => {
                   <div className="card-block text-center text-white">
                     <div className="m-b-25">
                       <img
-                        src={userData.photoURL || imageUrl}
+                        src={userData?.photoURL || imageUrl}
                         className="img-radius"
                         alt="User"
                       />
                     </div>
                     <h6 className="f-w-600">
-                      {userData.Nom} {userData.Prenom}
+                      {userData?.Nom} {userData?.Prenom}
                     </h6>
-                    <p>{userData.Role}</p>
+                    <p>{userData?.Role}</p>
                     <i className=" mdi mdi-square-edit-outline feather icon-edit m-t-10 f-16"></i>
                   </div>
                 </div>
@@ -147,7 +149,7 @@ const ProfilePage = () => {
                             type="text"
                             id="nom"
                             name="Nom"
-                            value={userData.Nom}
+                            value={userData?.Nom}
                             onChange={handleChange}
                             className="form-control"
                           />
@@ -160,7 +162,7 @@ const ProfilePage = () => {
                             type="text"
                             id="prenom"
                             name="Prenom"
-                            value={userData.Prenom}
+                            value={userData?.Prenom}
                             onChange={handleChange}
                             className="form-control"
                           />
@@ -175,7 +177,7 @@ const ProfilePage = () => {
                             type="email"
                             id="email"
                             name="Email"
-                            value={userData.Email}
+                            value={userData?.Email}
                             onChange={handleChange}
                             className="form-control"
                           />

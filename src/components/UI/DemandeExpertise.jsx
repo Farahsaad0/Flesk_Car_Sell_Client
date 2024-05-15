@@ -1,30 +1,57 @@
 import React, { useState, useEffect } from "react";
-import { Button, Row, Col, Table, Card, CardTitle, CardBody } from "reactstrap";
+import {
+  Button,
+  Row,
+  Col,
+  Table,
+  Card,
+  CardTitle,
+  CardBody,
+  Container,
+} from "reactstrap";
 import ReactPaginate from "react-paginate";
 import axios from "../../api/axios";
 import useAuth from "../../hooks/useAuth";
+import { Link, useNavigate } from "react-router-dom";
 
 const ExpertsDemande = () => {
-  const [jobs, setJobs] = useState([]);
+  const [expertJobs, setExpertJobs] = useState([]);
+  const [clientJobs, setClientJobs] = useState([]);
   const [pageNumber, setPageNumber] = useState(0); // Numéro de la page actuelle
   const [totalPages, setTotalPages] = useState(0);
   const { auth } = useAuth();
-
-  const expertId = auth._id;
+  const navigate = useNavigate();
+  const userId = auth._id;
 
   useEffect(() => {
     // Récupérer les données des demandes d'expertise depuis le serveur lorsque le composant est monté
-    console.log(expertId + " <<<<<<<<<<< expert id")
-    fetchJobs(expertId);
+    console.log(userId + " <<<<<<<<<<< expert id");
+    fetchJobsAsExpert(userId);
+    fetchJobsAsClient(userId);
   }, [pageNumber]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  const fetchJobs = async (expertId) => {
+  const fetchJobsAsExpert = async (userId) => {
     try {
-      const response = await axios.get(`/jobs/${expertId}`);
-      setJobs(response?.data?.data);
+      const response = await axios.get(`/jobs/expert/${userId}`);
+      setExpertJobs(response?.data?.data);
       setTotalPages(response?.data?.totalPages); // Définir le nombre total de pages
     } catch (error) {
-      console.error("Erreur lors de la récupération des demandes d'expertise en attente :", error);
+      console.error(
+        "Erreur lors de la récupération des demandes d'expertise en attente :",
+        error
+      );
+    }
+  };
+  const fetchJobsAsClient = async (userId) => {
+    try {
+      const response = await axios.get(`/jobs/client/${userId}`);
+      setClientJobs(response?.data?.data);
+      setTotalPages(response?.data?.totalPages); // Définir le nombre total de pages
+    } catch (error) {
+      console.error(
+        "Erreur lors de la récupération des demandes d'expertise en attente :",
+        error
+      );
     }
   };
 
@@ -35,7 +62,8 @@ const ExpertsDemande = () => {
   const acceptDemande = async (jobId) => {
     try {
       await axios.put(`/jobs/accept/${jobId}`);
-      fetchJobs(expertId);
+      fetchJobsAsExpert(userId);
+      fetchJobsAsClient(userId);
     } catch (error) {
       console.error("Erreur lors de l'approbation de l'expert :", error);
     }
@@ -44,91 +72,213 @@ const ExpertsDemande = () => {
   const rejeterDemande = async (jobId) => {
     try {
       await axios.put(`/jobs/reject/${jobId}`);
-      fetchJobs(expertId);
+      fetchJobsAsExpert(userId);
+      fetchJobsAsClient(userId);
+    } catch (error) {
+      console.error("Erreur lors du rejet de l'expert :", error);
+    }
+  };
+  const cancelDemande = async (jobId) => {
+    try {
+      await axios.put(`/jobs/cancel/${jobId}`);
+      fetchJobsAsExpert(userId);
+      fetchJobsAsClient(userId);
     } catch (error) {
       console.error("Erreur lors du rejet de l'expert :", error);
     }
   };
 
+  const goToChat = async (jobId) => {
+    navigate(`/consultation/${jobId}`);
+  };
+
   return (
-    <Row>
-      <Col lg="12">
-        <Card>
-          <CardTitle tag="h6" className="border-bottom p-3 mb-0">
-            <i className="bi bi-card-text me-2"> </i>
-            Demandes d'expertise
-          </CardTitle>
-          <CardBody className="">
-            <Table bordered hover>
-              <thead>
-                <tr>
-                  <th>Nom</th>
-                  <th>Email</th>
-                  <th>Description</th>
-                  <th>Action</th>
-                </tr>
-              </thead>
-              <tbody>
-                {jobs.length > 0 ? (
-                  jobs.map((job, index) => (
-                    <tr key={index}>
-                      <td>
-                        {job.client.Nom} {job.client.Prenom}
-                      </td>
-                      <td>{job.client.Email}</td>
-                      <td>{job.jobDescription}</td>
-                      <td className="button-group">
-                        <Button
-                          className="btn"
-                          color="success"
-                          size="sm"
-                          onClick={() => acceptDemande(job._id)}
+    <Container className={"my-4"}>
+      <Row className={"mb-4"}>
+        <Col lg="12">
+          <Card>
+            <CardTitle tag="h6" className="border-bottom p-3 mb-0">
+              <i className="bi bi-card-text me-2"> </i>
+              Les demandes d'expertise que vous avez initiées:
+            </CardTitle>
+            <CardBody className="">
+              <Table bordered hover>
+                <thead>
+                  <tr>
+                    <th>Nom</th>
+                    <th>Email</th>
+                    <th>Description</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {clientJobs?.length > 0 ? (
+                    clientJobs.map((job, index) => (
+                      <tr key={index}>
+                        {/* <Link
+                          to={`/consultation/${job._id}`}
+                          style={{ width: "100%", height: "100%" }}
+                        > */}
+                        <td
+                          onClick={() => goToChat(job._id)}
+                          style={{ cursor: "pointer" }}
                         >
-                          Accepter
-                        </Button>
-                        <Button
-                          className="btn"
-                          color="warning"
-                          size="sm"
-                          onClick={() => rejeterDemande(job._id)}
+                          {job.expert.Nom} {job.expert.Prenom}
+                        </td>
+                        {/* </Link> */}
+                        <td
+                          onClick={() => goToChat(job._id)}
+                          style={{ cursor: "pointer" }}
                         >
-                          Rejeter
-                        </Button>
+                          {job.expert.Email}
+                        </td>
+                        <td
+                          onClick={() => goToChat(job._id)}
+                          style={{ cursor: "pointer" }}
+                        >
+                          {job.jobDescription}
+                        </td>
+                        <td className="button-group">
+                          <Button
+                            className={`btn mx-3 ${
+                              job.accepted === "accepted" && "btn-danger"
+                            }`}
+                            color="warning"
+                            size="sm"
+                            onClick={() => cancelDemande(job._id)}
+                            disabled={job.accepted === "cancelled"}
+                          >
+                            {job.accepted === "accepted" && job.paymentStatus === "pending" ? "Payer" : "Annuler"}
+                          </Button>
+                        </td>
+                      </tr>
+                    ))
+                  ) : (
+                    <tr>
+                      <td colSpan="4" className="table-active">
+                        <center>Aucune demande en attente !</center>
                       </td>
                     </tr>
-                  ))
-                ) : (
-                  <tr>
-                    <td colSpan="4" className="table-active">
-                      <center>
-                        Aucune demande en attente !
-                      </center>
-                    </td>
-                  </tr>
-                )}
-              </tbody>
-            </Table>
-            <nav aria-label="Navigation par page">
-              <ul className="pagination justify-content-center">
-                <ReactPaginate
-                  breakLabel="..."
-                  previousLabel={<div className="page-link">Précédent</div>}
-                  nextLabel={<div className="page-link">Suivant</div>}
-                  pageRangeDisplayed={4}
-                  containerClassName={"pagination "}
-                  activeClassName={" active"}
-                  pageCount={totalPages}
-                  onPageChange={handlePageClick}
-                  pageClassName={"page-item"}
-                  pageLinkClassName={"page-link"}
-                  renderOnZeroPageCount={null}
-                />
-              </ul>
-            </nav>
-          </CardBody>
-        </Card>
-      </Col>
-    </Row>
+                  )}
+                </tbody>
+              </Table>
+              <nav aria-label="Navigation par page">
+                <ul className="pagination justify-content-center">
+                  <ReactPaginate
+                    breakLabel="..."
+                    previousLabel={<div className="page-link">Précédent</div>}
+                    nextLabel={<div className="page-link">Suivant</div>}
+                    pageRangeDisplayed={4}
+                    containerClassName={"pagination "}
+                    activeClassName={" active"}
+                    pageCount={totalPages}
+                    onPageChange={handlePageClick}
+                    pageClassName={"page-item"}
+                    pageLinkClassName={"page-link"}
+                    renderOnZeroPageCount={null}
+                  />
+                </ul>
+              </nav>
+            </CardBody>
+          </Card>
+        </Col>
+      </Row>
+      {auth.Role !== "Utilisateur" && (
+        <Row>
+          <Col lg="12">
+            <Card>
+              <CardTitle tag="h6" className="border-bottom p-3 mb-0">
+                <i className="bi bi-card-text me-2"> </i>
+                Demandes d'expertise
+              </CardTitle>
+              <CardBody className="">
+                <Table bordered hover>
+                  <thead>
+                    <tr>
+                      <th>Nom</th>
+                      <th>Email</th>
+                      <th>Description</th>
+                      <th>Action</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {expertJobs.length > 0 ? (
+                      expertJobs.map((job, index) => (
+                        <tr key={index}>
+                          <td
+                            onClick={() => goToChat(job._id)}
+                            style={{ cursor: "pointer" }}
+                          >
+                            {/* <Link to={`/consultation/${job._id}`}> */}
+                            {job.client.Nom} {job.client.Prenom}
+                            {/* </Link> */}
+                          </td>
+                          <td
+                            onClick={() => goToChat(job._id)}
+                            style={{ cursor: "pointer" }}
+                          >
+                            {job.client.Email}
+                          </td>
+                          <td
+                            onClick={() => goToChat(job._id)}
+                            style={{ cursor: "pointer" }}
+                          >
+                            {job.jobDescription}
+                          </td>
+                          <td className="button-group">
+                            <Button
+                              className="btn mx-3"
+                              color="success"
+                              size="sm"
+                              onClick={() => acceptDemande(job._id)}
+                              disabled={job.accepted === "accepted"}
+                            >
+                              Accepter
+                            </Button>
+                            <Button
+                              className="btn"
+                              color="warning"
+                              size="sm"
+                              onClick={() => rejeterDemande(job._id)}
+                              disabled={job.accepted === "accepted"}
+                            >
+                              Rejeter
+                            </Button>
+                          </td>
+                        </tr>
+                      ))
+                    ) : (
+                      <tr>
+                        <td colSpan="4" className="table-active">
+                          <center>Aucune demande en attente !</center>
+                        </td>
+                      </tr>
+                    )}
+                  </tbody>
+                </Table>
+                <nav aria-label="Navigation par page">
+                  <ul className="pagination justify-content-center">
+                    <ReactPaginate
+                      breakLabel="..."
+                      previousLabel={<div className="page-link">Précédent</div>}
+                      nextLabel={<div className="page-link">Suivant</div>}
+                      pageRangeDisplayed={4}
+                      containerClassName={"pagination "}
+                      activeClassName={" active"}
+                      pageCount={totalPages}
+                      onPageChange={handlePageClick}
+                      pageClassName={"page-item"}
+                      pageLinkClassName={"page-link"}
+                      renderOnZeroPageCount={null}
+                    />
+                  </ul>
+                </nav>
+              </CardBody>
+            </Card>
+          </Col>
+        </Row>
+      )}
+    </Container>
   );
 };
 

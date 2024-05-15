@@ -234,7 +234,7 @@ const Header = () => {
                     return null;
                   } else if (
                     userData.Nom &&
-                    userData.Role !== "Expert" &&
+                    userData.Role !== ("Expert", "Utilisateur") &&
                     item.path === "/demande"
                   ) {
                     
