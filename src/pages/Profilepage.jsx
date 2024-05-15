@@ -19,6 +19,8 @@ const ProfilePage = () => {
     experience: "",
     prix: "",
     spécialité: "",
+    Numéro: "",
+    Adresse: "",
   });
 
   const [newPassword, setNewPassword] = useState("");
@@ -33,7 +35,7 @@ const ProfilePage = () => {
     try {
       const response = await axiosPrivate.get(`/getUserData/${auth._id}`);
 
-      setUserData(response.data.user);
+      setUserData(response.data);
     } catch (error) {
       console.error("Error fetching user data:", error);
     }
@@ -186,124 +188,160 @@ const ProfilePage = () => {
                           />
                         </div>
                         <div className="col-sm-6">
-                          <label htmlFor="Password" className="m-b-10 f-w-600">
-                            Mot de passe actuel*
+                          <label htmlFor="Numéro" className="m-b-10 f-w-600">
+                            Téléphone
                           </label>
                           <input
-                            type="password"
-                            id="Password"
-                            name="Password"
-                            onChange={(e) => setOldPassword(e.target.value)}
-                            className="form-control"
-                            required
-                          />
-                        </div>
-                      </div>
-                      <div className="row">
-                        <div className="col-sm-6">
-                          <label
-                            htmlFor="newPassword"
-                            className="m-b-10 f-w-600"
-                          >
-                            Nouveau Mot de Passe*
-                          </label>
-                          <input
-                            type="password"
-                            id="newPassword"
-                            name="NewPassword"
-                            value={newPassword}
-                            onChange={(e) => setNewPassword(e.target.value)}
-                            className="form-control"
-                          />
-                        </div>
-                        <div className="col-sm-6">
-                          <label
-                            htmlFor="confirmPassword"
-                            className="m-b-10 f-w-600"
-                          >
-                            Confirmer le Mot de Passe*
-                          </label>
-                          <input
-                            type="password"
-                            id="confirmPassword"
-                            name="NewPassword"
-                            value={confirmPassword}
-                            onChange={(e) => setConfirmPassword(e.target.value)}
-                            className="form-control"
-                          />
-                        </div>
-                      </div>
-                      {userData.Role === "Expert" && (
-                        <div>
-                          <div className="row">
-                            <div className="col-sm-6">
-                              <label
-                                htmlFor="experience"
-                                className="m-b-10 f-w-600"
-                              >
-                                Expérience
-                              </label>
-                              <input
-                                type="text"
-                                id="experience"
-                                name="experience"
-                                value={userData.experience}
-                                onChange={handleChange}
-                                className="form-control"
-                              />
-                            </div>
-                            <div className="col-sm-6">
-                              <label htmlFor="prix" className="m-b-10 f-w-600">
-                                Prix
-                              </label>
-                              <input
-                                type="text"
-                                id="prix"
-                                name="prix"
-                                value={userData.prix}
-                                onChange={handleChange}
-                                className="form-control"
-                              />
-                            </div>
-                          </div>
-                          <div className="row">
-                            <div className="col-sm-12">
-                              <label
-                                htmlFor="spécialité"
-                                className="m-b-10 f-w-600"
-                              >
-                                Spécialité
-                              </label>
-                              <input
-                                type="text"
-                                id="spécialité"
-                                name="spécialité"
-                                value={userData.spécialité}
-                                onChange={handleChange}
-                                className="form-control"
-                              />
-                            </div>
-                          </div>
-                        </div>
-                      )}
-                      <div className="row">
-                        <div className="col-sm-6">
-                          <label htmlFor="photo" className="m-b-10 f-w-600">
-                            Photo
-                          </label>
-                          <input
-                            type="file"
-                            id="photo"
-                            name="photo"
+                            type="Numéro"
+                            id="Numéro"
+                            name="Numéro"
+                            value={userData?.Numéro}
                             onChange={handleChange}
                             className="form-control"
-                            accept="image/*"
                           />
                         </div>
                       </div>
-                      <button type="submit" className="btn btn-primary mt-3">
-                        Enregistrer
-                      </button>
+                        <div className="row">
+                          <div className="col-sm-6">
+                            <label htmlFor="Adresse" className="m-b-10 f-w-600">
+                              Adresse
+                            </label>
+                            <input
+                              type="Adresse"
+                              id="Adresse"
+                              name="Adresse"
+                              value={userData?.Adresse}
+                              onChange={handleChange}
+                              className="form-control"
+                            />
+                          </div>
+                          <div className="col-sm-6">
+                            <label
+                              htmlFor="Password"
+                              className="m-b-10 f-w-600"
+                            >
+                              Mot de passe actuel*
+                            </label>
+                            <input
+                              type="password"
+                              id="Password"
+                              name="Password"
+                              onChange={(e) => setOldPassword(e.target.value)}
+                              className="form-control"
+                              required
+                            />
+                          </div>
+                        </div>
+                        <div className="row">
+                          <div className="col-sm-6">
+                            <label
+                              htmlFor="newPassword"
+                              className="m-b-10 f-w-600"
+                            >
+                              Nouveau Mot de Passe*
+                            </label>
+                            <input
+                              type="password"
+                              id="newPassword"
+                              name="NewPassword"
+                              value={newPassword}
+                              onChange={(e) => setNewPassword(e.target.value)}
+                              className="form-control"
+                            />
+                          </div>
+                          <div className="col-sm-6">
+                            <label
+                              htmlFor="confirmPassword"
+                              className="m-b-10 f-w-600"
+                            >
+                              Confirmer le Mot de Passe*
+                            </label>
+                            <input
+                              type="password"
+                              id="confirmPassword"
+                              name="NewPassword"
+                              value={confirmPassword}
+                              onChange={(e) =>
+                                setConfirmPassword(e.target.value)
+                              }
+                              className="form-control"
+                            />
+                          </div>
+                        </div>
+                        {userData.Role === "Expert" && (
+                          <div>
+                            <div className="row">
+                              <div className="col-sm-6">
+                                <label
+                                  htmlFor="experience"
+                                  className="m-b-10 f-w-600"
+                                >
+                                  Expérience
+                                </label>
+                                <input
+                                  type="text"
+                                  id="experience"
+                                  name="experience"
+                                  value={userData.experience}
+                                  onChange={handleChange}
+                                  className="form-control"
+                                />
+                              </div>
+                              <div className="col-sm-6">
+                                <label
+                                  htmlFor="prix"
+                                  className="m-b-10 f-w-600"
+                                >
+                                  Prix
+                                </label>
+                                <input
+                                  type="text"
+                                  id="prix"
+                                  name="prix"
+                                  value={userData.prix}
+                                  onChange={handleChange}
+                                  className="form-control"
+                                />
+                              </div>
+                            </div>
+                            <div className="row">
+                              <div className="col-sm-12">
+                                <label
+                                  htmlFor="spécialité"
+                                  className="m-b-10 f-w-600"
+                                >
+                                  Spécialité
+                                </label>
+                                <input
+                                  type="text"
+                                  id="spécialité"
+                                  name="spécialité"
+                                  value={userData.spécialité}
+                                  onChange={handleChange}
+                                  className="form-control"
+                                />
+                              </div>
+                            </div>
+                          </div>
+                        )}
+                        <div className="row">
+                          <div className="col-sm-6">
+                            <label htmlFor="photo" className="m-b-10 f-w-600">
+                              Photo
+                            </label>
+                            <input
+                              type="file"
+                              id="photo"
+                              name="photo"
+                              onChange={handleChange}
+                              className="form-control"
+                              accept="image/*"
+                            />
+                          </div>
+                        </div>
+                        <button type="submit" className="btn btn-primary mt-3">
+                          Enregistrer
+                        </button>
                     </form>
                   </div>
                 </div>
