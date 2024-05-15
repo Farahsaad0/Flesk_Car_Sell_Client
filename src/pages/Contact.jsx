@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { Container, Row, Col, Form, FormGroup, Input } from "reactstrap";
 import Helmet from "../components/Helmet/Helmet";
 import CommonSection from "../components/UI/CommonSection";
-import axios from 'axios';
+import axios from "axios";
 
 import "../styles/contact.css";
 
@@ -31,7 +31,7 @@ const Contact = () => {
     Nom: "",
     Prénom: "",
     Email: "",
-    Message: ""
+    Message: "",
   });
 
   const { Nom, Prénom, Email, Message } = formData;
@@ -43,7 +43,10 @@ const Contact = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('http://localhost:8000/contact', formData);
+      const response = await axios.post(
+        "http://localhost:8000/contact",
+        formData
+      );
       console.log(response.data);
       // Réinitialisez le formulaire après avoir envoyé les données avec succès
       setFormData({ Nom: "", Prénom: "", Email: "", Message: "" });
@@ -63,13 +66,31 @@ const Contact = () => {
 
               <Form onSubmit={handleSubmit}>
                 <FormGroup className="contact__form">
-                  <Input name="Nom" placeholder=" Nom " type="text" value={Nom} onChange={handleChange} />
+                  <Input
+                    name="Nom"
+                    placeholder=" Nom "
+                    type="text"
+                    value={Nom}
+                    onChange={handleChange}
+                  />
                 </FormGroup>
                 <FormGroup className="contact__form">
-                  <Input name="Prénom" placeholder=" Prénom" type="text" value={Prénom} onChange={handleChange} />
+                  <Input
+                    name="Prénom"
+                    placeholder=" Prénom"
+                    type="text"
+                    value={Prénom}
+                    onChange={handleChange}
+                  />
                 </FormGroup>
                 <FormGroup className="contact__form">
-                  <Input name="Email" placeholder="Email" type="email" value={Email} onChange={handleChange} />
+                  <Input
+                    name="Email"
+                    placeholder="Email"
+                    type="email"
+                    value={Email}
+                    onChange={handleChange}
+                  />
                 </FormGroup>
                 <FormGroup className="contact__form">
                   <textarea
@@ -77,7 +98,8 @@ const Contact = () => {
                     rows="5"
                     placeholder="Message"
                     className="textarea"
-                    value={Message} onChange={handleChange}
+                    value={Message}
+                    onChange={handleChange}
                   ></textarea>
                 </FormGroup>
 
@@ -100,7 +122,9 @@ const Contact = () => {
 
                 <div className=" d-flex align-items-center gap-2">
                   <h6 className="mb-0 fs-6">Email:</h6>
-                  <p className="section__description mb-0">Farah.saad505@gmail.com</p>
+                  <p className="section__description mb-0">
+                    Farah.saad505@gmail.com
+                  </p>
                 </div>
 
                 <h6 className="fw-bold mt-4">Follow Us</h6>

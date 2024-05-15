@@ -17,6 +17,7 @@ import EditCarAd from "../components/UI/EditCar";
 import ExpertsDemande from "../components/UI/DemandeExpertise";
 import ExpertsPage from "../components/UI/Experts";
 import Form from "../components/UI/DevenirExpert";
+import ExpertProfile from "../components/UI/Expertprofile";
 // import VerificationPage from "../Auth/Signup/verificationPage";
 // import Main from "../Auth/Main";
 
@@ -42,6 +43,7 @@ const Routers = () => {
       <Route path="/signup" exact element={<Signup />} />
       <Route path="/login" exact element={<Login />} />
       <Route path="/profile" element={<ProfilePage />} />
+      <Route path="/expertprofile" element={<ExpertProfile />} />
       {/* <Route path="/" element={<Navigate replace to="/login" />} /> */}
       {/* <Route path="/verification" component={<VerificationPage />} /> */}
     </Routes>

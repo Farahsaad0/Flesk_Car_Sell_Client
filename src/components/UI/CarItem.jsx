@@ -77,7 +77,8 @@ const CarItem = ({ car }) => {
               <i className="ri-timer-flash-line"></i> {sponsorship}
             </span> */}
             <span className=" d-flex align-items-center gap-1">
-              <i className="ri-calendar-line"></i>{formatDistanceToNow(formattedDate, { locale: fr })}
+              {/* <i className="ri-calendar-line"></i>{formatDistanceToNow(formattedDate, { locale: fr })} */}
+              
             </span>
           </div>
           <Link to={`/cars/${car._id}`} className="car__item__button__wrapper">

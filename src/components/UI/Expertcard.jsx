@@ -1,13 +1,19 @@
 import React, { useState } from "react";
 import { Button, CardBody, CardText, CardTitle, Input, Label, Modal, ModalBody, ModalFooter, ModalHeader } from "reactstrap";
+import { useNavigate } from "react-router-dom"; // Import de useNavigate pour la navigation
 
-const ExpertCard = ({ expert, carAdId, hireExpert }) => {
-    const [modal, setModal] = useState(false);
-  if (!expert) {
-    return <div>aucun expert pour le moment !!</div>;
-  }
+const ExpertCard = ({ expert }) => {
+  const [modal, setModal] = useState(false);
+  const navigate = useNavigate(); // Obtention de la fonction de navigation
+
+  const handleClick = () => {
+    if (expert) {
+      // Navigation vers la page du profil de l'expert avec les données de l'expert passées
+      navigate("/expertprofile", { state: { expert } });
+    }
+  };
   
-  const toggle = () => setModal(!modal);
+  
 
   const imageUrl = expert.photo ? `http://localhost:8000/images/${expert.photo}` : null;
 
@@ -47,28 +53,13 @@ const ExpertCard = ({ expert, carAdId, hireExpert }) => {
         </div>
         <div className="card-footer">
           <div className="text-right">
-            <Button color="primary" className="btn btn-sm" onClick={toggle}>
-              Consulter
+            <Button color="primary" className="btn btn-sm"onClick={handleClick} >
+              Voir Profil
             </Button>
           </div>
         </div>
       </div>
-      <Modal isOpen={modal} toggle={toggle} centered size="lg">
-        <ModalHeader toggle={toggle}>
-          Consulter {expert?.Nom} {expert?.Prenom}
-        </ModalHeader>
-        <ModalBody>
-          <p>Email: {expert?.Email}</p>
-          <p>Spécialité: {expert?.ExpertId?.spécialité}</p>
-          <p>Expérience: {expert?.ExpertId?.experience} ans</p>
-          <p>Prix: {expert?.ExpertId?.prix} DT</p>
-          <Label for="jobDescription" >
-            Plus de détails : 
-             En tant qu'expert dans le domaine, je vous invite à explorer notre sélection et à envisager de bénéficier de mon expertise. N'hésitez pas à me choisir pour toute demande d'expertise, je suis à votre disposition pour répondre à vos besoins et vous accompagner dans votre recherche automobile.
-          </Label>
-          
-        </ModalBody>
-      </Modal>
+      
     </div>
   );
 };

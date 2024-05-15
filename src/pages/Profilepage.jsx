@@ -16,6 +16,9 @@ const ProfilePage = () => {
     email: "",
     role: "",
     photo: null,
+    experience: "",
+    prix: "",
+    spécialité: "",
   });
 
   const [newPassword, setNewPassword] = useState("");
@@ -36,7 +39,7 @@ const ProfilePage = () => {
     }
   };
 
-  const imageUrl = userData.photo
+  const imageUrl = userData?.photo
     ? `http://localhost:8000/images/${userData.photo}`
     : null;
 
@@ -46,19 +49,21 @@ const ProfilePage = () => {
     const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/;
 
     try {
-      if (newPassword !== confirmPassword) {
-        toast.error("Error! Passwords do not match.");
-        return;
-      }
       if (!oldPassword) {
         toast.error("Error! Old password is required.");
         return;
       }
-      if (!passwordRegex.test(newPassword)) {
-        toast.error(
-          "Le mot de passe doit contenir au moins 8 caractères, une lettre majuscule, une lettre minuscule et un chiffre."
-        );
-        return;
+      if (newPassword) {
+        if (newPassword !== confirmPassword) {
+          toast.error("Error! Passwords do not match.");
+          return;
+        }
+        if (!passwordRegex.test(newPassword)) {
+          toast.error(
+            "Le mot de passe doit contenir au moins 8 caractères, une lettre majuscule, une lettre minuscule et un chiffre."
+          );
+          return;
+        }
       }
       const formDataToSend = new FormData();
 
@@ -228,6 +233,59 @@ const ProfilePage = () => {
                           />
                         </div>
                       </div>
+                      {userData.Role === "Expert" && (
+                        <div>
+                          <div className="row">
+                            <div className="col-sm-6">
+                              <label
+                                htmlFor="experience"
+                                className="m-b-10 f-w-600"
+                              >
+                                Expérience
+                              </label>
+                              <input
+                                type="text"
+                                id="experience"
+                                name="experience"
+                                value={userData.experience}
+                                onChange={handleChange}
+                                className="form-control"
+                              />
+                            </div>
+                            <div className="col-sm-6">
+                              <label htmlFor="prix" className="m-b-10 f-w-600">
+                                Prix
+                              </label>
+                              <input
+                                type="text"
+                                id="prix"
+                                name="prix"
+                                value={userData.prix}
+                                onChange={handleChange}
+                                className="form-control"
+                              />
+                            </div>
+                          </div>
+                          <div className="row">
+                            <div className="col-sm-12">
+                              <label
+                                htmlFor="spécialité"
+                                className="m-b-10 f-w-600"
+                              >
+                                Spécialité
+                              </label>
+                              <input
+                                type="text"
+                                id="spécialité"
+                                name="spécialité"
+                                value={userData.spécialité}
+                                onChange={handleChange}
+                                className="form-control"
+                              />
+                            </div>
+                          </div>
+                        </div>
+                      )}
                       <div className="row">
                         <div className="col-sm-6">
                           <label htmlFor="photo" className="m-b-10 f-w-600">
