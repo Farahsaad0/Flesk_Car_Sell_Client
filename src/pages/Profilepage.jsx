@@ -16,6 +16,9 @@ const ProfilePage = () => {
     email: "",
     role: "",
     photo: null,
+    experience: "",
+    prix: "",
+    spécialité: "",
   });
 
   const [newPassword, setNewPassword] = useState("");
@@ -37,7 +40,7 @@ const ProfilePage = () => {
   };
 
   const imageUrl = userData?.photo
-    ? `http://localhost:8000/images/${userData?.photo}`
+    ? `http://localhost:8000/images/${userData.photo}`
     : null;
 
   const handleSubmit = async (e) => {
@@ -230,6 +233,59 @@ const ProfilePage = () => {
                           />
                         </div>
                       </div>
+                      {userData.Role === "Expert" && (
+                        <div>
+                          <div className="row">
+                            <div className="col-sm-6">
+                              <label
+                                htmlFor="experience"
+                                className="m-b-10 f-w-600"
+                              >
+                                Expérience
+                              </label>
+                              <input
+                                type="text"
+                                id="experience"
+                                name="experience"
+                                value={userData.experience}
+                                onChange={handleChange}
+                                className="form-control"
+                              />
+                            </div>
+                            <div className="col-sm-6">
+                              <label htmlFor="prix" className="m-b-10 f-w-600">
+                                Prix
+                              </label>
+                              <input
+                                type="text"
+                                id="prix"
+                                name="prix"
+                                value={userData.prix}
+                                onChange={handleChange}
+                                className="form-control"
+                              />
+                            </div>
+                          </div>
+                          <div className="row">
+                            <div className="col-sm-12">
+                              <label
+                                htmlFor="spécialité"
+                                className="m-b-10 f-w-600"
+                              >
+                                Spécialité
+                              </label>
+                              <input
+                                type="text"
+                                id="spécialité"
+                                name="spécialité"
+                                value={userData.spécialité}
+                                onChange={handleChange}
+                                className="form-control"
+                              />
+                            </div>
+                          </div>
+                        </div>
+                      )}
                       <div className="row">
                         <div className="col-sm-6">
                           <label htmlFor="photo" className="m-b-10 f-w-600">
