@@ -15,6 +15,8 @@ const Contact = React.lazy(() => import("./pages/Contact"));
 const NotFound = React.lazy(() => import("./pages/NotFound"));
 const UserCarList = React.lazy(() => import("./components/UI/Myads"));
 const EditCarAd = React.lazy(() => import("./components/UI/EditCar"));
+const ExpertProfile = React.lazy(() => import("./components/UI/Expertprofile"));
+const ExpertsPage = React.lazy(() => import("./components/UI/Experts"));
 const ExpertsDemande = React.lazy(() =>
   import("./components/UI/DemandeExpertise")
 );
@@ -42,7 +44,8 @@ function App() {
           <Route path="/blogs" element={<Blog />} />
           <Route path="/blogs/:slug" element={<BlogDetails />} />
           <Route path="/contact" element={<Contact />} />
-
+          <Route path="/expertprofile" element={<ExpertProfile />} />
+          <Route path="/Experts" element={<ExpertsPage />} />
           {/*//* "Expert" and "Utilisateur" routes */}
           <Route
             element={
@@ -58,11 +61,8 @@ function App() {
             <Route path="/consultation/:jobId" element={<ExpertiseChat />} />
             <Route path="/demande" element={<ExpertsDemande />} />
           </Route>
-
           {/*//* "Expert" only routes */}
-          <Route element={<RequireAuth allowedRoles={["Expert"]} />}>
-          </Route>
-
+          <Route element={<RequireAuth allowedRoles={["Expert"]} />}></Route>
           <Route path="/requestPasswordReset" element={<ResetPassword />} />
           <Route path="/changePassword/:token" element={<ChangePassword />} />
           <Route path="/signup" element={<Signup />} />
