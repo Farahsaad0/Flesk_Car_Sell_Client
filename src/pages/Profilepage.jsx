@@ -5,7 +5,7 @@ import useAxiosPrivate from "../hooks/useAxiosPrivate";
 import Loader from "../components/loader/Loader";
 import Form from "react-bootstrap/Form";
 import { toast } from "sonner"; // Import toast function
-import { Button, Col, FormGroup, Row } from "react-bootstrap";
+import { Button, Col, Row } from "react-bootstrap";
 // import { Button, Col, FormGroup, Form.Control, Label, Row } from "reactstrap";
 
 const ProfilePage = () => {
@@ -157,39 +157,45 @@ const ProfilePage = () => {
                       validated={validated}
                       onSubmit={handleSubmit}
                     >
-                      <Row  className="mb-3">
-                          <Form.Group 
-                          as={Col} md="6" controlId="validationCustom01">
-                            <Form.Label htmlFor="nom">Nom*</Form.Label>
-                            <Form.Control
-                              type="text"
-                              id="nom"
-                              name="Nom"
-                              value={userData.Nom}
-                              onChange={handleChange}
-                              required
-                            />
-                            <Form.Control.Feedback type="invalid">
-                              Veuillez fournir un nom valide.
-                            </Form.Control.Feedback>
-                          </Form.Group>
-                          <Form.Group 
-                          as={Col} md="6" controlId="validationCustom02">
-                            <Form.Label htmlFor="prenom">Prénom*</Form.Label>
-                            <Form.Control
-                              type="text"
-                              id="prenom"
-                              name="Prenom"
-                              value={userData.Prenom}
-                              onChange={handleChange}
-                              required
-                            />
-                            <Form.Control.Feedback type="invalid">
-                              Veuillez fournir un prénom valide.
-                            </Form.Control.Feedback>
-                          </Form.Group>
+                      <Row className="mb-3">
+                        <Form.Group
+                          as={Col}
+                          md="6"
+                          controlId="validationCustom01"
+                        >
+                          <Form.Label htmlFor="nom">Nom*</Form.Label>
+                          <Form.Control
+                            type="text"
+                            id="nom"
+                            name="Nom"
+                            value={userData.Nom}
+                            onChange={handleChange}
+                            required
+                          />
+                          <Form.Control.Feedback type="invalid">
+                            Veuillez fournir un nom valide.
+                          </Form.Control.Feedback>
+                        </Form.Group>
+                        <Form.Group
+                          as={Col}
+                          md="6"
+                          controlId="validationCustom02"
+                        >
+                          <Form.Label htmlFor="prenom">Prénom*</Form.Label>
+                          <Form.Control
+                            type="text"
+                            id="prenom"
+                            name="Prenom"
+                            value={userData.Prenom}
+                            onChange={handleChange}
+                            required
+                          />
+                          <Form.Control.Feedback type="invalid">
+                            Veuillez fournir un prénom valide.
+                          </Form.Control.Feedback>
+                        </Form.Group>
                       </Row>
-                      <Row  className="mb-3">
+                      <Row className="mb-3">
                         <Form.Group
                           as={Col}
                           md="6"
@@ -213,7 +219,9 @@ const ProfilePage = () => {
                           md="6"
                           controlId="validationCustom04"
                         >
-                          <Form.Label htmlFor="photo">Photo du profil*</Form.Label>
+                          <Form.Label htmlFor="photo">
+                            Photo du profil*
+                          </Form.Label>
                           <Form.Control
                             type="file"
                             id="photo"
@@ -230,12 +238,9 @@ const ProfilePage = () => {
                       {userData.Role === "Expert" && (
                         <div>
                           <hr className="mt-4" />
-                          <Row  className="mb-3">
+                          <Row className="mb-3">
                             <Col>
-                              <Form.Group
-                                md="6"
-                                controlId="validationCustom05"
-                              >
+                              <Form.Group md="6" controlId="validationCustom05">
                                 <Form.Label htmlFor="experience">
                                   Expérience*
                                 </Form.Label>
@@ -271,7 +276,7 @@ const ProfilePage = () => {
                               </Form.Group>
                             </Col>
                           </Row>
-                          <Row  className="mb-3">
+                          <Row className="mb-3">
                             <Form.Group md="12" controlId="validationCustom07">
                               <Form.Label htmlFor="spécialité">
                                 Spécialité*
@@ -292,7 +297,7 @@ const ProfilePage = () => {
                         </div>
                       )}
 
-                      <Row  className="mb-3">
+                      <Row className="mb-3">
                         <hr className="mt-4" />
                         <Form.Group
                           as={Col}
