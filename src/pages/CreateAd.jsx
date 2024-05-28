@@ -44,6 +44,8 @@ const CreateAdForm = () => {
     modele: "",
     annee: "",
     location: "",
+    kilometrage: "",
+    vitesse: "",
     photos: [null],
     sponsorship: "",
     utilisateur: userId,
@@ -391,7 +393,29 @@ const CreateAdForm = () => {
             name="annee"
             value={formData.annee}
             onChange={handleChange}
-            placeholder="Année de l'annonce"
+            placeholder="Année de fabrication"
+            required
+          />
+        </FormGroup>
+        <FormGroup>
+          <Label for="kilometrage">Kilometrage (en km)</Label>
+          <Input
+            type="number"
+            name="kilometrage"
+            value={formData.kilometrage}
+            onChange={handleChange}
+            placeholder="kilometrage totale de vehicle"
+            required
+          />
+        </FormGroup>
+        <FormGroup>
+          <Label for="vitesse">Vitesse (en km/h)</Label>
+          <Input
+            type="number"
+            name="vitesse"
+            value={formData.vitesse}
+            onChange={handleChange}
+            placeholder="vitesse maximal de vehicule"
             required
           />
         </FormGroup>
@@ -486,7 +510,7 @@ const CreateAdForm = () => {
           </Button>
         )}
 
-        <Button type="submit" color="" style={{backgroundColor:"#cd2028"}}>
+        <Button type="submit" color="" style={{ backgroundColor: "#cd2028" }}>
           Créer annonce
         </Button>
       </Form>
