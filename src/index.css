@@ -16,7 +16,7 @@ h3,
 h4,
 h5,
 h6 {
-  color: #000d6b;
+  color: #1b2651;
   font-weight: 600;
   margin-bottom: 0;
 }
@@ -46,19 +46,19 @@ ul {
 }
 
 .section__title {
-  color: #000d6b;
+  color: #1b2651;
   font-weight: 600;
   font-size: 2rem;
 }
 
 .section__subtitle {
-  color: #f9a826;
+  color: #cd2028;
   font-weight: 600;
   font-size: 1.2rem;
 }
 
 .section__description {
-  color: #7c8a97;
+  color: ;
   font-size: 0.9rem;
   line-height: 30px;
 }

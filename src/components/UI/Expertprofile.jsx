@@ -24,6 +24,10 @@ function ExpertProfile() {
   const [cars, setCars] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  useEffect(() => {
+    window.scrollTo(0, 0); // Scroll to the top of the page on component load
+  }, []);
+
   //   useEffect(() => {
   //     async function fetchData() {
   //       try {
@@ -54,6 +58,7 @@ function ExpertProfile() {
         setLoading(false);
       }
     };
+    window.scrollTo(0, 0); // Scroll to the top of the page on component load
 
     fetchCars();
   }, []);
@@ -88,26 +93,23 @@ function ExpertProfile() {
                     alt=""
                   />
                 </a>
-                <h1>{`${expert.Nom} ${expert.Prenom}`}</h1>
+                <h1>
+                  <b>{`${expert.Nom} ${expert.Prenom}`}</b>
+                </h1>
                 <p>{expert.Email}</p>
               </div>
-              <ul className="nav nav-pills nav-stacked">
-                <li className="active">
-                  <a href="#">
-                    {" "}
-                    <i className="fa fa-user"></i> Profile
-                  </a>
-                </li>
-              </ul>
             </div>
           </div>
 
-          <div className="panel">
-            <div className="bio-graph-heading">
-              "Passionné par l'automobile depuis toujours, je suis là pour vous
-              offrir une expertise personnalisée et vous guider vers le véhicule
-              parfaitement adapté à vos besoins et à votre style de vie. Faites
-              de chaque achat une expérience unique et sans souci."
+          <div className="panel col">
+            <div className="bio-graph-heading" style={{ color: "#1b2651" }}>
+              <b>
+                "Passionné par l'automobile depuis toujours, je suis là pour
+                vous offrir une expertise personnalisée et vous guider vers le
+                véhicule parfaitement adapté à vos besoins et à votre style de
+                vie. Faites de chaque achat une expérience unique et sans
+                souci."{" "}
+              </b>
             </div>
             <div className="panel-body bio-graph-info">
               <h1>Informations</h1>

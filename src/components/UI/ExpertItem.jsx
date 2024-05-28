@@ -110,8 +110,8 @@ const ExpertItem = ({ expert, carAdId, hiredExpertsForCar = [] }) => {
         </div>
         <div className="card-footer">
           <div className="text-right">
-            <Button disabled={disableExpert} color="primary" className="btn btn-sm" onClick={toggle}>
-              Hire
+            <Button disabled={disableExpert} style={{backgroundColor:"#cd2028"}} className="btn btn-sm" onClick={toggle}>
+              Demander
             </Button>
           </div>
         </div>
@@ -131,11 +131,11 @@ const ExpertItem = ({ expert, carAdId, hiredExpertsForCar = [] }) => {
           <Input id="jobDescription" name="text" type="textarea" />
         </ModalBody>
         <ModalFooter>
-          <Button color="primary" onClick={hireExpert}>
-            Confirm Hire
+          <Button style={{backgroundColor:"#cd2028"}} onClick={hireExpert}>
+            Confirmer la demande
           </Button>
           <Button  color="secondary" onClick={toggle}>
-            Cancel
+            Retour
           </Button>
         </ModalFooter>
       </Modal>

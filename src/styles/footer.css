@@ -1,21 +1,21 @@
 .footer {
-  background:#FF0000	;
+  background:#d3d3d3	;
   padding-top: 50px;
   padding-bottom: 15px;
 }
 
 .footer__logo i {
-  color: #fff;
+  color: #cd2028;
   font-weight: 400;
 }
 
 .footer__logo span {
-  color: #fff;
+  color: #cd2028;
   font-weight: 700;
 }
 
 .footer__logo-content {
-  color: #eee;
+  color: #1b2651;
   margin-top: 15px;
   line-height: 30px;
 }
@@ -26,7 +26,7 @@
 }
 
 .quick__link a {
-  color: rgba(255, 255, 255, 0.715);
+  color: #1b2651;
   text-decoration: none;
   font-weight: 300;
   transition: 0.3s;
@@ -37,11 +37,11 @@
 }
 
 .footer__link-title {
-  color: #fff;
+  color: #1b2651;
 }
 
 .office__info {
-  color: rgba(255, 255, 255, 0.715);
+  color: #1b2651;
   font-weight: 300;
 }
 
@@ -57,13 +57,13 @@
 
 .newsletter input {
   background: transparent;
-  color: #fff;
+  color: #1b2651;
   border: none;
   outline: none;
 }
 
 .newsletter span i {
-  color: #fff;
+  color: #1b2651;
 }
 
 .footer__bottom {

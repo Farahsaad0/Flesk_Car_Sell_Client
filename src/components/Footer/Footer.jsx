@@ -10,25 +10,27 @@ const quickLinks = [
     display: "About",
   },
 
-  {
-    path: "#",
-    display: "Privacy Policy",
-  },
+  
 
   {
     path: "/cars",
-    display: "Car Listing",
+    display: "Nos voitures",
+  },
+  
+  {
+    path: "/Experts",
+    display: "Nos Experts",
   },
   {
-    path: "/blogs",
-    display: "Blog",
+    path: "/DevenirExpert",
+    display: "Demande d'expertise",
   },
-
   {
     path: "/contact",
     display: "Contact",
   },
 ];
+  
 
 const Footer = () => {
   const date = new Date();
@@ -49,10 +51,7 @@ const Footer = () => {
               </h1>
             </div>
             <p className="footer__logo-content">
-              Lorem ipsum dolor sit amet consectetur adipisicing elit.
-              Consequuntur, distinctio, itaque reiciendis ab cupiditate harum ex
-              quam veniam, omnis expedita animi quibusdam obcaecati mollitia?
-              Delectus et ad illo recusandae temporibus?
+            Flesk Car Sell ,Votre destination de confiance pour l'achat de voitures de qualité supérieure. Fondée avec une passion pour l'automobile et un engagement envers l'excellence du service à la clientèle, notre équipe chez FLESK Car s'efforce de rendre votre expérience d'achat de voiture aussi agréable et transparente que possible. Avec notre vaste sélection de véhicules soigneusement inspectés et notre approche personnalisée, nous sommes déterminés à vous aider à trouver la voiture parfaite qui répond à vos besoins et à votre style de vie. Chez AutoMondo, nous ne vendons pas seulement des voitures, nous créons des expériences mémorables sur la route.
             </p>
           </Col>
 
@@ -71,20 +70,20 @@ const Footer = () => {
 
           <Col lg="3" md="4" sm="6">
             <div className="mb-4">
-              <h5 className="footer__link-title mb-4">Head Office</h5>
-              <p className="office__info">123 Zindabazar, Sylhet, Bangladesh</p>
-              <p className="office__info">Phone: +0995345875365</p>
+              <h5 className="footer__link-title mb-4">Notre agence central</h5>
+              <p className="office__info">Monstir , rue de la liberté </p>
+              <p className="office__info">Phone: +216 55 555 555</p>
 
-              <p className="office__info">Email: muhib5532@gmail.com</p>
+              <p className="office__info">Email: farah.saad505@gmail.com</p>
 
-              <p className="office__info">Office Time: 10am - 7pm</p>
+              <p className="office__info">Temps du travail: 24j/7</p>
             </div>
           </Col>
 
           <Col lg="3" md="4" sm="12">
             <div className="mb-4">
-              <h5 className="footer__link-title">Newsletter</h5>
-              <p className="section__description">Subscribe our newsletter</p>
+              <h5 className="footer__link-title"></h5>
+              <p className="section__description"></p>
               <div className="newsletter">
                 <input type="email" placeholder="Email" />
                 <span>
@@ -97,8 +96,7 @@ const Footer = () => {
           <Col lg="12">
             <div className="footer__bottom">
               <p className="section__description d-flex align-items-center justify-content-center gap-1 pt-4">
-                <i className="ri-copyright-line"></i>Copyright {year}, Developed
-                by Muhibur Rahman. All rights reserved.
+                <i className="ri-copyright-line"></i>Copyright {year}, Flesk car Sell , Developped by FLESK. All rights reserved.
               </p>
             </div>
           </Col>

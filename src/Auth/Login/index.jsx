@@ -111,12 +111,12 @@ const Login = () => {
                     checked={persist}
                   />
                   <label className="form-check-label" htmlFor="persist">
-                    Trust This Device
+                  rester connecté (24h)
                   </label>
                 </div>
               </div>
               <div className={styles.link_container}>
-                <Link to="/requestPasswordReset">Forgot Password?</Link>
+                <Link to="/requestPasswordReset">Mot de passe oublié ?</Link>
               </div>
               {errMsg && <div className={styles.error_msg}>{errMsg}</div>}
               <button type="submit" className={styles.green_btn}>
