@@ -22,6 +22,7 @@ import "swiper/css/thumbs";
 import "../styles/product-image-slider.scss";
 import useAxiosPrivate from "../hooks/useAxiosPrivate";
 import Loader from "../components/loader/Loader";
+import useAuth from "../hooks/useAuth";
 
 const CarDetails = () => {
   const { id } = useParams();
@@ -33,6 +34,7 @@ const CarDetails = () => {
   const [thumbsSwiper, setThumbsSwiper] = useState(null);
   const [hiredExpertsForCar, setHiredExpertsForCar] = useState([]);
   const axiosPrivate = useAxiosPrivate();
+  const { auth } = useAuth();
 
   const toggle = (id) => {
     if (open === id) {
@@ -62,10 +64,6 @@ const CarDetails = () => {
         `/jobs/car/${id}/assigned-experts`
       );
       setHiredExpertsForCar(response.data);
-      console.log(hiredExpertsForCar);
-      console.log(hiredExpertsForCar);
-      console.log(hiredExpertsForCar);
-      console.log(hiredExpertsForCar);
     } catch (error) {
       console.error("Error fetching hired experts for car: ", error);
     }
@@ -86,7 +84,7 @@ const CarDetails = () => {
 
     fetchCar();
   }, []);
-  
+
   const profileImageUrl = singleCarItem?.utilisateur?.photo
     ? `http://localhost:8000/images/${singleCarItem.utilisateur.photo}`
     : "";
@@ -235,8 +233,15 @@ const CarDetails = () => {
                     )}
                   </p>
                 </div>
-                <div style={{ position: "absolute", bottom: "0", display:"flex"}}>
-                  <img style={{ width: "3rem", height:"3rem" }} className="img-radius" src={profileImageUrl} alt="" />
+                <div
+                  style={{ position: "absolute", bottom: "0", display: "flex" }}
+                >
+                  <img
+                    style={{ width: "3rem", height: "3rem" }}
+                    className="img-radius"
+                    src={profileImageUrl}
+                    alt=""
+                  />
                   <div className="ms-2">
                     <div className="h7">
                       {singleCarItem.utilisateur.Nom}{" "}
@@ -258,14 +263,16 @@ const CarDetails = () => {
                     {expertsLoading ? (
                       <div>Loading...</div>
                     ) : (
-                      experts.map((expert) => (
-                        <ExpertItem
-                          key={expert._id}
-                          expert={expert}
-                          carAdId={id}
-                          hiredExpertsForCar={hiredExpertsForCar}
-                        />
-                      ))
+                      experts
+                        .filter((expert) => expert._id !== auth._id)
+                        .map((expert) => (
+                          <ExpertItem
+                            key={expert._id}
+                            expert={expert}
+                            carAdId={id}
+                            hiredExpertsForCar={hiredExpertsForCar}
+                          />
+                        ))
                     )}
                   </Row>
                 </AccordionBody>

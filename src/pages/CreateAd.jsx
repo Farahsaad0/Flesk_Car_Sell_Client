@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import {
   Form,
@@ -16,6 +16,10 @@ import axios from "../api/axios";
 import "../styles/CreateAdForm.css";
 import useAuth from "../hooks/useAuth";
 import SponsorshipItem from "../components/sponsorship/SponsorshipItem";
+import * as cv from "../opencv/opencv";
+
+import useOpenCV from "../hooks/useOpenCV"; // Import the useOpenCV hook
+import Utils from "../assets/utils";
 
 const CreateAdForm = () => {
   const navigate = useNavigate();
@@ -24,7 +28,9 @@ const CreateAdForm = () => {
   const userId = auth._id;
   // const [open, setOpen] = useState(1);
   const [modal, setModal] = useState(false);
+  const canvasRef = useRef(null);
 
+  let licensePlateCascade = null;
   const toggle = () => setModal(!modal);
 
   const [sponsorships, setSponsorships] = useState([]);
@@ -42,6 +48,8 @@ const CreateAdForm = () => {
     sponsorship: "",
     utilisateur: userId,
   });
+  // const isReady = useOpenCV("opencv"); // Check if OpenCV.js is ready
+  // const utils = new Utils("errorMessage"); // Initialize Utils class
 
   useEffect(() => {
     fetchCarAdCache();
@@ -101,16 +109,6 @@ const CreateAdForm = () => {
       photos.forEach((photo, index) => {
         formDataToSend.append(`photos`, photo);
       });
-      // for (let key in formData) {
-      //   if (key === "photos") {
-      //     // Append each photo to FormData
-      //     photos.forEach((photo, index) => {
-      //       formDataToSend.append(`${key}[${index}]`, photo);
-      //     });
-      //   } else {
-      //     formDataToSend.append(key, formData[key]);
-      //   }
-      // }
 
       const response = await axios.post("/carAds", formDataToSend, {
         headers: {
@@ -134,12 +132,194 @@ const CreateAdForm = () => {
     }));
   };
 
-  const handlePhotosChange = (e) => {
+  // const handlePhotosChange = async (e) => {
+  //   const { files } = e.target;
+  //   const selectedPhotos = Array.from(files);
+
+  //   setPhotos(selectedPhotos);
+  // };
+
+  // Function to load the cascade file asynchronously
+  const loadCascadeFile = async (xmlURL) => {
+    return new Promise((resolve, reject) => {
+      console.log("111111111111");
+      let licensePlateCascade = new cv.CascadeClassifier();
+      console.log("222222222222");
+      const utils = new Utils("errorMessage");
+      try {
+        utils.createFileFromUrl(xmlURL, xmlURL, () => {
+          console.log("33333333333");
+          try {
+            if (licensePlateCascade.load(xmlURL)) {
+              console.log("44444444444");
+              console.log("Haar Cascade XML file loaded successfully.");
+              resolve(licensePlateCascade);
+            } else {
+              throw new Error("Failed to load Haar Cascade XML file.");
+            }
+          } catch (error) {
+            console.error("Error loading Haar Cascade XML file:", error);
+            reject(error);
+          }
+        });
+      } catch (error) {
+        console.error("Error creating File From Url:", error);
+        reject(error);
+      }
+    });
+  };
+  // Function to process a single image
+  const processImage = async (file, licensePlateCascade) => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = async () => {
+        try {
+          console.log("Image loaded successfully.");
+          const image = new Image();
+          image.src = reader.result;
+          image.onload = async () => {
+            console.log("Converting image to grayscale...");
+            const src = cv.imread(image);
+            const gray = new cv.Mat();
+            cv.cvtColor(src, gray, cv.COLOR_RGBA2GRAY, 0);
+
+            console.log("Detecting license plates...");
+            const plates = new cv.RectVector();
+            const msize = new cv.Size(0, 0);
+            licensePlateCascade.detectMultiScale(
+              gray,
+              plates,
+              1.1,
+              3,
+              0,
+              msize,
+              msize
+            );
+
+            console.log("Applying Gaussian blur to detected plates...");
+            for (let i = 0; i < plates.size(); ++i) {
+              try {
+                const plate = plates.get(i);
+                const roi = src.roi(plate);
+                cv.GaussianBlur(
+                  roi,
+                  roi,
+                  new cv.Size(23, 23),
+                  40,
+                  40,
+                  cv.BORDER_DEFAULT
+                );
+                roi.delete();
+              } catch (error) {
+                console.error("Error applying Gaussian blur to plate:", error);
+              }
+            }
+
+            const canvas = canvasRef.current;
+            const ctx = canvas.getContext("2d");
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            console.log("Displaying the result...");
+            cv.imshow(canvasRef.current, src);
+
+            // Convert the processed image to a Blob
+            canvasRef.current.toBlob((blob) => {
+              resolve(blob);
+            });
+
+            // Clean up
+            src.delete();
+            gray.delete();
+            plates.delete();
+          };
+        } catch (error) {
+          console.error("Error processing image:", error);
+          reject(error);
+        }
+      };
+      reader.readAsDataURL(file);
+    });
+  };
+  // Function to handle photos change and process each photo
+  const handlePhotosChange = async (e) => {
     const { files } = e.target;
     const selectedPhotos = Array.from(files);
+    const xmlURL = "cascade_numero_uno.xml";
 
-    setPhotos(selectedPhotos);
+    // Check if XML file has been loaded before proceeding
+    if (licensePlateCascade === null) {
+      console.log(licensePlateCascade);
+      console.log("XML file has not been loaded yet. Loading...");
+      try {
+        licensePlateCascade = await loadCascadeFile(xmlURL);
+      } catch (error) {
+        console.error("Error loading Haar Cascade XML file:", error);
+        return;
+      }
+    }
+    try {
+      console.log("Starting license plate detection...");
+      // const xmlURL = "cascade_numero_uno.xml";
+
+      // Load the cascade file once before processing all images
+      // const licensePlateCascade = await loadCascadeFile(xmlURL);
+
+      const processedPhotos = await Promise.all(
+        selectedPhotos.map(async (file) => {
+          try {
+            const processedBlob = await processImage(file, licensePlateCascade);
+            return processedBlob;
+          } catch (error) {
+            console.error("Error processing image:", error);
+            return null;
+          }
+        })
+      );
+
+      // Filter out any null values (in case of errors)
+      const validProcessedPhotos = processedPhotos.filter(
+        (photo) => photo !== null
+      );
+
+      console.log(licensePlateCascade);
+      setPhotos(validProcessedPhotos);
+    } catch (error) {
+      console.error("Error initializing license plate detection:", error);
+    }
+    cv.FS_unlink(xmlURL, xmlURL);
   };
+
+  // const handlePhotosChange = async (e) => {
+  //   const { files } = e.target;
+  //   const selectedPhotos = Array.from(files);
+
+  //   try {
+  //     console.log("Starting license plate detection...");
+  //     // Jarab Loadi el cascade file 9bal ma tebda  tprocessi tsawer
+  //     const xmlURL = "cascade_numero_uno.xml";
+  //     let licensePlateCascade = await loadCascadeFile(xmlURL);
+
+  //     const processedPhotos = await Promise.all(
+  //       selectedPhotos.map(async (file) => {
+  //         try {
+  //           const processedBlob = await processImage(file, licensePlateCascade);
+  //           return processedBlob;
+  //         } catch (error) {
+  //           console.error("Error processing image:", error);
+  //           return null;
+  //         }
+  //       })
+  //     );
+
+  //     const validProcessedPhotos = processedPhotos.filter(
+  //       (photo) => photo !== null
+  //     );
+
+  //     setPhotos(validProcessedPhotos);
+  //   } catch (error) {
+  //     console.error("Error initializing license plate detection:", error);
+  //   }
+  // };
 
   return (
     <div className="create-ad-form-container">
@@ -226,27 +406,56 @@ const CreateAdForm = () => {
             required
           />
         </FormGroup>
-        <FormGroup>
+        {/* <FormGroup>
           <Label for="photos">Photos</Label>
           <Input
             type="file"
             name="photos"
-            onChange={handlePhotosChange}
+            onChange={handlePhotosChange}handleLicensePlateDetection
             accept="image/*"
             multiple
             required
           />
+        </FormGroup> */}
+        <FormGroup>
+          <Label for="licensePlateImage">
+            Image du véhicule avec plaque d'immatriculation
+          </Label>
+          <Input
+            type="file"
+            name="licensePlateImage"
+            id="licensePlateImage"
+            accept="image/*"
+            onChange={handlePhotosChange} // Call the license plate detection function
+            multiple
+            required
+          />
         </FormGroup>
+        <canvas
+          ref={canvasRef}
+          id="canvas"
+          style={{ width: "100%", display: "none" }}
+        ></canvas>
+
         {photos.length > 0 && (
           <FormGroup>
             <Label>Prévisualisation des photos:</Label>
             <Row>
               {photos.map((photo, index) => (
-                <div key={index} className="photo-preview">
+                <div
+                  key={index}
+                  className=" col-12 col-sm-6 col-md-4  photo-preview"
+                  style={{ alignContent: "center" }}
+                >
                   <img
                     src={URL.createObjectURL(photo)}
                     alt={`Prévisualisation ${index + 1}`}
-                    style={{ maxWidth: "100%", marginBottom: "10px" }}
+                    style={{
+                      backgroundColor: "#eee",
+                      objectFit: "contain",
+                      maxWidth: "100%",
+                      marginBottom: "10px",
+                    }}
                   />
                 </div>
               ))}

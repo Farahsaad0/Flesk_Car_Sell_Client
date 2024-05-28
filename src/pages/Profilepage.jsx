@@ -3,18 +3,21 @@ import "../styles/profile.css";
 import useAuth from "../hooks/useAuth";
 import useAxiosPrivate from "../hooks/useAxiosPrivate";
 import Loader from "../components/loader/Loader";
+import Form from "react-bootstrap/Form";
 import { toast } from "sonner"; // Import toast function
+import { Button, Col, FormGroup, Row } from "react-bootstrap";
+// import { Button, Col, FormGroup, Form.Control, Label, Row } from "reactstrap";
 
 const ProfilePage = () => {
   const { auth } = useAuth();
-
   const axiosPrivate = useAxiosPrivate();
 
+  const [validated, setValidated] = useState(false);
   const [userData, setUserData] = useState({
-    nom: "",
-    prenom: "",
-    email: "",
-    role: "",
+    Nom: "",
+    Prenom: "",
+    Email: "",
+    Role: "",
     photo: null,
     experience: "",
     prix: "",
@@ -32,7 +35,6 @@ const ProfilePage = () => {
   const fetchUserData = async () => {
     try {
       const response = await axiosPrivate.get(`/getUserData/${auth._id}`);
-
       setUserData(response.data);
     } catch (error) {
       console.error("Error fetching user data:", error);
@@ -44,8 +46,12 @@ const ProfilePage = () => {
     : null;
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-
+    e.preventDefault(); // Add preventDefault here
+    const form = e.currentTarget;
+    if (form.checkValidity() === false) {
+      e.stopPropagation();
+    }
+    setValidated(true);
     const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/;
 
     try {
@@ -66,7 +72,6 @@ const ProfilePage = () => {
         }
       }
       const formDataToSend = new FormData();
-
       for (let key in userData) {
         formDataToSend.append(key, userData[key]);
       }
@@ -82,11 +87,14 @@ const ProfilePage = () => {
         }
       );
       console.log("Response from server:", response.data);
-      // Show success toast
       toast.success("Success! Profile updated successfully.");
+
+      setValidated(false);
+      setOldPassword("");
+      setNewPassword("");
+      setConfirmPassword("");
     } catch (error) {
       console.error("Error submitting form:", error);
-      // Show error toast
       toast.error("Error! Failed to update profile.");
     }
   };
@@ -134,7 +142,7 @@ const ProfilePage = () => {
                       {userData?.Nom} {userData?.Prenom}
                     </h6>
                     <p>{userData?.Role}</p>
-                    <i className=" mdi mdi-square-edit-outline feather icon-edit m-t-10 f-16"></i>
+                    <i className="mdi mdi-square-edit-outline feather icon-edit m-t-10 f-16"></i>
                   </div>
                 </div>
                 <div className="col-sm-8">
@@ -142,169 +150,208 @@ const ProfilePage = () => {
                     <h6 className="m-b-20 p-b-5 b-b-default f-w-600">
                       Information
                     </h6>
-                    <form onSubmit={handleSubmit}>
-                      <div className="row">
-                        <div className="col-sm-6">
-                          <label htmlFor="nom" className="m-b-10 f-w-600">
-                            Nom
-                          </label>
-                          <input
-                            type="text"
-                            id="nom"
-                            name="Nom"
-                            value={userData?.Nom}
-                            onChange={handleChange}
-                            className="form-control"
-                          />
-                        </div>
-                        <div className="col-sm-6">
-                          <label htmlFor="prenom" className="m-b-10 f-w-600">
-                            Prénom
-                          </label>
-                          <input
-                            type="text"
-                            id="prenom"
-                            name="Prenom"
-                            value={userData?.Prenom}
-                            onChange={handleChange}
-                            className="form-control"
-                          />
-                        </div>
-                      </div>
-                      <div className="row">
-                        <div className="col-sm-6">
-                          <label htmlFor="email" className="m-b-10 f-w-600">
-                            Email
-                          </label>
-                          <input
+                    <Form
+                      noValidate
+                      validated={validated}
+                      onSubmit={handleSubmit}
+                    >
+                      <Row  className="mb-3">
+                          <Form.Group 
+                          as={Col} md="6" controlId="validationCustom01">
+                            <Form.Label htmlFor="nom">Nom*</Form.Label>
+                            <Form.Control
+                              type="text"
+                              id="nom"
+                              name="Nom"
+                              value={userData.Nom}
+                              onChange={handleChange}
+                              required
+                            />
+                            <Form.Control.Feedback type="invalid">
+                              Veuillez fournir un nom valide.
+                            </Form.Control.Feedback>
+                          </Form.Group>
+                          <Form.Group 
+                          as={Col} md="6" controlId="validationCustom02">
+                            <Form.Label htmlFor="prenom">Prénom*</Form.Label>
+                            <Form.Control
+                              type="text"
+                              id="prenom"
+                              name="Prenom"
+                              value={userData.Prenom}
+                              onChange={handleChange}
+                              required
+                            />
+                            <Form.Control.Feedback type="invalid">
+                              Veuillez fournir un prénom valide.
+                            </Form.Control.Feedback>
+                          </Form.Group>
+                      </Row>
+                      <Row  className="mb-3">
+                        <Form.Group
+                          as={Col}
+                          md="6"
+                          controlId="validationCustom03"
+                        >
+                          <Form.Label htmlFor="email">Email*</Form.Label>
+                          <Form.Control
                             type="email"
                             id="email"
                             name="Email"
-                            value={userData?.Email}
+                            value={userData.Email}
                             onChange={handleChange}
-                            className="form-control"
-                          />
-                        </div>
-                        <div className="col-sm-6">
-                          <label htmlFor="Password" className="m-b-10 f-w-600">
-                            Mot de passe actuel*
-                          </label>
-                          <input
-                            type="password"
-                            id="Password"
-                            name="Password"
-                            onChange={(e) => setOldPassword(e.target.value)}
-                            className="form-control"
                             required
                           />
-                        </div>
-                      </div>
-                      <div className="row">
-                        <div className="col-sm-6">
-                          <label
-                            htmlFor="newPassword"
-                            className="m-b-10 f-w-600"
-                          >
-                            Nouveau Mot de Passe*
-                          </label>
-                          <input
-                            type="password"
-                            id="newPassword"
-                            name="NewPassword"
-                            value={newPassword}
-                            onChange={(e) => setNewPassword(e.target.value)}
-                            className="form-control"
+                          <Form.Control.Feedback type="invalid">
+                            Veuillez fournir un email valide.
+                          </Form.Control.Feedback>
+                        </Form.Group>
+                        <Form.Group
+                          as={Col}
+                          md="6"
+                          controlId="validationCustom04"
+                        >
+                          <Form.Label htmlFor="photo">Photo du profil*</Form.Label>
+                          <Form.Control
+                            type="file"
+                            id="photo"
+                            name="photo"
+                            onChange={handleChange}
+                            accept="image/*"
                           />
-                        </div>
-                        <div className="col-sm-6">
-                          <label
-                            htmlFor="confirmPassword"
-                            className="m-b-10 f-w-600"
-                          >
-                            Confirmer le Mot de Passe*
-                          </label>
-                          <input
-                            type="password"
-                            id="confirmPassword"
-                            name="NewPassword"
-                            value={confirmPassword}
-                            onChange={(e) => setConfirmPassword(e.target.value)}
-                            className="form-control"
-                          />
-                        </div>
-                      </div>
+                          <Form.Control.Feedback type="invalid">
+                            Veuillez fournir une photo.
+                          </Form.Control.Feedback>
+                        </Form.Group>
+                      </Row>
+
                       {userData.Role === "Expert" && (
                         <div>
-                          <div className="row">
-                            <div className="col-sm-6">
-                              <label
-                                htmlFor="experience"
-                                className="m-b-10 f-w-600"
+                          <hr className="mt-4" />
+                          <Row  className="mb-3">
+                            <Col>
+                              <Form.Group
+                                md="6"
+                                controlId="validationCustom05"
                               >
-                                Expérience
-                              </label>
-                              <input
-                                type="text"
-                                id="experience"
-                                name="experience"
-                                value={userData.experience}
-                                onChange={handleChange}
-                                className="form-control"
-                              />
-                            </div>
-                            <div className="col-sm-6">
-                              <label htmlFor="prix" className="m-b-10 f-w-600">
-                                Prix
-                              </label>
-                              <input
-                                type="text"
-                                id="prix"
-                                name="prix"
-                                value={userData.prix}
-                                onChange={handleChange}
-                                className="form-control"
-                              />
-                            </div>
-                          </div>
-                          <div className="row">
-                            <div className="col-sm-12">
-                              <label
-                                htmlFor="spécialité"
-                                className="m-b-10 f-w-600"
-                              >
-                                Spécialité
-                              </label>
-                              <input
+                                <Form.Label htmlFor="experience">
+                                  Expérience*
+                                </Form.Label>
+                                <Form.Control
+                                  type="text"
+                                  id="experience"
+                                  name="experience"
+                                  value={userData.experience}
+                                  onChange={handleChange}
+                                  required
+                                />
+                                <Form.Control.Feedback type="invalid">
+                                  Veuillez fournir une expérience valide.
+                                </Form.Control.Feedback>
+                              </Form.Group>
+                            </Col>
+                            <Col>
+                              <Form.Group md="6" controlId="validationCustom06">
+                                <Form.Label htmlFor="prix">
+                                  Prix de consultation*
+                                </Form.Label>
+                                <Form.Control
+                                  type="text"
+                                  id="prix"
+                                  name="prix"
+                                  value={userData.prix}
+                                  onChange={handleChange}
+                                  required
+                                />
+                                <Form.Control.Feedback type="invalid">
+                                  Veuillez fournir un prix valide.
+                                </Form.Control.Feedback>
+                              </Form.Group>
+                            </Col>
+                          </Row>
+                          <Row  className="mb-3">
+                            <Form.Group md="12" controlId="validationCustom07">
+                              <Form.Label htmlFor="spécialité">
+                                Spécialité*
+                              </Form.Label>
+                              <Form.Control
                                 type="text"
                                 id="spécialité"
                                 name="spécialité"
                                 value={userData.spécialité}
                                 onChange={handleChange}
-                                className="form-control"
+                                required
                               />
-                            </div>
-                          </div>
+                              <Form.Control.Feedback type="invalid">
+                                Veuillez fournir une spécialité valide.
+                              </Form.Control.Feedback>
+                            </Form.Group>
+                          </Row>
                         </div>
                       )}
-                      <div className="row">
-                        <div className="col-sm-6">
-                          <label htmlFor="photo" className="m-b-10 f-w-600">
-                            Photo
-                          </label>
-                          <input
-                            type="file"
-                            id="photo"
-                            name="photo"
-                            onChange={handleChange}
-                            className="form-control"
-                            accept="image/*"
+
+                      <Row  className="mb-3">
+                        <hr className="mt-4" />
+                        <Form.Group
+                          as={Col}
+                          md="12"
+                          controlId="validationCustom08"
+                        >
+                          <Form.Label htmlFor="Password">
+                            Mot de passe actuel*
+                          </Form.Label>
+                          <Form.Control
+                            type="password"
+                            id="Password"
+                            name="Password"
+                            onChange={(e) => setOldPassword(e.target.value)}
+                            required
                           />
-                        </div>
+                          <Form.Control.Feedback type="invalid">
+                            Veuillez fournir un mot de passe valide.
+                          </Form.Control.Feedback>
+                        </Form.Group>
+                      </Row>
+
+                      <Row className=" border rounded-2 pb-3">
+                        <Form.Group md="6" controlId="validationCustom09">
+                          <Form.Label htmlFor="newPassword">
+                            Nouveau Mot de Passe*
+                          </Form.Label>
+                          <Form.Control
+                            type="password"
+                            id="newPassword"
+                            name="newPassword"
+                            value={newPassword}
+                            onChange={(e) => setNewPassword(e.target.value)}
+                          />
+                          <Form.Control.Feedback type="invalid">
+                            Veuillez fournir un nouveau mot de passe valide.
+                          </Form.Control.Feedback>
+                        </Form.Group>
+                        <Form.Group md="6" controlId="validationCustom10">
+                          <Form.Label htmlFor="confirmPassword">
+                            Confirmer le Mot de Passe*
+                          </Form.Label>
+                          <Form.Control
+                            type="password"
+                            id="confirmPassword"
+                            name="newPassword"
+                            value={confirmPassword}
+                            onChange={(e) => setConfirmPassword(e.target.value)}
+                          />
+                          <Form.Control.Feedback type="invalid">
+                            Veuillez confirmer le nouveau mot de passe.
+                          </Form.Control.Feedback>
+                        </Form.Group>
+                      </Row>
+
+                      <div className="d-flex justify-content-end">
+                        <Button type="submit" className="btn btn-primary mt-3">
+                          Enregistrer
+                        </Button>
                       </div>
-                      <button type="submit" className="btn btn-primary mt-3">
-                        Enregistrer
-                      </button>
-                    </form>
+                    </Form>
                   </div>
                 </div>
               </div>

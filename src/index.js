@@ -8,6 +8,9 @@ import "remixicon/fonts/remixicon.css";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { io } from 'socket.io-client';
+
+const socket = io('http://localhost:8001');
 
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
@@ -16,7 +19,7 @@ root.render(
     <BrowserRouter>
       <AuthProvider>
         <Routes>
-          <Route path="/*" element={<App />} />
+          <Route path="/*" socket={socket} element={<App />} />
         </Routes>
       </AuthProvider>
     </BrowserRouter>

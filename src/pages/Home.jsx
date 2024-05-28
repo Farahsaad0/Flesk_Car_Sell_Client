@@ -14,8 +14,10 @@ import Testimonial from "../components/UI/Testimonial";
 
 import BlogList from "../components/UI/BlogList";
 import HomepageCarList from "../components/UI/HomePageCarList";
+import useAuth from "../hooks/useAuth";
 
 const Home = () => {
+  const { auth } = useAuth();
   return (
     <Helmet title="Home">
       {/* ============= hero section =========== */}
@@ -25,15 +27,11 @@ const Home = () => {
         {/* <div  className="hero__form"> */}
         <Container>
           <Row className="form__row">
-            <Col lg="4" md="4">
-              <div className="find__cars-left">
-                <h2>Trouvez votre voiture idéale ici</h2>
-              </div>
-            </Col>
+            
 
-            <Col lg="8" md="8" sm="12">
+            {/* <Col lg="8" md="8" sm="12"> */}
               <FindCarForm />
-            </Col>
+            {/* </Col> */}
           </Row>
         </Container>
         {/* </div> */}
@@ -66,7 +64,7 @@ const Home = () => {
         </Container>
       </section>
       {/* =========== become a driver section ============ */}
-      <BecomeDriverSection />
+      {auth.Role !== "Expert" && <BecomeDriverSection />}
 
       {/* =========== testimonial section =========== */}
       <section>

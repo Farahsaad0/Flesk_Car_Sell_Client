@@ -18,7 +18,7 @@ const ExpertCard = ({ expert }) => {
   const imageUrl = expert.photo ? `http://localhost:8000/images/${expert.photo}` : null;
 
   return (
-    <div className="col-12 col-sm-6 col-md-4 d-flex align-items-stretch flex-column">
+    <div className="col-12 col-sm-6 col-md-4 d-flex align-items-stretch flex-column mb-4">
       <div className="card bg-light d-flex flex-fill">
         <div className="card-header text-muted border-bottom-0">Expert</div>
         <div className="card-body pt-0">

@@ -7,6 +7,11 @@
   max-width: 90%;
 }
 
+a{
+  text-decoration: none;
+}
+
+
 .other-message {
   background-color: #eaf7ff;
   padding: 8px;

@@ -9,6 +9,7 @@ import {
   CardTitle,
   Col,
   Container,
+  Form,
   FormGroup,
   Input,
   ListGroup,
@@ -21,6 +22,7 @@ import { Link, useParams } from "react-router-dom";
 import useAuth from "../../hooks/useAuth";
 import { formatDistanceToNow } from "date-fns";
 import { fr } from "date-fns/locale";
+import { io } from "socket.io-client";
 
 const ExpertiseChat = () => {
   const { jobId } = useParams();
@@ -28,13 +30,35 @@ const ExpertiseChat = () => {
   const [newMessageText, setNewMessageText] = useState("");
   const { auth } = useAuth();
   const chatContainerRef = useRef(null);
+  const socket = useRef(null);
 
   const fetchJob = async () => {
     try {
       const res = await axios.get(`/job/${jobId}`);
       setJob(res?.data?.data);
-    } catch (error) {}
+    } catch (error) {
+      console.error("Error fetching job:", error);
+    }
   };
+
+  useEffect(() => {
+    socket.current = io("http://localhost:8001");
+
+    socket.current.on("receiveMessage", (message) => {
+      if (message.jobId === jobId) {
+        setJob((prevJob) => ({
+          ...prevJob,
+          chat: [...prevJob.chat, message],
+        }));
+        scrollToBottom();
+      }
+    });
+
+    return () => {
+      socket.current.disconnect();
+    };
+  }, [jobId]);
+
   useEffect(() => {
     fetchJob();
   }, [jobId]);
@@ -43,54 +67,63 @@ const ExpertiseChat = () => {
     setNewMessageText(e.target.value);
   };
 
-  const handleSendMessage = async () => {
-    try {
-      await axios.post(`/job/${jobId}/chat`, {
-        sender: auth._id,
-        message: newMessageText,
-      });
-      setNewMessageText(""); // Clear the message input
-      fetchJob(); // Refresh the chat
-      const lastMessage = chatContainerRef.current?.lastElementChild;
-      lastMessage?.scrollIntoView({ behavior: "smooth" });
-    } catch (error) {
-      console.error("Error sending message:", error);
+  const handleSendMessage = () => {
+    const message = {
+      jobId,
+      sender: auth._id,
+      message: newMessageText,
+      timestamp: new Date().toISOString(),
+    };
+    socket.current.emit("sendMessage", message);
+    setNewMessageText("");
+    scrollToBottom();
+  };
+
+  // const handleSendMessage = async () => {
+  //   try {
+  //     await axios.post(`/job/${jobId}/chat`, {
+  //       sender: auth._id,
+  //       message: newMessageText,
+  //     });
+  //     setNewMessageText(""); // Clear the message input
+  //     fetchJob(); // Refresh the chat
+  //     scrollToBottom(); // Scroll to the bottom after sending a message
+  //   } catch (error) {
+  //     console.error("Error sending message:", error);
+  //   }
+  // };
+
+  const scrollToBottom = () => {
+    if (chatContainerRef.current) {
+      chatContainerRef.current.scrollTop =
+        chatContainerRef.current.scrollHeight;
     }
   };
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [job?.chat]); // Scroll to the bottom whenever the chat messages change
 
   const ListGroupItemWithRef = forwardRef((props, ref) => (
     <ListGroupItem {...props} ref={ref} />
   ));
 
-  // useEffect(() => {
-  //   // Scroll to the bottom of the chat container whenever the ref is updated
-  //   if (chatContainerRef.current) {
-  //     chatContainerRef.current.scrollTop =
-  //       chatContainerRef.current.scrollHeight;
-  //     console.log("Scroll to bottom on ref update");
-  //   }
-  // }, [chatContainerRef.current]);
-
   const formattedDate = job?.submitDate
-    ? new Date("2024-04-17T14:42:05.382Z").toLocaleDateString()
+    ? new Date(job.submitDate).toLocaleDateString()
     : null;
 
-
-console.log(job?.car)
-
-  const firstPhoto = job?.car.photo || job?.car.photos[0];
-  // Construire l'URL de l'image en utilisant la nouvelle structure
+  const firstPhoto = job?.car?.photo || job?.car?.photos?.[0];
   const imageUrl = `http://localhost:8000/images/${firstPhoto}`;
+
   return (
     <Container className={"my-4"}>
       <Row>
         <Col xl="8">
           <Card>
-            <CardHeader className="d-flex justify-content-between ">
-              <div>{job?.client.Nom}:</div>
-              {/* {formatDistanceToNow(formattedDate, { locale: fr })} */}
+            <CardHeader className="d-flex justify-content-between">
+              <div>{job?.client?.Nom}:</div>
             </CardHeader>
-            
+
             <ListGroup flush>
               <ListGroupItem style={{ minHeight: "5rem" }}>
                 {job?.jobDescription}
@@ -100,7 +133,7 @@ console.log(job?.car)
                 style={{ height: "30rem", overflowY: "auto" }}
                 ref={chatContainerRef}
               >
-                {job?.chat.map((message, index) => (
+                {job?.chat?.map((message, index) => (
                   <div key={index} className="message-container">
                     <div
                       className={
@@ -108,51 +141,53 @@ console.log(job?.car)
                           ? "my-message"
                           : "other-message"
                       }
-                      title={formatDistanceToNow(message?.timestamp, {
-                        locale: fr,
-                      })}
+                      title={
+                        message?.timestamp
+                          ? formatDistanceToNow(new Date(message?.timestamp), {
+                              locale: fr,
+                            })
+                          : "Invalid date"
+                      }
                     >
-                      {/* <strong>{message.sender}: </strong> */}
                       {message.message}
                     </div>
                   </div>
                 ))}
               </ListGroupItemWithRef>
-
-              <FormGroup
-                style={{ display: "flex", gap: "12px", alignItems: "center" }}
-                className="m-2"
-              >
-                <Input
-                  id="message-input"
-                  name="message-input"
-                  type="textarea"
-                  value={newMessageText}
-                  onChange={handleMessageChange}
-                  placeholder="Type your message..."
-                />
-                <Button className="send-button" onClick={handleSendMessage}>
-                  <i className="bi bi-send"></i>Send
-                </Button>
-              </FormGroup>
+              <Form>
+                <FormGroup
+                  style={{ display: "flex", gap: "12px", alignItems: "center" }}
+                  className="m-2"
+                >
+                  <Input
+                    id="message-input"
+                    name="message-input"
+                    type="textarea"
+                    value={newMessageText}
+                    onChange={handleMessageChange}
+                    placeholder="Type your message..."
+                  />
+                  <Button className="send-button" onClick={handleSendMessage}>
+                    <i className="bi bi-send"></i>Envoyer
+                  </Button>
+                </FormGroup>
+              </Form>
             </ListGroup>
-            {/* </CardBody> */}
           </Card>
         </Col>
         <Col xl="4">
           <Card className="mb-4">
-          <Link to={`/cars/${job?.car._id}`} >
-            <img
-              alt="Sample"
-              src={imageUrl}
-              style={{ width: "100%" }}
-            /></Link>
+            <Link to={`/cars/${job?.car?._id}`}>
+              <img alt="Sample" src={imageUrl} style={{ width: "100%" }} />
+            </Link>
             <CardBody>
-              <CardTitle tag="h5">{job?.car.titre}</CardTitle>
+              <CardTitle tag="h5">
+                <Link to={`/cars/${job?.car?._id}`}> {job?.car?.titre}</Link>
+              </CardTitle>
               <CardSubtitle className="mb-2 text-muted" tag="h6">
-                {job?.car.prix}
+                {job?.car?.prix}
               </CardSubtitle>
-              <CardText>{job?.car.description}</CardText>
+              <CardText>{job?.car?.description}</CardText>
             </CardBody>
           </Card>
           <Card>

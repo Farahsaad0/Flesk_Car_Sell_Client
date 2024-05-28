@@ -118,7 +118,7 @@ const Header = () => {
                         ? `${userData.Nom} ${userData.Prenom}`
                         : "Profile"}
                     </Link>
-                    <button onClick={handleLogout} className="btn btn-link">
+                    <button onClick={handleLogout} className="btn btn-info">
                       Déconnecter
                     </button>
                   </>

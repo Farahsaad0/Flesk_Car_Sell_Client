@@ -92,6 +92,38 @@ const ExpertsDemande = () => {
     navigate(`/consultation/${jobId}`);
   };
 
+  const redirectToPaymentPage = async (link) => {
+    window.location.href = link;
+  };
+
+  const renderButton = (job) => {
+    let buttonText = "";
+    let buttonOnClick = () => {};
+  
+    if (job.accepted === "accepted" && job.paymentStatus === "pending") {
+      buttonText = "Payer";
+      buttonOnClick = () => redirectToPaymentPage(job.paymentLink);
+    } else if (job.paymentStatus === "completed") {
+      buttonText = "Discuter";
+      buttonOnClick = () => goToChat(job._id);
+    } else {
+      buttonText = "Annuler";
+      buttonOnClick = () => cancelDemande(job._id);
+    }
+  
+    return (
+      <Button
+        className={`btn mx-3 ${job.accepted === "accepted" && "btn-danger"}`}
+        color="warning"
+        size="sm"
+        onClick={buttonOnClick}
+        disabled={job.accepted === "cancelled"}
+      >
+        {buttonText}
+      </Button>
+    );
+  };
+  
   return (
     <Container className={"my-4"}>
       <Row className={"mb-4"}>
@@ -139,17 +171,7 @@ const ExpertsDemande = () => {
                           {job.jobDescription}
                         </td>
                         <td className="button-group">
-                          <Button
-                            className={`btn mx-3 ${
-                              job.accepted === "accepted" && "btn-danger"
-                            }`}
-                            color="warning"
-                            size="sm"
-                            onClick={() => cancelDemande(job._id)}
-                            disabled={job.accepted === "cancelled"}
-                          >
-                            {job.accepted === "accepted" && job.paymentStatus === "pending" ? "Payer" : "Annuler"}
-                          </Button>
+                        {renderButton(job)}
                         </td>
                       </tr>
                     ))

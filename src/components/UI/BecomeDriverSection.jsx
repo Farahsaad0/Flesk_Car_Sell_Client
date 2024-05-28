@@ -18,7 +18,7 @@ const BecomeDriverSection = () => {
             Souhaitez-vous devenir un expert sur notre site ? Rejoignez-nous dès maintenant et commencez à gagner avec nous !
             </h2>
 
-            <Link to="/DevenirExpert" className="btn become__driver-btn mt-4">
+            <Link to="/demandez_un_poste_d_expert" className="btn become__driver-btn mt-4">
               <button className="btn become__driver-btn">
                 Devenir Expert
               </button>

@@ -3,6 +3,7 @@ import { Routes, Route, Navigate } from "react-router-dom";
 import Layout from "./components/Layout/Layout";
 import PersistLogin from "./components/PersistLogin";
 import RequireAuth from "./components/RequireAuth";
+import ApplyForAnExpertRoleForm from "./components/UI/DevenirExpert";
 
 const Home = React.lazy(() => import("./pages/Home"));
 const About = React.lazy(() => import("./pages/About"));
@@ -46,6 +47,7 @@ function App() {
           <Route path="/contact" element={<Contact />} />
           <Route path="/expertprofile" element={<ExpertProfile />} />
           <Route path="/Experts" element={<ExpertsPage />} />
+          <Route path="/demandez_un_poste_d_expert" element={<ApplyForAnExpertRoleForm />} />
           {/*//* "Expert" and "Utilisateur" routes */}
           <Route
             element={

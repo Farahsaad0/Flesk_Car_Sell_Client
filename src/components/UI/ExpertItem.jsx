@@ -70,7 +70,7 @@ const ExpertItem = ({ expert, carAdId, hiredExpertsForCar = [] }) => {
 
   console.log(hiredExpertsForCar);
   return (
-    <div className="col-12 col-sm-6 col-md-4 d-flex align-items-stretch flex-column">
+    <div className="col-12 col-sm-6 col-md-4 d-flex align-items-stretch flex-column mb-4">
       <div className="card bg-light d-flex flex-fill">
         <div className="card-header text-muted border-bottom-0">Expert</div>
         <div className="card-body pt-0">

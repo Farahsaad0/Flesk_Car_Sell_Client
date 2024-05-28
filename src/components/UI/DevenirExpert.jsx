@@ -4,7 +4,7 @@ import "../../styles/Devenir.css";
 import useAuth from "../../hooks/useAuth";
 import axios from "../../api/axios";
 
-const Form = () => {
+const ApplyForAnExpertRoleForm = () => {
   const { auth } = useAuth();
   const [data, setData] = useState({
     spécialité: "",
@@ -96,4 +96,4 @@ const Form = () => {
   );
 };
 
-export default Form;
+export default ApplyForAnExpertRoleForm;
