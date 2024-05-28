@@ -31,7 +31,7 @@ const HeroSlider = () => {
             <button className="btn reserve__btn mt-4">
               <Link to="/cars">Nos voitures</Link>
             </button>
-            <button className="btn create__ad-btn mt-4">
+            <button className="btn create__ad-btn mt-4 ms-4">
               <Link to="/create-ad">Créer annonce</Link>
             </button>
           </div>
@@ -52,7 +52,7 @@ const HeroSlider = () => {
             <button className="btn reserve__btn mt-4">
               <Link to="/cars">Nos voitures</Link>
             </button>
-            <button className="btn create__ad-btn mt-4">
+            <button className="btn create__ad-btn mt-4 ms-4">
               <Link to="/create-ad">Créer annonce</Link>
             </button>
           </div>
@@ -72,7 +72,7 @@ const HeroSlider = () => {
             <button className="btn reserve__btn mt-4">
               <Link to="/cars">Nos voitures</Link>
             </button>
-            <button className="btn create__ad-btn mt-4">
+            <button className="btn create__ad-btn mt-4 ms-4">
               <Link to="/create-ad">Créer annonce</Link>
             </button>
           </div>

@@ -22,6 +22,8 @@ const ProfilePage = () => {
     experience: "",
     prix: "",
     spécialité: "",
+    Numéro: "",
+    Adresse: "",
   });
 
   const [newPassword, setNewPassword] = useState("");

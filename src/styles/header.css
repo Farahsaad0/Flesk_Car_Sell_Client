@@ -4,7 +4,7 @@ a{
 
 .header__top {
   padding: 10px 0px;
-  background: #FF0000	;
+  background:#d3d3d3 	;
   color: #fff;
 }
 
@@ -68,13 +68,13 @@ a{
 
 .header__location span i {
   font-size: 2.2rem;
-  color: #000000	;
+  color: #1b2651;
 }
 
 .header__location-content h4 {
   font-size: 1.2rem;
   font-weight: 700;
-  color: #000000	;
+  color: #1b2651;
 }
 
 .header__location-content h6 {
@@ -82,7 +82,7 @@ a{
 }
 
 .header__btn {
-  background: #FF0000	!important;
+  background: #cd2028		!important;
   padding: 10px 20px;
   border: none;
   outline: none;
@@ -107,7 +107,7 @@ a{
 
 .main__navbar {
   padding: 15px 0px;
-  background: #FF0000	;
+  background:  #cd2028;
 }
 
 .mobile__menu i {
@@ -133,11 +133,11 @@ a{
 }
 
 .nav__item:hover {
-  color: #f9a826;
+  color: #1b2651;
 }
 
 .search__box {
-  border: 1px solid #7c8a972f;
+  border: 1px solid #d3d3d3 ;
   padding: 7px 12px;
   display: flex;
   align-items: center;
@@ -162,7 +162,7 @@ a{
 }
 
 .nav__active {
-  color: #f9a826;
+  color: #1b2651;
 }
 
 @media only screen and (max-width: 768px) {
@@ -177,7 +177,7 @@ a{
   }
 
   .navigation {
-    background: rgb(0, 13, 107, 0.6);
+    background: #1b2651;
     width: 100%;
     height: 100%;
     position: fixed;
@@ -209,7 +209,7 @@ a{
   }
   .profile_icon {
     /* Ajoutez vos styles personnalisés pour l'icône de profil ici */
-    color: blue; /* Exemple: changer la couleur de l'icône en bleu */
+    color:#1b2651;/* Exemple: changer la couleur de l'icône en bleu */
     font-size: 20px; /* Exemple: changer la taille de l'icône */
     margin-right: 5px; /* Exemple: ajouter une marge à droite de l'icône */
     /* Ajoutez d'autres styles personnalisés au besoin */

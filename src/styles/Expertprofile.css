@@ -15,7 +15,7 @@ body {
 }
 
 .profile-nav .user-heading {
-    background: #FFC0CB;
+    background: #cd2028;
     color: #fff;
     border-radius: 4px 4px 0 0;
     -webkit-border-radius: 4px 4px 0 0;
@@ -109,7 +109,7 @@ body {
 }
 
 .bio-graph-heading {
-    background:#FFC0CB;
+    background:#D3D3D3;
     color: #fff;
     text-align: center;
     font-style: italic;
@@ -164,7 +164,7 @@ body {
 }
 
 .bio-desk h4.red {
-    color: #e26b7f;
+    color: #1b2651;
 }
 
 .bio-desk h4.green {
