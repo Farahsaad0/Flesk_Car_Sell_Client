@@ -58,12 +58,12 @@ const ProfilePage = () => {
 
     try {
       if (!oldPassword) {
-        toast.error("Error! Old password is required.");
+        toast.error("Erreur! L'ancien mot de passe est requis.");
         return;
       }
       if (newPassword) {
         if (newPassword !== confirmPassword) {
-          toast.error("Error! Passwords do not match.");
+          toast.error("Erreur! Le mot de passe ne correspondent pas.");
           return;
         }
         if (!passwordRegex.test(newPassword)) {
@@ -89,7 +89,7 @@ const ProfilePage = () => {
         }
       );
       console.log("Response from server:", response.data);
-      toast.success("Success! Profile updated successfully.");
+      toast.success("Succès! Mise à jour du profil réussie.");
 
       setValidated(false);
       setOldPassword("");
@@ -214,15 +214,7 @@ const ProfilePage = () => {
                           <Form.Control.Feedback type="invalid">
                             Veuillez fournir un email valide.
                           </Form.Control.Feedback>
-                          <Form.Label htmlFor="Numéro">Numéro*</Form.Label>
-                          <Form.Control
-                            type=" Numéro"
-                            id=" Numéro"
-                            name=" Numéro"
-                            value={userData. Numéro}
-                            onChange={handleChange}
-                            required
-                          />
+
                         </Form.Group>
                         <Form.Group
                           as={Col}
@@ -242,15 +234,48 @@ const ProfilePage = () => {
                           <Form.Control.Feedback type="invalid">
                             Veuillez fournir une photo.
                           </Form.Control.Feedback>
-                          <Form.Label htmlFor="Adresse">Adresse*</Form.Label>
+
+                        </Form.Group>
+                      </Row>
+                      <Row className="mb-3">
+                        <Form.Group
+                          as={Col}
+                          md="6"
+                          controlId="validationCustom10"
+                        >
+                          <Form.Label htmlFor="Numéro">Numéro*</Form.Label>
                           <Form.Control
-                            type="Adresse"
-                            id=" Adresse"
-                            name=" Adresse"
-                            value={userData. Adresse}
+                            type="number"
+                            id="Numéro"
+                            name="Numéro"
+                            value={userData.Numéro}
                             onChange={handleChange}
                             required
                           />
+                           
+                          <Form.Control.Feedback type="invalid">
+                            Veuillez fournir un numero valide.
+                          </Form.Control.Feedback>
+
+                        </Form.Group>
+                        <Form.Group
+                          as={Col}
+                          md="6"
+                          controlId="validationCustom11"
+                        >
+                          <Form.Label htmlFor="Adresse">Adresse*</Form.Label>
+                          <Form.Control
+                            type="text"
+                            id="Adresse"
+                            name="Adresse"
+                            value={userData.Adresse}
+                            onChange={handleChange}
+                            required
+                          />
+                          <Form.Control.Feedback type="invalid">
+                            Veuillez fournir une adress valide.
+                          </Form.Control.Feedback>
+
                         </Form.Group>
                       </Row>
 
