@@ -6,7 +6,6 @@ import Loader from "../components/loader/Loader";
 import Form from "react-bootstrap/Form";
 import { toast } from "sonner"; // Import toast function
 import { Button, Col, Row } from "react-bootstrap";
-// import { Button, Col, FormGroup, Form.Control, Label, Row } from "reactstrap";
 
 const ProfilePage = () => {
   const { auth } = useAuth();
@@ -28,7 +27,7 @@ const ProfilePage = () => {
 
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [oldPassword, setOldPassword] = useState(""); // Add old password state
+  const [oldPassword, setOldPassword] = useState("");
 
   useEffect(() => {
     fetchUserData();
@@ -48,7 +47,7 @@ const ProfilePage = () => {
     : null;
 
   const handleSubmit = async (e) => {
-    e.preventDefault(); // Add preventDefault here
+    e.preventDefault();
     const form = e.currentTarget;
     if (form.checkValidity() === false) {
       e.stopPropagation();
@@ -63,7 +62,7 @@ const ProfilePage = () => {
       }
       if (newPassword) {
         if (newPassword !== confirmPassword) {
-          toast.error("Erreur! Le mot de passe ne correspondent pas.");
+          toast.error("Erreur! Les mots de passe ne correspondent pas.");
           return;
         }
         if (!passwordRegex.test(newPassword)) {
@@ -97,7 +96,7 @@ const ProfilePage = () => {
       setConfirmPassword("");
     } catch (error) {
       console.error("Error submitting form:", error);
-      toast.error("Error! Failed to update profile.");
+      toast.error("Erreur! Échec de la mise à jour du profil.");
     }
   };
 
@@ -120,7 +119,7 @@ const ProfilePage = () => {
     }
   };
 
-  if (!userData) {
+  if (!userData.Nom) {
     return <Loader />;
   }
 
@@ -210,11 +209,10 @@ const ProfilePage = () => {
                             onChange={handleChange}
                             required
                           />
-                           
+
                           <Form.Control.Feedback type="invalid">
                             Veuillez fournir un email valide.
                           </Form.Control.Feedback>
-
                         </Form.Group>
                         <Form.Group
                           as={Col}
@@ -234,7 +232,6 @@ const ProfilePage = () => {
                           <Form.Control.Feedback type="invalid">
                             Veuillez fournir une photo.
                           </Form.Control.Feedback>
-
                         </Form.Group>
                       </Row>
                       <Row className="mb-3">
@@ -252,11 +249,10 @@ const ProfilePage = () => {
                             onChange={handleChange}
                             required
                           />
-                           
-                          <Form.Control.Feedback type="invalid">
-                            Veuillez fournir un numero valide.
-                          </Form.Control.Feedback>
 
+                          <Form.Control.Feedback type="invalid">
+                            Veuillez fournir un numéro valide.
+                          </Form.Control.Feedback>
                         </Form.Group>
                         <Form.Group
                           as={Col}
@@ -273,9 +269,8 @@ const ProfilePage = () => {
                             required
                           />
                           <Form.Control.Feedback type="invalid">
-                            Veuillez fournir une adress valide.
+                            Veuillez fournir une adresse valide.
                           </Form.Control.Feedback>
-
                         </Form.Group>
                       </Row>
 
@@ -364,10 +359,10 @@ const ProfilePage = () => {
                         </Form.Group>
                       </Row>
 
-                      <Row className=" border rounded-2 pb-3">
+                      <Row className="border rounded-2 pb-3">
                         <Form.Group md="6" controlId="validationCustom09">
                           <Form.Label htmlFor="newPassword">
-                            Nouveau Mot de Passe*
+                            Nouveau Mot de Passe
                           </Form.Label>
                           <Form.Control
                             type="password"
@@ -382,12 +377,12 @@ const ProfilePage = () => {
                         </Form.Group>
                         <Form.Group md="6" controlId="validationCustom10">
                           <Form.Label htmlFor="confirmPassword">
-                            Confirmer le Mot de Passe*
+                            Confirmer le Mot de Passe
                           </Form.Label>
                           <Form.Control
                             type="password"
                             id="confirmPassword"
-                            name="newPassword"
+                            name="confirmPassword"
                             value={confirmPassword}
                             onChange={(e) => setConfirmPassword(e.target.value)}
                           />
@@ -398,7 +393,10 @@ const ProfilePage = () => {
                       </Row>
 
                       <div className="d-flex justify-content-end">
-                        <Button type="submit"  color="" style={{ backgroundColor: "#1b2651" }}> 
+                        <Button
+                          type="submit"
+                          style={{ backgroundColor: "#1b2651" }}
+                        >
                           Enregistrer
                         </Button>
                       </div>

@@ -31,7 +31,7 @@ const CarItem = ({ car }) => {
 
   return (
     <Col lg="3" md="4" sm="6" className="mb-2 ">
-      <div className={`car__item ${car.sponsorship?.redeemed && car.sponsorship?.features.includes("Highlighted Listing") ? "golden_border" : ""}`}>
+      <div className={`car__item ${car.sponsorship?.sponsorshipStatus ===  "active" && car.sponsorship?.features.includes("Highlighted Listing") ? "golden_border" : ""}`}>
         <Link to={`/cars/${car._id}`}>
           <div
             className="car__img"

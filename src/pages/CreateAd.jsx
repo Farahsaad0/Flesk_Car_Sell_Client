@@ -246,7 +246,7 @@ const CreateAdForm = () => {
   const handlePhotosChange = async (e) => {
     const { files } = e.target;
     const selectedPhotos = Array.from(files);
-    const xmlURL = "cascade_numero_uno.xml";
+    const xmlURL = "cascade_number_woaen.xml";
 
     // Check if XML file has been loaded before proceeding
     if (licensePlateCascade === null) {

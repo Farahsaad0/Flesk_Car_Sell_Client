@@ -250,7 +250,12 @@ const ExpertiseChat = () => {
                         justifyContent: "space-between",
                       }}
                     >
-                      <a href={`${doc}`} download={doc} title="Télécharger">
+                      <a
+                        href={`http://localhost:8000/documents/${doc}`}
+                        download={doc}
+                        title="Télécharger"
+                        target="_blank"
+                      >
                         {doc}
                       </a>
                       {auth.Role === "Expert" && (
