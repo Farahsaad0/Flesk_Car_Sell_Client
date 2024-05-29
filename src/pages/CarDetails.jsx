@@ -188,7 +188,7 @@ const CarDetails = () => {
                         className="ri-timer-flash-line"
                         style={{ color: "#f9a826" }}
                       ></i>
-                      {singleCarItem.speed || (
+                      {singleCarItem.vitesse || (
                         <small>aucune vitesse donnee</small>
                       )}
                     </span>

@@ -11,7 +11,10 @@ import {
   Container,
   Form,
   FormGroup,
+  FormText,
   Input,
+  InputGroup,
+  Label,
   ListGroup,
   ListGroupItem,
   Row,
@@ -31,13 +34,25 @@ const ExpertiseChat = () => {
   const { auth } = useAuth();
   const chatContainerRef = useRef(null);
   const socket = useRef(null);
+  const [documents, setDocuments] = useState([]);
+  const [selectedFile, setSelectedFile] = useState(null);
 
   const fetchJob = async () => {
     try {
       const res = await axios.get(`/job/${jobId}`);
       setJob(res?.data?.data);
+      setDocuments(res?.data?.data?.documents || []);
     } catch (error) {
       console.error("Error fetching job:", error);
+    }
+  };
+
+  const fetchDocuments = async () => {
+    try {
+      const res = await axios.get(`/job/files`);
+      setDocuments(res?.data?.data || []);
+    } catch (error) {
+      console.error("Error fetching documents:", error);
     }
   };
 
@@ -92,6 +107,38 @@ const ExpertiseChat = () => {
   //     console.error("Error sending message:", error);
   //   }
   // };
+
+  const handleFileChange = (e) => {
+    setSelectedFile(e.target.files[0]);
+  };
+
+  const handleUpload = async () => {
+    if (!selectedFile) return;
+
+    const formData = new FormData();
+    formData.append("documents", selectedFile);
+
+    try {
+      await axios.post(`/job/${jobId}/upload`, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+      fetchJob();
+      setSelectedFile(null);
+    } catch (error) {
+      console.error("Error uploading file:", error);
+    }
+  };
+
+  const handleDelete = async (fileName) => {
+    try {
+      await axios.get(`/job/${jobId}/files/${fileName}`);
+      fetchJob();
+    } catch (error) {
+      console.error("Error deleting file:", error);
+    }
+  };
 
   const scrollToBottom = () => {
     if (chatContainerRef.current) {
@@ -192,7 +239,52 @@ const ExpertiseChat = () => {
           </Card>
           <Card>
             <CardBody>
-              <CardTitle> Files:</CardTitle>
+              <CardTitle>Fichiers:</CardTitle>
+              <CardBody>
+                <ListGroup>
+                  {documents.map((doc, index) => (
+                    <ListGroupItem
+                      key={index}
+                      style={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                      }}
+                    >
+                      <a href={`${doc}`} download={doc} title="Télécharger">
+                        {doc}
+                      </a>
+                      {auth.Role === "Expert" && (
+                        <Button
+                          color="danger"
+                          size="sm"
+                          onClick={() => handleDelete(doc)}
+                        >
+                          Supprimer
+                        </Button>
+                      )}
+                    </ListGroupItem>
+                  ))}
+                </ListGroup>
+                <CardText>
+                  <FormGroup>
+                    <Label for="exampleFile">Ajouter:</Label>
+                    <Input
+                      id="exampleFile"
+                      name="file"
+                      type="file"
+                      onChange={handleFileChange}
+                    />
+                    <FormText>
+                      Tous les fichiers nécessaires pour avoir un(e) client(e)
+                      satisfait(e).
+                    </FormText>
+                    <br />
+                    <Button color="success" onClick={handleUpload}>
+                      télécharger
+                    </Button>
+                  </FormGroup>
+                </CardText>
+              </CardBody>
             </CardBody>
           </Card>
         </Col>
