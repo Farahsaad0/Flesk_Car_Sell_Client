@@ -14,7 +14,7 @@ const CarList = () => {
       try {
         const response = await axios.get("/carAds");
         console.log(response.data);
-        setCars(response.data);
+        setCars(response?.data?.ads);
         setLoading(false);
       } catch (error) {
         console.error("Error fetching cars:", error);

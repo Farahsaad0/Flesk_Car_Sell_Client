@@ -15,8 +15,8 @@ const HomepageCarList = () => {
     const fetchCars = async () => {
       try {
         const response = await axios.get(`/carAds/sponsored?feature=${encodeURIComponent(feature)}`);
-        console.log(response.data);
-        setCars(response.data);
+        console.log(response?.data);
+        setCars(response?.data);
         setLoading(false);
       } catch (error) {
         console.error("Error fetching cars:", error);
@@ -32,7 +32,7 @@ const HomepageCarList = () => {
       {loading ? (
         <Loader/>
       ) : (
-        cars.map((car) => <CarItem key={car._id} car={car} />)
+        cars?.map((car) => <CarItem key={car._id} car={car} />)
       )}
     </Row>
   );
