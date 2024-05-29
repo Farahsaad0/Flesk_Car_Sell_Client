@@ -505,7 +505,7 @@ const CreateAdForm = () => {
             </Input>
           </FormGroup>
         ) : (
-          <Button color="primary" onClick={toggle}>
+          <Button  onClick={toggle} className="golden_border" style={{color:"#1a1a1a"}}>
             sponsoriser
           </Button>
         )}

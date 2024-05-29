@@ -20,8 +20,8 @@ const ProfilePage = () => {
     photo: null,
     experience: "",
     prix: "",
-    spécialité: "",
-    Numéro: "",
+    specialite: "",
+    Numero: "",
     Adresse: "",
   });
 
@@ -37,6 +37,7 @@ const ProfilePage = () => {
     try {
       const response = await axiosPrivate.get(`/getUserData/${auth._id}`);
       setUserData(response.data);
+      console.log(response.data)
     } catch (error) {
       console.error("Error fetching user data:", error);
     }
@@ -157,11 +158,7 @@ const ProfilePage = () => {
                       onSubmit={handleSubmit}
                     >
                       <Row className="mb-3">
-                        <Form.Group
-                          as={Col}
-                          md="6"
-                          controlId="validationCustom01"
-                        >
+                        <Form.Group as={Col} md="6">
                           <Form.Label htmlFor="nom">Nom*</Form.Label>
                           <Form.Control
                             type="text"
@@ -175,11 +172,7 @@ const ProfilePage = () => {
                             Veuillez fournir un nom valide.
                           </Form.Control.Feedback>
                         </Form.Group>
-                        <Form.Group
-                          as={Col}
-                          md="6"
-                          controlId="validationCustom02"
-                        >
+                        <Form.Group as={Col} md="6">
                           <Form.Label htmlFor="prenom">Prénom*</Form.Label>
                           <Form.Control
                             type="text"
@@ -195,11 +188,7 @@ const ProfilePage = () => {
                         </Form.Group>
                       </Row>
                       <Row className="mb-3">
-                        <Form.Group
-                          as={Col}
-                          md="6"
-                          controlId="validationCustom03"
-                        >
+                        <Form.Group as={Col} md="6">
                           <Form.Label htmlFor="email">Email*</Form.Label>
                           <Form.Control
                             type="email"
@@ -214,11 +203,7 @@ const ProfilePage = () => {
                             Veuillez fournir un email valide.
                           </Form.Control.Feedback>
                         </Form.Group>
-                        <Form.Group
-                          as={Col}
-                          md="6"
-                          controlId="validationCustom04"
-                        >
+                        <Form.Group as={Col} md="6">
                           <Form.Label htmlFor="photo">
                             Photo du profil*
                           </Form.Label>
@@ -235,17 +220,13 @@ const ProfilePage = () => {
                         </Form.Group>
                       </Row>
                       <Row className="mb-3">
-                        <Form.Group
-                          as={Col}
-                          md="6"
-                          controlId="validationCustom10"
-                        >
-                          <Form.Label htmlFor="Numéro">Numéro*</Form.Label>
+                        <Form.Group as={Col} md="6">
+                          <Form.Label htmlFor="Numero">Numéro*</Form.Label>
                           <Form.Control
-                            type="number"
-                            id="Numéro"
-                            name="Numéro"
-                            value={userData.Numéro}
+                            type="text"
+                            id="Numero"
+                            name="Numero"
+                            value={userData.Numero}
                             onChange={handleChange}
                             required
                           />
@@ -254,11 +235,7 @@ const ProfilePage = () => {
                             Veuillez fournir un numéro valide.
                           </Form.Control.Feedback>
                         </Form.Group>
-                        <Form.Group
-                          as={Col}
-                          md="6"
-                          controlId="validationCustom11"
-                        >
+                        <Form.Group as={Col} md="6">
                           <Form.Label htmlFor="Adresse">Adresse*</Form.Label>
                           <Form.Control
                             type="text"
@@ -279,7 +256,7 @@ const ProfilePage = () => {
                           <hr className="mt-4" />
                           <Row className="mb-3">
                             <Col>
-                              <Form.Group md="6" controlId="validationCustom05">
+                              <Form.Group md="6">
                                 <Form.Label htmlFor="experience">
                                   Expérience*
                                 </Form.Label>
@@ -297,7 +274,7 @@ const ProfilePage = () => {
                               </Form.Group>
                             </Col>
                             <Col>
-                              <Form.Group md="6" controlId="validationCustom06">
+                              <Form.Group md="6">
                                 <Form.Label htmlFor="prix">
                                   Prix de consultation*
                                 </Form.Label>
@@ -316,15 +293,15 @@ const ProfilePage = () => {
                             </Col>
                           </Row>
                           <Row className="mb-3">
-                            <Form.Group md="12" controlId="validationCustom07">
-                              <Form.Label htmlFor="spécialité">
+                            <Form.Group md="12">
+                              <Form.Label htmlFor="specialite">
                                 Spécialité*
                               </Form.Label>
                               <Form.Control
                                 type="text"
-                                id="spécialité"
-                                name="spécialité"
-                                value={userData.spécialité}
+                                id="specialite"
+                                name="specialite"
+                                value={userData.specialite}
                                 onChange={handleChange}
                                 required
                               />
@@ -338,11 +315,7 @@ const ProfilePage = () => {
 
                       <Row className="mb-3">
                         <hr className="mt-4" />
-                        <Form.Group
-                          as={Col}
-                          md="12"
-                          controlId="validationCustom08"
-                        >
+                        <Form.Group as={Col} md="12">
                           <Form.Label htmlFor="Password">
                             Mot de passe actuel*
                           </Form.Label>
@@ -350,6 +323,7 @@ const ProfilePage = () => {
                             type="password"
                             id="Password"
                             name="Password"
+                            value={oldPassword}
                             onChange={(e) => setOldPassword(e.target.value)}
                             required
                           />
@@ -360,7 +334,7 @@ const ProfilePage = () => {
                       </Row>
 
                       <Row className="border rounded-2 pb-3">
-                        <Form.Group md="6" controlId="validationCustom09">
+                        <Form.Group md="6">
                           <Form.Label htmlFor="newPassword">
                             Nouveau Mot de Passe
                           </Form.Label>
@@ -375,7 +349,7 @@ const ProfilePage = () => {
                             Veuillez fournir un nouveau mot de passe valide.
                           </Form.Control.Feedback>
                         </Form.Group>
-                        <Form.Group md="6" controlId="validationCustom10">
+                        <Form.Group md="6">
                           <Form.Label htmlFor="confirmPassword">
                             Confirmer le Mot de Passe
                           </Form.Label>
