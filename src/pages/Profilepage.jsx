@@ -120,7 +120,7 @@ const ProfilePage = () => {
     }
   };
 
-  if (!userData.Nom) {
+  if (!userData.Role) {
     return <Loader />;
   }
 
@@ -141,7 +141,7 @@ const ProfilePage = () => {
                       />
                     </div>
                     <h6 className="f-w-600">
-                      {userData?.Nom} {userData?.Prenom}
+                    {userData?.Prenom} {userData?.Nom} 
                     </h6>
                     <p>{userData?.Role}</p>
                     <i className="mdi mdi-square-edit-outline feather icon-edit m-t-10 f-16"></i>
@@ -158,27 +158,13 @@ const ProfilePage = () => {
                       onSubmit={handleSubmit}
                     >
                       <Row className="mb-3">
-                        <Form.Group as={Col} md="6">
-                          <Form.Label htmlFor="nom">Nom*</Form.Label>
-                          <Form.Control
-                            type="text"
-                            id="nom"
-                            name="Nom"
-                            value={userData.Nom}
-                            onChange={handleChange}
-                            required
-                          />
-                          <Form.Control.Feedback type="invalid">
-                            Veuillez fournir un nom valide.
-                          </Form.Control.Feedback>
-                        </Form.Group>
-                        <Form.Group as={Col} md="6">
+                      <Form.Group as={Col} md="6">
                           <Form.Label htmlFor="prenom">Prénom*</Form.Label>
                           <Form.Control
                             type="text"
                             id="prenom"
                             name="Prenom"
-                            value={userData.Prenom}
+                            value={userData?.Prenom}
                             onChange={handleChange}
                             required
                           />
@@ -186,6 +172,21 @@ const ProfilePage = () => {
                             Veuillez fournir un prénom valide.
                           </Form.Control.Feedback>
                         </Form.Group>
+                        <Form.Group as={Col} md="6">
+                          <Form.Label htmlFor="nom">Nom*</Form.Label>
+                          <Form.Control
+                            type="text"
+                            id="nom"
+                            name="Nom"
+                            value={userData?.Nom}
+                            onChange={handleChange}
+                            required
+                          />
+                          <Form.Control.Feedback type="invalid">
+                            Veuillez fournir un nom valide.
+                          </Form.Control.Feedback>
+                        </Form.Group>
+                        
                       </Row>
                       <Row className="mb-3">
                         <Form.Group as={Col} md="6">
@@ -194,7 +195,7 @@ const ProfilePage = () => {
                             type="email"
                             id="email"
                             name="Email"
-                            value={userData.Email}
+                            value={userData?.Email}
                             onChange={handleChange}
                             required
                           />
@@ -226,7 +227,7 @@ const ProfilePage = () => {
                             type="text"
                             id="Numero"
                             name="Numero"
-                            value={userData.Numero}
+                            value={userData?.Numero}
                             onChange={handleChange}
                             required
                           />
@@ -241,7 +242,7 @@ const ProfilePage = () => {
                             type="text"
                             id="Adresse"
                             name="Adresse"
-                            value={userData.Adresse}
+                            value={userData?.Adresse}
                             onChange={handleChange}
                             required
                           />
@@ -264,7 +265,7 @@ const ProfilePage = () => {
                                   type="text"
                                   id="experience"
                                   name="experience"
-                                  value={userData.experience}
+                                  value={userData?.experience}
                                   onChange={handleChange}
                                   required
                                 />
@@ -282,7 +283,7 @@ const ProfilePage = () => {
                                   type="text"
                                   id="prix"
                                   name="prix"
-                                  value={userData.prix}
+                                  value={userData?.prix}
                                   onChange={handleChange}
                                   required
                                 />
@@ -301,7 +302,7 @@ const ProfilePage = () => {
                                 type="text"
                                 id="specialite"
                                 name="specialite"
-                                value={userData.specialite}
+                                value={userData?.specialite}
                                 onChange={handleChange}
                                 required
                               />

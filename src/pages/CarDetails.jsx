@@ -244,8 +244,8 @@ const CarDetails = () => {
                   />
                   <div className="ms-2">
                     <div className="h7">
+                      {singleCarItem?.utilisateur?.Prenom}{" "}
                       {singleCarItem?.utilisateur?.Nom}
-                      {singleCarItem?.utilisateur?.Prenom}
                     </div>
                     <p>{singleCarItem?.utilisateur?.Numéro}</p>
                   </div>
