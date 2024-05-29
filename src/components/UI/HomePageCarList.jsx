@@ -9,7 +9,7 @@ const HomepageCarList = () => {
   const [cars, setCars] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  const feature = "Featured on Homepage"
+  const feature = "Mis en avant sur la page d'accueil"
 
   useEffect(() => {
     const fetchCars = async () => {

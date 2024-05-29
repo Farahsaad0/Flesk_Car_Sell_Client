@@ -349,7 +349,7 @@ const CreateAdForm = () => {
             name="description"
             value={formData.description}
             onChange={handleChange}
-            placeholder="Description de l'annonce"
+            placeholder="Description du véhicule"
             required
           />
         </FormGroup>
@@ -360,7 +360,7 @@ const CreateAdForm = () => {
             name="prix"
             value={formData.prix}
             onChange={handleChange}
-            placeholder="Prix de l'annonce"
+            placeholder="Prix "
             required
           />
         </FormGroup>
@@ -371,7 +371,7 @@ const CreateAdForm = () => {
             name="marque"
             value={formData.marque}
             onChange={handleChange}
-            placeholder="Marque de l'annonce"
+            placeholder="Marque"
             required
           />
         </FormGroup>
@@ -382,7 +382,7 @@ const CreateAdForm = () => {
             name="modele"
             value={formData.modele}
             onChange={handleChange}
-            placeholder="Modèle de l'annonce"
+            placeholder="Modèle de véhicule"
             required
           />
         </FormGroup>
@@ -398,13 +398,13 @@ const CreateAdForm = () => {
           />
         </FormGroup>
         <FormGroup>
-          <Label for="kilometrage">Kilometrage (en km)</Label>
+          <Label for="kilometrage">Kilométrage (en km)</Label>
           <Input
             type="number"
             name="kilometrage"
             value={formData.kilometrage}
             onChange={handleChange}
-            placeholder="kilometrage totale de vehicle"
+            placeholder="kilométrage totale de véhicle"
             required
           />
         </FormGroup>
@@ -415,18 +415,18 @@ const CreateAdForm = () => {
             name="vitesse"
             value={formData.vitesse}
             onChange={handleChange}
-            placeholder="vitesse maximal de vehicule"
+            placeholder="Vitesse maximal de véhicule"
             required
           />
         </FormGroup>
         <FormGroup>
-          <Label for="location">Location</Label>
+          <Label for="location">Localisation</Label>
           <Input
             type="text"
             name="location"
             value={formData.location}
             onChange={handleChange}
-            placeholder="ou ete vous ?"
+            placeholder="Votre adresse exacte ?"
             required
           />
         </FormGroup>
@@ -488,7 +488,7 @@ const CreateAdForm = () => {
         )}
         {sponsorship.length > 0 ? (
           <FormGroup>
-            <Label for="sponsorshipSelect">Sponsorship Plan:</Label>
+            <Label for="sponsorshipSelect">Nos Pack sponsor:</Label>
             <Input
               id="sponsorshipSelect"
               name="select"
@@ -496,7 +496,7 @@ const CreateAdForm = () => {
               value={formData.sponsorship}
               onChange={handleSponsorshipChange}
             >
-              <option value="">Sélectionnez un plan</option>
+              <option value="">Sélectionnez un pack</option>
               {sponsorship.map((sponsorship) => (
                 <option key={sponsorship._id} value={sponsorship._id}>
                   {sponsorship.sponsorship}
@@ -516,7 +516,7 @@ const CreateAdForm = () => {
       </Form>
 
       <Modal isOpen={modal} toggle={toggle} size="xl">
-        <ModalHeader toggle={toggle}>Nos plans de sponsorships:</ModalHeader>
+        <ModalHeader toggle={toggle}>Nos pack sponsor:</ModalHeader>
         <ModalBody>
           <Row>
             {sponsorships.map((sponsorship) => (
