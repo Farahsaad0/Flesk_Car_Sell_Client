@@ -31,8 +31,8 @@ body {
 }
 
 .bg-c-lite-green {
-        background: -webkit-gradient(linear, left top, right top, from(#ee1414), to(#f50f32));
-    background: linear-gradient(to right, #ee5a6f, #ec2f3b);
+        background: -webkit-gradient(linear, left top, right top, from(#cd2028), to(#D3D3D3));
+    background: linear-gradient(to right, #e7a1a1, #cd2028);
 }
 
 .user-profile {
@@ -134,5 +134,8 @@ p {
     -webkit-transition: all 0.3s ease-in-out;
     transition: all 0.3s ease-in-out;
 }
-
+.b {
+    color :#cd2028,
+    
+}
 

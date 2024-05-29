@@ -210,9 +210,19 @@ const ProfilePage = () => {
                             onChange={handleChange}
                             required
                           />
+                           
                           <Form.Control.Feedback type="invalid">
                             Veuillez fournir un email valide.
                           </Form.Control.Feedback>
+                          <Form.Label htmlFor="Numéro">Numéro*</Form.Label>
+                          <Form.Control
+                            type=" Numéro"
+                            id=" Numéro"
+                            name=" Numéro"
+                            value={userData. Numéro}
+                            onChange={handleChange}
+                            required
+                          />
                         </Form.Group>
                         <Form.Group
                           as={Col}
@@ -232,6 +242,15 @@ const ProfilePage = () => {
                           <Form.Control.Feedback type="invalid">
                             Veuillez fournir une photo.
                           </Form.Control.Feedback>
+                          <Form.Label htmlFor="Adresse">Adresse*</Form.Label>
+                          <Form.Control
+                            type="Adresse"
+                            id=" Adresse"
+                            name=" Adresse"
+                            value={userData. Adresse}
+                            onChange={handleChange}
+                            required
+                          />
                         </Form.Group>
                       </Row>
 
@@ -354,7 +373,7 @@ const ProfilePage = () => {
                       </Row>
 
                       <div className="d-flex justify-content-end">
-                        <Button type="submit" className="btn btn-primary mt-3">
+                        <Button type="submit"  color="" style={{ backgroundColor: "#1b2651" }}> 
                           Enregistrer
                         </Button>
                       </div>

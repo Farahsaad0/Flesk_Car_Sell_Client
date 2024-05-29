@@ -115,7 +115,7 @@ const Header = () => {
                         ? `${userData.Nom} ${userData.Prenom}`
                         : "Profile"}
                     </Link>
-                    <button onClick={handleLogout} className="btn btn-info">
+                    <button onClick={handleLogout} color="" style={{ backgroundColor: "#cd2028" }}>
                       Déconnecter
                     </button>
                   </>

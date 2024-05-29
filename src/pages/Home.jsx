@@ -56,8 +56,8 @@ const Home = () => {
         <Container>
           <Row>
             <Col lg="12" className="text-center mb-5">
-              <h6 className="section__subtitle">Come with</h6>
-              <h2 className="section__title">Hot Offers</h2>
+              <h6 className="section__subtitle">Nos annonces</h6>
+              <h2 className="section__title">Sponsorisées</h2>
             </Col>
           </Row>
           <HomepageCarList />
@@ -71,8 +71,8 @@ const Home = () => {
         <Container>
           <Row>
             <Col lg="12" className="mb-4 text-center">
-              <h6 className="section__subtitle">Our clients says</h6>
-              <h2 className="section__title">Testimonials</h2>
+              <h6 className="section__subtitle">Liste de nos</h6>
+              <h2 className="section__title">Experts</h2>
             </Col>
 
             <Testimonial />
@@ -81,7 +81,7 @@ const Home = () => {
       </section>
 
       {/* =============== blog section =========== */}
-      <section>
+      {/*<section>
         <Container>
           <Row>
             <Col lg="12" className="mb-5 text-center">
@@ -92,7 +92,7 @@ const Home = () => {
             <BlogList />
           </Row>
         </Container>
-      </section>
+    </section> */}
     </Helmet>
   );
 };

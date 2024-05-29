@@ -53,7 +53,7 @@ const ExpertCard = ({ expert }) => {
         </div>
         <div className="card-footer">
           <div className="text-right">
-            <Button color="primary" className="btn btn-sm"onClick={handleClick} >
+            <Button style={{backgroundColor:"#cd2028"}} onClick={handleClick} >
               Voir Profil
             </Button>
           </div>

@@ -486,7 +486,7 @@ const CreateAdForm = () => {
           </Button>
         )}
 
-        <Button type="submit" color="" style={{backgroundColor:"#cd2028"}}>
+        <Button type="submit" color="" style={{ backgroundColor: "#cd2028" }}>
           Créer annonce
         </Button>
       </Form>
