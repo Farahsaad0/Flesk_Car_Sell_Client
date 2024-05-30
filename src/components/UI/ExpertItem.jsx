@@ -80,8 +80,8 @@ const ExpertItem = ({ expert, carAdId, hiredExpertsForCar = [] }) => {
                 <b>{`${expert.Nom} ${expert.Prenom}`}</b>
               </h2>
               <p className="text-muted text-sm">
-                <b>About: </b>
-                <br />
+                
+                
                 <span>
                   <b>Adresse:</b> {expert?.Adresse}
                 </span>
@@ -96,6 +96,10 @@ const ExpertItem = ({ expert, carAdId, hiredExpertsForCar = [] }) => {
                 <br />
                 <span>
                   <b>Expérience:</b> {expert?.ExpertId?.experience} ans
+                </span>
+                <br/>
+                <span>
+                  <b>Spécialité:</b> {expert?.ExpertId?.specialite} 
                 </span>
               </p>
             </div>
@@ -122,7 +126,7 @@ const ExpertItem = ({ expert, carAdId, hiredExpertsForCar = [] }) => {
         </ModalHeader>
         <ModalBody>
           <p>Email: {expert?.Email}</p>
-          <p>Spécialité: {expert?.ExpertId?.spécialité}</p>
+          <p>Spécialité: {expert?.ExpertId?.specialite}</p>
           <p>Expérience: {expert?.ExpertId?.experience} ans</p>
           <p>Prix: {expert?.ExpertId?.prix} DT</p>
           <Label for="jobDescription" sm={2}>
