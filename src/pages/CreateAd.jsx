@@ -110,9 +110,13 @@ const CreateAdForm = () => {
         formDataToSend.append(key, formData[key]);
       }
 
+      if (photos.length >0) {
+        
+      
       photos.forEach((photo, index) => {
         formDataToSend.append(`photos`, photo);
       });
+    }
 
       const response = await axios.post("/carAds", formDataToSend, {
         headers: {

@@ -3,11 +3,12 @@ import { Link } from "react-router-dom";
 import "../../styles/Devenir.css";
 import useAuth from "../../hooks/useAuth";
 import axios from "../../api/axios";
+import { toast } from "sonner";
 
 const ApplyForAnExpertRoleForm = () => {
   const { auth } = useAuth();
   const [data, setData] = useState({
-    spécialité: "",
+    specialite: "",
     prix: "",
     experience: "",
   });
@@ -26,20 +27,26 @@ const ApplyForAnExpertRoleForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!auth._id) {
-      setError("Vous devez vous connecter ou créer un compte pour envoyer cette demande.");
+      setError(
+        "Vous devez vous connecter ou créer un compte pour envoyer cette demande."
+      );
       return;
     }
     try {
       const response = await axios.post("/demandeExpert", {
         userId: auth._id,
-        spécialité: data.spécialité,
+        specialite: data.specialite,
         prix: data.prix,
         experience: data.experience,
       });
       console.log(response.data);
-      setSuccessMessage("Votre demande a été envoyée avec succès !");
+      // setSuccessMessage("Votre demande a été envoyée avec succès !");
+      toast.success("Votre demande a été envoyée avec succès !")
     } catch (error) {
-      console.error("Erreur lors de l'envoi de la demande pour devenir expert :", error);
+      console.error(
+        "Erreur lors de l'envoi de la demande pour devenir expert :",
+        error
+      );
     }
   };
 
@@ -60,14 +67,14 @@ const ApplyForAnExpertRoleForm = () => {
             <input
               type="text"
               placeholder="Spécialité"
-              name="spécialité"
+              name="specialite"
               onChange={handleChange}
-              value={data.spécialité}
+              value={data.specialite}
               required
               className="input"
             />
             <input
-              type="number"
+              type="text"
               placeholder="prix par consultation"
               name="prix"
               onChange={handleChange}
@@ -76,7 +83,7 @@ const ApplyForAnExpertRoleForm = () => {
               className="input"
             />
             <input
-              type="number"
+              type="text"
               placeholder="expérience"
               name="experience"
               onChange={handleChange}
@@ -85,7 +92,9 @@ const ApplyForAnExpertRoleForm = () => {
               className="input"
             />
             {error && <div className="error_msg">{error}</div>}
-            {successMessage && <div className="success_msg">{successMessage}</div>}
+            {successMessage && (
+              <div className="success_msg">{successMessage}</div>
+            )}
             <button type="submit" className="green_btn">
               Demander
             </button>
