@@ -65,8 +65,12 @@ const UserCarList = () => {
             key={car._id}
             className="mb-3 d-flex align-items-center justify-content-between"
           >
-            <CarItem car={car} />
-            <div>
+            <CarItem
+              car={car}
+              onEdit={() => handleEdit(car._id)}
+              onDelete={() => handleDelete(car._id)}
+            />
+            {/* <div>
               <Button
                 color="secondary"
                 size="sm"
@@ -82,7 +86,7 @@ const UserCarList = () => {
               >
                 <BsTrash />
               </Button>
-            </div>
+            </div> */}
           </div>
         ))
       )}

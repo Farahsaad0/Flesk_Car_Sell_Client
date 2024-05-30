@@ -1,5 +1,5 @@
 import React, { useRef, useState, useEffect } from "react";
-import { Container, Row, Col } from "reactstrap";
+import { Container, Row, Col, Button } from "reactstrap";
 import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 import "../../styles/header.css";
@@ -19,7 +19,7 @@ const navLinks = [
     path: "/cars",
     display: "Cars",
   },
- 
+
   {
     path: "/contact",
     display: "Contact",
@@ -115,9 +115,13 @@ const Header = () => {
                         ? `${userData.Nom} ${userData.Prenom}`
                         : "Profile"}
                     </Link>
-                    <button onClick={handleLogout} color="" style={{ backgroundColor: "#cd2028" }}>
+                    <Button
+                      onClick={handleLogout}
+                      color=""
+                      style={{ backgroundColor: "#cd2028" }}
+                    >
                       Déconnecter
-                    </button>
+                    </Button>
                   </>
                 ) : (
                   <>
@@ -227,17 +231,14 @@ const Header = () => {
                     !userData.Nom &&
                     (item.path === "/myads" || item.path === "/demande")
                   ) {
-                    
                     return null;
                   } else if (
                     userData.Nom &&
                     userData.Role !== ("Expert", "Utilisateur") &&
                     item.path === "/demande"
                   ) {
-                    
                     return null;
                   } else {
-                    
                     return (
                       <NavLink
                         to={item.path}
@@ -255,14 +256,14 @@ const Header = () => {
                 })}
               </div>
             </div>
-            <div className="nav__right">
+            {/* <div className="nav__right">
               <div className="search__box">
                 <input type="text" placeholder="Search" />
                 <span>
                   <i className="ri-search-line"></i>
                 </span>
               </div>
-            </div>
+            </div> */}
           </div>
         </Container>
       </div>

@@ -1,10 +1,10 @@
-a{
+a {
   text-decoration: none;
 }
 
 .header__top {
   padding: 10px 0px;
-  background:#d3d3d3 	;
+  background: #d3d3d3;
   color: #fff;
 }
 
@@ -39,7 +39,7 @@ a{
 }
 
 .header__top__right a:hover {
-  color: #fff;
+  color: #1b2651;
 }
 
 /* ============ header middle style =========== */
@@ -58,7 +58,7 @@ a{
 
 .logo h1 a {
   text-decoration: none;
-  color: #000000	;
+  color: #000000;
   font-weight: 700;
 }
 
@@ -82,7 +82,7 @@ a{
 }
 
 .header__btn {
-  background: #cd2028		!important;
+  background: #cd2028 !important;
   padding: 10px 20px;
   border: none;
   outline: none;
@@ -107,7 +107,7 @@ a{
 
 .main__navbar {
   padding: 15px 0px;
-  background:  #cd2028;
+  background: #cd2028;
 }
 
 .mobile__menu i {
@@ -137,12 +137,12 @@ a{
 }
 
 .search__box {
-  border: 1px solid #d3d3d3 ;
+  border: 1px solid #d3d3d3;
   padding: 7px 12px;
   display: flex;
   align-items: center;
   border-radius: 50px;
-  background:#C0C0C0	 ;
+  background: #c0c0c0;
 }
 
 .search__box input {
@@ -209,10 +209,9 @@ a{
   }
   .profile_icon {
     /* Ajoutez vos styles personnalisés pour l'icône de profil ici */
-    color:#1b2651;/* Exemple: changer la couleur de l'icône en bleu */
+    color: #1b2651; /* Exemple: changer la couleur de l'icône en bleu */
     font-size: 20px; /* Exemple: changer la taille de l'icône */
     margin-right: 5px; /* Exemple: ajouter une marge à droite de l'icône */
     /* Ajoutez d'autres styles personnalisés au besoin */
   }
-  
 }

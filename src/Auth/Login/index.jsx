@@ -35,6 +35,10 @@ const Login = () => {
         { email, password },
         { withCredentials: true }
       );
+      if (response.data.User.Verified === false) {
+        setIsNotVerified(true);
+        return;
+      }
       const { token, User } = response.data;
       const { _id, Nom, Prenom, Role, photo } = User;
 
@@ -111,7 +115,7 @@ const Login = () => {
                     checked={persist}
                   />
                   <label className="form-check-label" htmlFor="persist">
-                  rester connecté (24h)
+                    rester connecté (24h)
                   </label>
                 </div>
               </div>

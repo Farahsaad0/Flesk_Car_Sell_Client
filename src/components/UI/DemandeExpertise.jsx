@@ -145,7 +145,7 @@ const ExpertsDemande = () => {
                 </thead>
                 <tbody>
                   {clientJobs?.length > 0 ? (
-                    clientJobs.map((job, index) => (
+                    clientJobs?.map((job, index) => (
                       <tr key={index}>
                         {/* <Link
                           to={`/consultation/${job._id}`}
@@ -155,20 +155,20 @@ const ExpertsDemande = () => {
                           onClick={() => goToChat(job._id)}
                           style={{ cursor: "pointer" }}
                         >
-                          {job.expert.Nom} {job.expert.Prenom}
+                          {job?.expert?.Nom} {job?.expert?.Prenom}
                         </td>
                         {/* </Link> */}
                         <td
                           onClick={() => goToChat(job._id)}
                           style={{ cursor: "pointer" }}
                         >
-                          {job.expert.Email}
+                          {job?.expert?.Email}
                         </td>
                         <td
                           onClick={() => goToChat(job._id)}
                           style={{ cursor: "pointer" }}
                         >
-                          {job.jobDescription}
+                          {job?.jobDescription}
                         </td>
                         <td className="button-group">
                         {renderButton(job)}
@@ -224,35 +224,35 @@ const ExpertsDemande = () => {
                     </tr>
                   </thead>
                   <tbody>
-                    {expertJobs.length > 0 ? (
-                      expertJobs.map((job, index) => (
+                    {expertJobs?.length > 0 ? (
+                      expertJobs?.map((job, index) => (
                         <tr key={index}>
                           <td
                             onClick={() => goToChat(job._id)}
                             style={{ cursor: "pointer" }}
                           >
                             {/* <Link to={`/consultation/${job._id}`}> */}
-                            {job.client.Nom} {job.client.Prenom}
+                            {job?.client?.Nom} {job?.client?.Prenom}
                             {/* </Link> */}
                           </td>
                           <td
                             onClick={() => goToChat(job._id)}
                             style={{ cursor: "pointer" }}
                           >
-                            {job.client.Email}
+                            {job?.client?.Email}
                           </td>
                           <td
                             onClick={() => goToChat(job._id)}
                             style={{ cursor: "pointer" }}
                           >
-                            {job.jobDescription}
+                            {job?.jobDescription}
                           </td>
                           <td className="button-group">
                             <Button
                               className="btn mx-3"
                               color="success"
                               size="sm"
-                              onClick={() => acceptDemande(job._id)}
+                              onClick={() => acceptDemande(job?._id)}
                               disabled={job.accepted === "accepted"}
                             >
                               Accepter
@@ -261,7 +261,7 @@ const ExpertsDemande = () => {
                               className="btn"
                               color="warning"
                               size="sm"
-                              onClick={() => rejeterDemande(job._id)}
+                              onClick={() => rejeterDemande(job?._id)}
                               disabled={job.accepted === "accepted"}
                             >
                               Rejeter

@@ -39,7 +39,7 @@ const Footer = () => {
     <footer className="footer">
       <Container>
         <Row>
-          <Col lg="4" md="4" sm="12">
+          <Col lg="6" md="4" sm="12">
             <div className="logo footer__logo">
               <h1>
                 <Link to="/home" className=" d-flex align-items-center gap-2">
@@ -55,9 +55,9 @@ const Footer = () => {
             </p>
           </Col>
 
-          <Col lg="2" md="4" sm="6">
+          <Col lg="2" md="4" sm="6"  className="ms-5">
             <div className="mb-4">
-              <h5 className="footer__link-title">Quick Links</h5>
+              <h5 className="footer__link-title">Lien Rapides</h5>
               <ListGroup>
                 {quickLinks.map((item, index) => (
                   <ListGroupItem key={index} className="p-0 mt-3 quick__link">
@@ -68,11 +68,11 @@ const Footer = () => {
             </div>
           </Col>
 
-          <Col lg="3" md="4" sm="6">
+          <Col lg="3" md="4" sm="6"  className="ms-5">
             <div className="mb-4">
               <h5 className="footer__link-title mb-4">Notre agence central</h5>
-              <p className="office__info">Monstir , rue de la liberté </p>
-              <p className="office__info">Phone: +216 55 555 555</p>
+              <p className="office__info">Monastir , rue de la liberté </p>
+              <p className="office__info">Tel: +216 55 555 555</p>
 
               <p className="office__info">Email: farah.saad505@gmail.com</p>
 
@@ -80,7 +80,7 @@ const Footer = () => {
             </div>
           </Col>
 
-          <Col lg="3" md="4" sm="12">
+          {/* <Col lg="3" md="4" sm="12">
             <div className="mb-4">
               <h5 className="footer__link-title"></h5>
               <p className="section__description"></p>
@@ -91,7 +91,7 @@ const Footer = () => {
                 </span>
               </div>
             </div>
-          </Col>
+          </Col> */}
 
           <Col lg="12">
             <div className="footer__bottom">

@@ -1,11 +1,12 @@
 import React from "react";
-import { Col } from "reactstrap";
+import { Button, Col } from "reactstrap";
 import { Link } from "react-router-dom";
 import "../../styles/car-item.css";
 import { formatDistanceToNow } from "date-fns";
+import { BsPencilSquare, BsTrash } from "react-icons/bs";
 import { fr } from "date-fns/locale";
 
-const CarItem = ({ car }) => {
+const CarItem = ({ car, onEdit, onDelete }) => {
   // Vérifiez si car est défini avant de tenter de le déstructurer
   if (!car) {
     return <div>mafamma chay!!</div>; // Ou tout autre composant de chargement ou message d'erreur approprié
@@ -31,7 +32,14 @@ const CarItem = ({ car }) => {
 
   return (
     <Col lg="3" md="4" sm="6" className="mb-2 ">
-      <div className={`car__item ${car.sponsorship?.sponsorshipStatus ===  "active" && car.sponsorship?.features.includes("Annonce mise en avant") ? "golden_border" : ""}`}>
+      <div
+        className={`car__item ${
+          car.sponsorship?.sponsorshipStatus === "active" &&
+          car.sponsorship?.features.includes("Annonce mise en avant")
+            ? "golden_border"
+            : ""
+        }`}
+      >
         <Link to={`/cars/${car._id}`}>
           <div
             className="car__img"
@@ -54,7 +62,12 @@ const CarItem = ({ car }) => {
         </Link>
 
         <div className="car__item-content mt-4">
-          <h4 className="section__title text-center" style={{ height: "2.5em", overflowY: "auto" }}>{titre}</h4>
+          <h4
+            className="section__title text-center"
+            style={{ height: "2.5em", overflowY: "auto" }}
+          >
+            {titre}
+          </h4>
           {/* Utilisez titre ici */}
           <div
             className="description-container"
@@ -78,7 +91,6 @@ const CarItem = ({ car }) => {
             </span> */}
             <span className=" d-flex align-items-center gap-1">
               {/* <i className="ri-calendar-line"></i>{formatDistanceToNow(formattedDate, { locale: fr })} */}
-              
             </span>
           </div>
           <Link to={`/cars/${car._id}`} className="car__item__button__wrapper">
@@ -86,6 +98,22 @@ const CarItem = ({ car }) => {
               Details
             </button>
           </Link>
+          {onEdit && (
+            <Button
+              color="secondary"
+              size="m"
+              className="ms-4 mb-1"
+              onClick={onEdit}
+              title="Modifier"
+            >
+              <BsPencilSquare />
+            </Button>
+          )}
+          {onDelete && (
+            <Button color="danger" size="m" className=" ms-4 mb-1"onClick={onDelete}>
+              <BsTrash />
+            </Button>
+          )}
         </div>
       </div>
     </Col>

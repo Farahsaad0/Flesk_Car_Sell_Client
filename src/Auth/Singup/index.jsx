@@ -13,9 +13,9 @@ const Signup = () => {
     Password: "",
     ConfirmPassword: "",
     Role: "",
-    Numéro: "",
+    Numero: "",
     Adresse: "",
-    Spécialité: "",
+    Specialite: "",
     prix: "",
     experience: "",
   });
@@ -133,7 +133,7 @@ const Signup = () => {
                 placeholder="Numéro de téléphone"
                 name="Numéro"
                 onChange={handleChange}
-                value={data.Numéro}
+                value={data.Numero}
                 required
                 className={styles.input}
               />
@@ -179,10 +179,10 @@ const Signup = () => {
                 <>
                   <input
                     type="text"
-                    placeholder="Spécialité"
-                    name="Spécialité"
+                    placeholder="Specialite"
+                    name="Specialite"
                     onChange={handleChange}
-                    value={data.Spécialité}
+                    value={data.Specialite}
                     required
                     className={styles.input}
                   />

@@ -11,6 +11,7 @@ import {
   ModalHeader,
   ModalBody,
   ModalFooter,
+  Progress,
 } from "reactstrap";
 import axios from "../api/axios";
 import "../styles/CreateAdForm.css";
@@ -36,6 +37,7 @@ const CreateAdForm = () => {
   const [sponsorships, setSponsorships] = useState([]);
   const [sponsorship, setSponsorship] = useState([]);
   const [photos, setPhotos] = useState([]);
+  const [progress, setProgress] = useState(0);
   const [formData, setFormData] = useState({
     titre: "",
     description: "",
@@ -267,9 +269,10 @@ const CreateAdForm = () => {
       // const licensePlateCascade = await loadCascadeFile(xmlURL);
 
       const processedPhotos = await Promise.all(
-        selectedPhotos.map(async (file) => {
+        selectedPhotos.map(async (file, index) => {
           try {
             const processedBlob = await processImage(file, licensePlateCascade);
+            setProgress(((index + 1) / selectedPhotos.length) * 100);
             return processedBlob;
           } catch (error) {
             console.error("Error processing image:", error);
@@ -289,6 +292,7 @@ const CreateAdForm = () => {
       console.error("Error initializing license plate detection:", error);
     }
     cv.FS_unlink(xmlURL, xmlURL);
+    setProgress(0);
   };
 
   // const handlePhotosChange = async (e) => {
@@ -460,7 +464,10 @@ const CreateAdForm = () => {
           id="canvas"
           style={{ width: "100%", display: "none" }}
         ></canvas>
-
+        {/* progress bar here */}
+        {progress > 0 && (
+          <Progress value={progress}>{Math.round(progress)}%</Progress>
+        )}
         {photos.length > 0 && (
           <FormGroup>
             <Label>Prévisualisation des photos:</Label>
@@ -498,18 +505,21 @@ const CreateAdForm = () => {
             >
               <option value="">Sélectionnez un pack</option>
               {sponsorship.map((sponsorship) => (
-                <option key={sponsorship._id} value={sponsorship._id}>
+                <option key={sponsorship._id} value={sponsorship._id} selected>
                   {sponsorship.sponsorship}
                 </option>
               ))}
             </Input>
           </FormGroup>
         ) : (
-          <Button  onClick={toggle} className="golden_border" style={{color:"#1a1a1a"}}>
+          <Button
+            onClick={toggle}
+            className="golden_border"
+            style={{ color: "#1a1a1a" }}
+          >
             sponsoriser
           </Button>
         )}
-
         <Button type="submit" color="" style={{ backgroundColor: "#cd2028" }}>
           Créer annonce
         </Button>
