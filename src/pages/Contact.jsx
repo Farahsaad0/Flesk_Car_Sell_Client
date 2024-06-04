@@ -105,7 +105,7 @@ const Contact = () => {
                 </FormGroup>
 
                 <Button className=" contact__btn" type="submit">
-                  Send Message
+                  Envoyer Message
                 </Button>
               </Form>
             </Col>
