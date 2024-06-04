@@ -11,6 +11,7 @@ const ApplyForAnExpertRoleForm = () => {
     specialite: "",
     prix: "",
     experience: "",
+    documents: null,
   });
   const [error, setError] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
@@ -24,6 +25,14 @@ const ApplyForAnExpertRoleForm = () => {
     }));
   };
 
+  const handleFileChange = (e) => {
+    setData((prevData) => ({
+      ...prevData,
+
+      documents: e.target.files[0],
+    }));
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!auth._id) {
@@ -33,15 +42,36 @@ const ApplyForAnExpertRoleForm = () => {
       return;
     }
     try {
-      const response = await axios.post("/demandeExpert", {
-        userId: auth._id,
-        specialite: data.specialite,
-        prix: data.prix,
-        experience: data.experience,
+      const formData = new FormData(); // Create a new FormData instance
+
+      Object.keys(data).forEach((key) => {
+        formData.append(key, data[key]); // Append each field to the formData
       });
+
+      const response = await axios.post(
+        "/demandeExpert",
+        {
+          userId: auth._id,
+          specialite: data.specialite,
+          prix: data.prix,
+          documents: data.documents,
+          experience: data.experience,
+        },
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+      // const response = await axios.post("/demandeExpert", {
+      //   userId: auth._id,
+      //   specialite: data.specialite,
+      //   prix: data.prix,
+      //   experience: data.experience,
+      // });
       console.log(response.data);
       // setSuccessMessage("Votre demande a été envoyée avec succès !");
-      toast.success("Votre demande a été envoyée avec succès !")
+      toast.success("Votre demande a été envoyée avec succès !");
     } catch (error) {
       console.error(
         "Erreur lors de l'envoi de la demande pour devenir expert :",
@@ -90,6 +120,15 @@ const ApplyForAnExpertRoleForm = () => {
               value={data.experience}
               required
               className="input"
+            />
+            <input
+              type="file"
+              placeholder="Document de Confiance"
+              name="documents"
+              onChange={handleFileChange}
+              // value={data.documents}
+              required
+              className={"input"}
             />
             {error && <div className="error_msg">{error}</div>}
             {successMessage && (

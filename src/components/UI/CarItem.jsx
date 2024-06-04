@@ -34,8 +34,7 @@ const CarItem = ({ car, onEdit, onDelete }) => {
     <Col lg="3" md="4" sm="6" className="mb-2 ">
       <div
         className={`car__item ${
-          car.sponsorship?.sponsorshipStatus === "active" &&
-          car.sponsorship?.features.includes("Annonce mise en avant")
+          car.sponsorship?.features?.includes("Annonce mise en avant")
             ? "golden_border"
             : ""
         }`}
@@ -62,18 +61,20 @@ const CarItem = ({ car, onEdit, onDelete }) => {
         </Link>
 
         <div className="car__item-content mt-4">
-          <h4
-            className="section__title text-center"
-            style={{ height: "2.5em", overflowY: "auto" }}
-          >
-            {titre}
-          </h4>
+          <Link to={`/cars/${car._id}`} style={{textDecoration:"none"}}>
+            <h4
+              className="section__title text-center"
+              style={{ height: "2.5em", overflowY: "auto" }}
+            >
+              {titre}
+            </h4>
+          </Link>
           {/* Utilisez titre ici */}
           <div
             className="description-container"
             style={{ height: "3em", overflowY: "auto" }}
           >
-            <p className="description">{description}</p>
+            <p className="description" style={{ whiteSpace:"pre"}}>{description}</p>
           </div>
 
           {/* Utilisez description ici */}
@@ -110,7 +111,12 @@ const CarItem = ({ car, onEdit, onDelete }) => {
             </Button>
           )}
           {onDelete && (
-            <Button color="danger" size="m" className=" ms-4 mb-1"onClick={onDelete}>
+            <Button
+              color="danger"
+              size="m"
+              className=" ms-4 mb-1"
+              onClick={onDelete}
+            >
               <BsTrash />
             </Button>
           )}

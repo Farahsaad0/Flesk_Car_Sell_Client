@@ -1,6 +1,4 @@
-body {
-    background-color: #f9f9fa
-}
+
 
 .padding {
     padding: 3rem !important
@@ -48,7 +46,7 @@ body {
 }
 
 .img-radius {
-    border-radius: 5px;
+    border-radius: 50%;
     width: 4.5rem;
 }
 
@@ -58,7 +56,7 @@ h6 {
     font-size: 14px;
 }
 
-.card .card-block p {
+.card-block p {
     line-height: 25px;
 }
 

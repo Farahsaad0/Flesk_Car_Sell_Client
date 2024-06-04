@@ -84,7 +84,7 @@ function ExpertProfile() {
       />
       <div className="container bootstrap snippets bootdey">
         <div className="row">
-          <div className="profile-nav col-md-3">
+          <div className="profile-nav col col-md-3">
             <div className="panel">
               <div className="user-heading round">
                 <a href="#">
@@ -101,7 +101,7 @@ function ExpertProfile() {
             </div>
           </div>
 
-          <div className="panel col">
+          <div className="profile-info panel col">
             <div className="bio-graph-heading" style={{ color: "#1b2651" }}>
               <b>
                 "Passionné par l'automobile depuis toujours, je suis là pour
@@ -138,12 +138,12 @@ function ExpertProfile() {
                 </div>
                 <div className="bio-row">
                   <p>
-                    <span>Téléphone </span>: {expert.Numéro}
+                    <span>Téléphone </span>: {expert.Numero}
                   </p>
                 </div>
                 <div className="bio-row">
                   <p>
-                    <span>Spécialité </span>: {expert.ExpertId.spécialité}
+                    <span>Spécialité </span>: {expert.ExpertId.specialite}
                   </p>
                 </div>
                 <div className="bio-row">

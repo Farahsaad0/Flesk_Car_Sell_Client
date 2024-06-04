@@ -1,4 +1,4 @@
-body {
+/* body {
     color: #797979;
     background: #f1f2f7;
     font-family: 'Open Sans', sans-serif;
@@ -8,7 +8,7 @@ body {
     text-rendering: optimizeLegibility;
     -webkit-font-smoothing: antialiased;
     -moz-font-smoothing: antialiased;
-}
+} */
 
 .profile-nav, .profile-info{
     margin-top:30px;   

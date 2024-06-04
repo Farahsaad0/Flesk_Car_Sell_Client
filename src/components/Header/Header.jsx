@@ -11,30 +11,35 @@ const navLinks = [
     path: "/home",
     display: "Home",
   },
-  {
-    path: "/about",
-    display: "About",
-  },
+
   {
     path: "/cars",
     display: "Cars",
   },
 
   {
-    path: "/contact",
-    display: "Contact",
-  },
-  {
     path: "/myads",
     display: "Mes annonces",
+  },
+  {
+    path: "/demande",
+    display: "Demande d'expertise",
+  },
+  {
+    path: "/Historique_de_transaction",
+    display: "Historique de transaction",
   },
   {
     path: "/Experts",
     display: "Nos Experts",
   },
   {
-    path: "/demande",
-    display: "Demande d'expertise",
+    path: "/contact",
+    display: "Contact",
+  },
+  {
+    path: "/about",
+    display: "About",
   },
 ];
 
@@ -228,12 +233,14 @@ const Header = () => {
                       </NavLink>
                     );
                   } else if (
-                    !userData.Nom &&
-                    (item.path === "/myads" || item.path === "/demande")
+                    !userData.Role &&
+                    (item.path === "/myads" ||
+                      item.path === "/demande" ||
+                      item.path === "/Historique_de_transaction")
                   ) {
                     return null;
                   } else if (
-                    userData.Nom &&
+                    userData.Role &&
                     userData.Role !== ("Expert", "Utilisateur") &&
                     item.path === "/demande"
                   ) {

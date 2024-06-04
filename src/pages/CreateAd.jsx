@@ -358,6 +358,7 @@ const CreateAdForm = () => {
             value={formData.description}
             onChange={handleChange}
             placeholder="Description du véhicule"
+            style={{maxHeight:"20rem"}}
             required
           />
         </FormGroup>
@@ -507,9 +508,8 @@ const CreateAdForm = () => {
               value={formData.sponsorship}
               onChange={handleSponsorshipChange}
             >
-              <option value="">Sélectionnez un pack</option>
               {sponsorship.map((sponsorship) => (
-                <option key={sponsorship._id} value={sponsorship._id} selected>
+                <option key={sponsorship._id} value={sponsorship._id} defaultValue>
                   {sponsorship.sponsorship}
                 </option>
               ))}

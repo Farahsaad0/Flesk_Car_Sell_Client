@@ -1,21 +1,37 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { Button, Form, FormGroup, Label, Input, Row } from "reactstrap";
+import {
+  Button,
+  Form,
+  FormGroup,
+  Label,
+  Input,
+  Row,
+  Modal,
+  ModalHeader,
+  ModalBody,
+  ModalFooter,
+} from "reactstrap";
 import axios from "../../api/axios";
+import "../../styles/editCar.css";
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 import Loader from "../loader/Loader";
 import * as cv from "../../opencv/opencv";
 import Utils from "../../assets/utils";
+import SponsorshipItemAlt from "../sponsorship/SponsorshipItemAlt";
 
 const EditCarAd = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const axiosPrivate = useAxiosPrivate();
   const canvasRef = useRef(null);
+  const [modal, setModal] = useState(false);
+  const toggle = () => setModal(!modal);
+  const [sponsorships, setSponsorships] = useState([]);
 
   let licensePlateCascade = null;
 
-  const [photos, setPhotos] = useState([]);
+  const [newPhotos, setNewPhotos] = useState([]);
   const [carData, setCarData] = useState({
     titre: "",
     description: "",
@@ -33,6 +49,7 @@ const EditCarAd = () => {
     const fetchCarAd = async () => {
       try {
         const response = await axios.get(`/carAds/details/${id}`);
+        console.log(response.data);
         setCarData(response.data);
         setLoading(false);
       } catch (error) {
@@ -40,27 +57,37 @@ const EditCarAd = () => {
         setLoading(false);
       }
     };
+
+    const fetchSponsorships = async () => {
+      try {
+        const response = await axios.get("/sponsorships");
+        setSponsorships(response.data);
+      } catch (error) {
+        console.error("Error fetching sponsorships:", error);
+      }
+    };
     fetchCarAd();
+    fetchSponsorships();
   }, [id]);
 
-  const imageUrl = `http://localhost:8000/images/${carData.photo}`;
+  // const imageUrl = `http://localhost:8000/images/${carData.photo}`;
 
   const handleChange = (e) => {
-    const { name, value, files } = e.target;
-    const newValue = name === "photo" ? files[0] : value;
+    const { name, value } = e.target;
+    const newValue = value;
 
     setCarData((prevCarData) => ({
       ...prevCarData,
       [name]: newValue,
     }));
 
-    if (name === "photo" && files.length > 0) {
-      const photoURL = URL.createObjectURL(files[0]);
-      setCarData((prevCarData) => ({
-        ...prevCarData,
-        photoURL: photoURL,
-      }));
-    }
+    // if (name === "photo" && files.length > 0) {
+    //   const photoURL = URL.createObjectURL(files[0]);
+    //   setCarData((prevCarData) => ({
+    //     ...prevCarData,
+    //     photoURL: photoURL,
+    //   }));
+    // }
   };
 
   const handleSubmit = async (e) => {
@@ -69,15 +96,18 @@ const EditCarAd = () => {
     try {
       const formDataToSend = new FormData();
       for (let key in carData) {
-        if (key === "photo" && carData[key] === null) {
+        if (key === "photos") {
+          console.log("qsdfqssdfqsd");
+          console.log("qsdfqssdfqsd");
+          console.log("qsdfqssdfqsd");
           continue;
         }
         formDataToSend.append(key, carData[key]);
       }
 
       // Append new processed photos if they exist
-      if (photos.length > 0) {
-        photos.forEach((photo, index) => {
+      if (newPhotos.length > 0) {
+        newPhotos.forEach((photo, index) => {
           formDataToSend.append(`photos`, photo);
         });
       }
@@ -246,7 +276,7 @@ const EditCarAd = () => {
       );
 
       console.log(licensePlateCascade);
-      setPhotos(validProcessedPhotos);
+      setNewPhotos(validProcessedPhotos);
     } catch (error) {
       console.error("Error initializing license plate detection:", error);
     }
@@ -311,16 +341,16 @@ const EditCarAd = () => {
               onChange={handleChange}
             />
           </FormGroup>
-          <FormGroup>
+          {/* <FormGroup>
             <Label for="sponsorship">Sponsorship</Label>
             <Input
-              type="text"
+              type="select"
               name="sponsorship"
               id="sponsorship"
               value={carData.sponsorship}
               onChange={handleChange}
             />
-          </FormGroup>
+          </FormGroup> */}
           <FormGroup>
             <Label for="annee">Année</Label>
             <Input
@@ -330,7 +360,7 @@ const EditCarAd = () => {
               value={carData.annee}
               onChange={handleChange}
             />
-          </FormGroup>
+          </FormGroup>{" "}
           <FormGroup>
             <Label for="photo">Photo</Label>
             <Input
@@ -349,8 +379,8 @@ const EditCarAd = () => {
           ></canvas>
           <h3>Aperçu de l'image :</h3>
           <Row>
-            {photos.length > 0
-              ? photos.map((photo, index) => (
+            {newPhotos.length > 0
+              ? newPhotos.map((photo, index) => (
                   <div
                     key={index}
                     className=" col-12 col-sm-6 col-md-4 "
@@ -379,10 +409,7 @@ const EditCarAd = () => {
                     style={{ alignContent: "center" }}
                   >
                     <img
-                      src={
-                        carData.photoURL ||
-                        `http://localhost:8000/images/${photo}`
-                      }
+                      src={`http://localhost:8000/images/${photo}`}
                       alt="Aperçu"
                       style={{
                         maxWidth: "100%",
@@ -398,11 +425,55 @@ const EditCarAd = () => {
                   </div>
                 ))}
           </Row>
+          {carData?.sponsorship?.sponsorshipStatus === "active" ? (
+            <FormGroup>
+              <Label for="sponsorshipSelect">Sponsorship Pack:</Label>
+              <Input
+                id="sponsorshipSelect"
+                name="select"
+                type="select"
+                value={carData.sponsorship.sponsorship}
+                disabled
+              >
+                {/* <option value="">Sélectionnez un pack</option> */}
+                <option defaultValue value={carData.sponsorship.sponsorship}>
+                  {carData.sponsorship.sponsorship}
+                </option>
+              </Input>
+            </FormGroup>
+          ) : (
+            <Button
+              onClick={toggle}
+              className="golden_border mt-3"
+              style={{ color: "#1a1a1a" }}
+            >
+              sponsoriser
+            </Button>
+          )}
           <Button color="primary" type="submit" className="mt-3">
             Modifier
           </Button>
         </Form>
       )}
+      <Modal isOpen={modal} toggle={toggle} size="xl">
+        <ModalHeader toggle={toggle}>Nos pack sponsor:</ModalHeader>
+        <ModalBody>
+          <Row>
+            {sponsorships.map((sponsorship) => (
+              <SponsorshipItemAlt
+                key={sponsorship._id}
+                sponsorship={sponsorship}
+                carAd={carData._id}
+              />
+            ))}
+          </Row>
+        </ModalBody>
+        <ModalFooter>
+          <Button color="secondary" onClick={toggle}>
+            Annuler
+          </Button>
+        </ModalFooter>
+      </Modal>
     </div>
   );
 };

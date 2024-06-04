@@ -3,7 +3,6 @@ import { Routes, Route, Navigate } from "react-router-dom";
 import Layout from "./components/Layout/Layout";
 import PersistLogin from "./components/PersistLogin";
 import RequireAuth from "./components/RequireAuth";
-import ApplyForAnExpertRoleForm from "./components/UI/DevenirExpert";
 
 const Home = React.lazy(() => import("./pages/Home"));
 const About = React.lazy(() => import("./pages/About"));
@@ -31,6 +30,12 @@ const ChangePassword = React.lazy(() =>
   import("./Auth/ResetPassword/resetPassword")
 );
 const ExpertiseChat = React.lazy(() => import("./components/UI/ExpertiseChat"));
+const HistoriqueDeTransaction = React.lazy(() =>
+  import("./components/UI/HistoriqueDeTransaction")
+);
+const ApplyForAnExpertRoleForm = React.lazy(() =>
+  import("./components/UI/DevenirExpert")
+);
 
 function App() {
   return (
@@ -47,7 +52,6 @@ function App() {
           <Route path="/contact" element={<Contact />} />
           <Route path="/expertprofile" element={<ExpertProfile />} />
           <Route path="/Experts" element={<ExpertsPage />} />
-          <Route path="/demandez_un_poste_d_expert" element={<ApplyForAnExpertRoleForm />} />
           {/*//* "Expert" and "Utilisateur" routes */}
           <Route
             element={
@@ -62,9 +66,15 @@ function App() {
             <Route path="/edit-car/:id" element={<EditCarAd />} />
             <Route path="/consultation/:jobId" element={<ExpertiseChat />} />
             <Route path="/demande" element={<ExpertsDemande />} />
+            <Route path="/Historique_de_transaction" element={<HistoriqueDeTransaction />} />
           </Route>
-          {/*//* "Expert" only routes */}
-          <Route element={<RequireAuth allowedRoles={["Expert"]} />}></Route>
+          {/*//* "Utilisateur" only routes */}
+          <Route element={<RequireAuth allowedRoles={["Utilisateur"]} />}>
+            <Route
+              path="/demandez_un_poste_d_expert"
+              element={<ApplyForAnExpertRoleForm />}
+            />
+          </Route>
           <Route path="/requestPasswordReset" element={<ResetPassword />} />
           <Route path="/changePassword/:token" element={<ChangePassword />} />
           <Route path="/signup" element={<Signup />} />

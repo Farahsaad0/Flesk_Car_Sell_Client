@@ -227,7 +227,7 @@ const CarDetails = () => {
                     </span>
                   </div>
 
-                  <p className="section__description">
+                  <p className="section__description"  style={{ whiteSpace:"pre"}}>
                     {singleCarItem.description || (
                       <small>aucune description donnee</small>
                     )}

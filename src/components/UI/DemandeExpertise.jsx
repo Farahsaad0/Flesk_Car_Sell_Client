@@ -99,31 +99,41 @@ const ExpertsDemande = () => {
   const renderButton = (job) => {
     let buttonText = "";
     let buttonOnClick = () => {};
-  
-    if (job.accepted === "accepted" && job.paymentStatus === "pending") {
+    let buttonClass = "btn ms-2 w-75";
+    let buttonDisabled = false;
+
+    if (job.accepted === "cancelled") {
+      buttonText = "Annulé";
+      buttonOnClick = () => goToChat(job._id);
+      buttonClass += " btn-danger";
+      buttonDisabled = true;
+    } else if (job.accepted === "accepted" && job.paymentStatus === "pending") {
       buttonText = "Payer";
       buttonOnClick = () => redirectToPaymentPage(job.paymentLink);
+      buttonClass += " btn-warning";
     } else if (job.paymentStatus === "completed") {
       buttonText = "Discuter";
       buttonOnClick = () => goToChat(job._id);
+      buttonClass += " btn-success";
     } else {
       buttonText = "Annuler";
       buttonOnClick = () => cancelDemande(job._id);
+      buttonClass += " btn-danger";
     }
-  
+
     return (
       <Button
-        className={`btn mx-3 ${job.accepted === "accepted" && "btn-danger"}`}
-        color="warning"
+        className={buttonClass}
+        // color="warning"
         size="sm"
         onClick={buttonOnClick}
-        disabled={job.accepted === "cancelled"}
+        disabled={buttonDisabled}
       >
         {buttonText}
       </Button>
     );
   };
-  
+
   return (
     <Container className={"my-4"}>
       <Row className={"mb-4"}>
@@ -170,9 +180,7 @@ const ExpertsDemande = () => {
                         >
                           {job?.jobDescription}
                         </td>
-                        <td className="button-group">
-                        {renderButton(job)}
-                        </td>
+                        <td className="button-group">{renderButton(job)}</td>
                       </tr>
                     ))
                   ) : (
@@ -211,7 +219,7 @@ const ExpertsDemande = () => {
             <Card>
               <CardTitle tag="h6" className="border-bottom p-3 mb-0">
                 <i className="bi bi-card-text me-2"> </i>
-                Demandes d'expertise
+                Demandes d'expertise reçu:
               </CardTitle>
               <CardBody className="">
                 <Table bordered hover>
@@ -249,7 +257,7 @@ const ExpertsDemande = () => {
                           </td>
                           <td className="button-group">
                             <Button
-                              className="btn mx-3"
+                              className="btn ms-3 w-auto "
                               color="success"
                               size="sm"
                               onClick={() => acceptDemande(job?._id)}
@@ -258,7 +266,7 @@ const ExpertsDemande = () => {
                               Accepter
                             </Button>
                             <Button
-                              className="btn"
+                              className="btn ms-3 w-auto "
                               color="warning"
                               size="sm"
                               onClick={() => rejeterDemande(job?._id)}

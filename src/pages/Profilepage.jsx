@@ -133,7 +133,7 @@ const ProfilePage = () => {
               <div className="row m-l-0 m-r-0">
                 <div className="col-sm-4 bg-c-lite-green user-profile">
                   <div className="card-block text-center text-white">
-                    <div className="m-b-25">
+                    <div className="m-b-25 round">
                       <img
                         src={userData?.photoURL || imageUrl}
                         className="img-radius"
@@ -367,7 +367,7 @@ const ProfilePage = () => {
                         </Form.Group>
                       </Row>
 
-                      <div className="d-flex justify-content-end">
+                      <div className="d-flex justify-content-end mt-3">
                         <Button
                           type="submit"
                           style={{ backgroundColor: "#1b2651" }}

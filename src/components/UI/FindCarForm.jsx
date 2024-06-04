@@ -1,8 +1,9 @@
-import React, { useState } from "react";
-import { Col, Form, FormGroup, Row } from "reactstrap";
+import React, { useEffect, useState } from "react";
+import { Col, Form, FormGroup, Input, Label, Row } from "reactstrap";
 import CarItem from "./CarItem"; // Importer le composant CarItem
 import "../../styles/find-car-form.css";
 import axios from "../../api/axios";
+import ReactPaginate from "react-paginate";
 
 const FindCarForm = ({ cars }) => {
   // États de formulaire pour chaque critère de recherche
@@ -15,12 +16,17 @@ const FindCarForm = ({ cars }) => {
   const [anneeMax, setAnneeMax] = useState("");
   const [modele, setModele] = useState("");
   const [searchResults, setSearchResults] = useState([]); // État pour stocker les résultats de la recherche
+  const [pageNumber, setPageNumber] = useState(0);
+  const [adsPerPage, setAdsPerPage] = useState(10);
+  const [totalPages, setTotalPages] = useState(0);
 
   // Fonction de recherche des annonces de voiture
   const searchCars = async () => {
     try {
       const response = await axios.get("/carAds/search", {
         params: {
+          page: pageNumber + 1,
+          limit: adsPerPage,
           marque: marque || undefined,
           modele: modele || undefined,
           date: date || undefined,
@@ -31,7 +37,9 @@ const FindCarForm = ({ cars }) => {
           adresse: adresse || undefined,
         },
       });
-      setSearchResults(response.data); // Mettre à jour les résultats de la recherche
+
+      setTotalPages(response?.data?.page);
+      setSearchResults(response?.data?.data); // Mettre à jour les résultats de la recherche
     } catch (error) {
       console.error(
         "Erreur lors de la recherche des annonces de voiture :",
@@ -40,6 +48,18 @@ const FindCarForm = ({ cars }) => {
       setSearchResults([]); // Réinitialiser les résultats de la recherche en cas d'erreur
     }
   };
+
+  const handlePageClick = ({ selected }) => {
+    setPageNumber(selected);
+  };
+
+  const handlePerPageChange = (e) => {
+    setAdsPerPage(parseInt(e.target.value)); // Parse the selected value to an integer
+    setPageNumber(0); // Reset page number when changing the number of users per page
+  };
+  useEffect(() => {
+    searchCars();
+  }, [pageNumber, adsPerPage]);
 
   // Fonction de gestion de la soumission du formulaire
   const handleSubmit = (e) => {
@@ -146,11 +166,52 @@ const FindCarForm = ({ cars }) => {
           </Form>
         </Col>
       </Row>
-      <div className="row w-100">
+      {searchResults.length > 0 && (
+        <Row className="row-cols-lg-auto  d-flex justify-content-between align-items-center my-3">
+          <Col className=" d-flex ml-auto gap-1">
+            <Col>
+              <Input
+                type="select"
+                id="perPageSelect"
+                value={adsPerPage}
+                onChange={handlePerPageChange}
+                style={{ width: "fit-content" }}
+              >
+                <option value={12}> 12 </option>
+                <option value={20}> 20 </option>
+                <option value={32}> 32 </option>
+              </Input>
+            </Col>
+            <Col>
+              <Label for="perPageSelect">par page</Label>
+            </Col>
+          </Col>
+        </Row>
+      )}
+      <Row className=" w-100">
         {searchResults.map((car) => (
           <CarItem key={car._id} car={car} />
         ))}
-      </div>
+      </Row>
+      <Row>
+        <nav aria-label="Page navigation ">
+          <ul className="pagination justify-content-center">
+            <ReactPaginate
+              breakLabel="..."
+              previousLabel={<div className="page-link">Previous</div>}
+              nextLabel={<div className="page-link">Next</div>}
+              pageCount={totalPages}
+              onPageChange={handlePageClick}
+              containerClassName={"pagination "}
+              pageRangeDisplayed={2}
+              activeClassName={" active"}
+              pageClassName={"page-item"}
+              pageLinkClassName={"page-link"}
+              renderOnZeroPageCount={null}
+            />
+          </ul>
+        </nav>
+      </Row>
     </>
   );
 };

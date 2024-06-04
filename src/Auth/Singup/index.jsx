@@ -18,6 +18,7 @@ const Signup = () => {
     Specialite: "",
     prix: "",
     experience: "",
+    documents: null,
   });
   const [error, setError] = useState("");
   const [msg, setMsg] = useState("");
@@ -31,6 +32,14 @@ const Signup = () => {
     setData((prevData) => ({
       ...prevData,
       [name]: newValue,
+    }));
+  };
+
+  const handleFileChange = (e) => {
+    setData((prevData) => ({
+      ...prevData,
+
+      documents: e.target.files[0],
     }));
   };
 
@@ -52,13 +61,24 @@ const Signup = () => {
 
     try {
       const url = "/register";
-      const postData = {
-        ...data,
-        Role: data.Role || "Utilisateur",
-      };
-      const response = await axios.post(url, postData);
+      // const postData = {
+      //   ...data,
+      //   Role: data.Role || "Utilisateur",
+      // };
+      // const response = await axios.post(url, postData);
+      const formData = new FormData(); // Create a new FormData instance
+
+      Object.keys(data).forEach((key) => {
+        formData.append(key, data[key]); // Append each field to the formData
+      });
+
+      const response = await axios.post(url, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
       if (response.status === 201) {
-        toast.success(response.data.message); // Use response.data.message instead of res.message
+        toast.success(response.data.message);
         setIsRegistered(true);
       } else {
         toast.error("Registration failed.");
@@ -131,7 +151,7 @@ const Signup = () => {
               <input
                 type="text"
                 placeholder="Numéro de téléphone"
-                name="Numéro"
+                name="Numero"
                 onChange={handleChange}
                 value={data.Numero}
                 required
@@ -201,6 +221,15 @@ const Signup = () => {
                     name="experience"
                     onChange={handleChange}
                     value={data.experience}
+                    required
+                    className={styles.input}
+                  />
+                  <input
+                    type="file"
+                    placeholder="Document de Confiance"
+                    name="documents"
+                    onChange={handleFileChange}
+                    // value={data.documents}
                     required
                     className={styles.input}
                   />

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Row, Button } from "reactstrap";
+import { Row, Button, Container } from "reactstrap";
 import { BsPencilSquare, BsTrash } from "react-icons/bs";
 import { useNavigate } from "react-router-dom";
 import CarItem from "./CarItem";
@@ -53,44 +53,26 @@ const UserCarList = () => {
   };
 
   return (
-    <div className="container">
-      <h1>Mes annonces</h1>
-      {loading ? (
-        <Loader />
-      ) : cars.length === 0 ? (
-        <div>No car ads found.</div>
-      ) : (
-        cars.map((car) => (
-          <div
-            key={car._id}
-            className="mb-3 d-flex align-items-center justify-content-between"
-          >
-            <CarItem
-              car={car}
-              onEdit={() => handleEdit(car._id)}
-              onDelete={() => handleDelete(car._id)}
-            />
-            {/* <div>
-              <Button
-                color="secondary"
-                size="sm"
-                className="me-2"
-                onClick={() => handleEdit(car._id)}
-              >
-                <BsPencilSquare />
-              </Button>
-              <Button
-                color="danger"
-                size="sm"
-                onClick={() => handleDelete(car._id)}
-              >
-                <BsTrash />
-              </Button>
-            </div> */}
-          </div>
-        ))
-      )}
-    </div>
+    <Container className="my-5">
+      <h1 className="mb-4">Mes annonces</h1>
+      <Row>
+        {loading ? (
+          <Loader />
+        ) : cars.length === 0 ? (
+          <div>No car ads found.</div>
+        ) : (
+          cars.map((car) => (
+              <CarItem
+                key={car._id}
+                car={car}
+                onEdit={() => handleEdit(car._id)}
+                onDelete={() => handleDelete(car._id)}
+              />
+              
+          ))
+        )}
+      </Row>
+    </Container>
   );
 };
 

@@ -26,12 +26,6 @@ const ExpertItem = ({ expert, carAdId, hiredExpertsForCar = [] }) => {
   useEffect(() => {
     if (hiredExpertsForCar.includes(expert._id)) {
       setDisableExpert(true);
-      console.log(disableExpert);
-      console.log(disableExpert);
-      console.log(disableExpert);
-      console.log(disableExpert);
-      console.log(disableExpert);
-      console.log(disableExpert);
     }
   }, [hiredExpertsForCar]);
 

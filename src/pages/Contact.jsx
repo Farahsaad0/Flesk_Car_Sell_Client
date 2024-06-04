@@ -92,15 +92,16 @@ const Contact = () => {
                     onChange={handleChange}
                   />
                 </FormGroup>
-                <FormGroup className="contact__form">
-                  <textarea
+                <FormGroup className="contact__form ">
+                  <Input
+                    type="textarea"
                     name="Message"
                     rows="5"
                     placeholder="Message"
                     className="textarea"
                     value={Message}
                     onChange={handleChange}
-                  ></textarea>
+                  />
                 </FormGroup>
 
                 <button className=" contact__btn" type="submit">
