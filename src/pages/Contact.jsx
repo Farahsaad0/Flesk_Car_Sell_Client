@@ -105,7 +105,7 @@ const Contact = () => {
                 </FormGroup>
 
                 <button className=" contact__btn" type="submit">
-                  Send Message
+                  Envoyer Message
                 </button>
               </Form>
             </Col>
@@ -128,19 +128,7 @@ const Contact = () => {
                   </p>
                 </div>
 
-                <h6 className="fw-bold mt-4">Follow Us</h6>
-
-                <div className=" d-flex align-items-center gap-4 mt-3">
-                  {socialLinks.map((item, index) => (
-                    <Link
-                      to={item.url}
-                      key={index}
-                      className="social__link-icon"
-                    >
-                      <i className={item.icon}></i>
-                    </Link>
-                  ))}
-                </div>
+               
               </div>
             </Col>
           </Row>

@@ -9,6 +9,7 @@ import BecomeDriverSection from "../components/UI/BecomeDriverSection";
 import driveImg from "../assets/all-images/drive.jpg";
 import OurMembers from "../components/UI/OurMembers";
 import "../styles/about.css";
+import Testimonial from "../components/UI/Testimonial";
 
 const About = () => {
   return (
@@ -63,9 +64,10 @@ const About = () => {
           <Row>
             <Col lg="12" className="mb-5 text-center">
               <h6 className="section__subtitle">Experts</h6>
-              <h2 className="section__title">Our Members</h2>
+              <h2 className="section__title">Nos Membres</h2>
             </Col>
-            <OurMembers />
+            {/* <OurMembers /> */}
+            <Testimonial />
           </Row>
         </Container>
       </section>

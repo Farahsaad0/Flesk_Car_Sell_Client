@@ -34,13 +34,14 @@ const navLinks = [
     display: "Nos Experts",
   },
   {
+    path: "/about",
+    display: "A propos",
+  },
+  {
     path: "/contact",
     display: "Contact",
   },
-  {
-    path: "/about",
-    display: "About",
-  },
+  
 ];
 
 const Header = () => {
