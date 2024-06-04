@@ -37,7 +37,7 @@ const HistoriqueDeTransaction = () => {
   useEffect(() => {
     const fetchSentTransactions = async () => {
       try {
-        const response = await axios.get(`/transactions/${userId}`,{
+        const response = await axios.get(`/transactions/${userId}`, {
           params: {
             page: pageNumber + 1,
             limit: transactionPerPage,
@@ -62,9 +62,8 @@ const HistoriqueDeTransaction = () => {
 
     fetchSentTransactions();
     fetchReceivedTransactions();
-  }, [userId]);
+  }, [userId, sortOrder]);
 
-  
   const handlePageClick = ({ selected }) => {
     setPageNumber(selected);
   };
@@ -78,10 +77,9 @@ const HistoriqueDeTransaction = () => {
     const value = e.target.value;
     if (value === "croissant") {
       setSortOrder(1);
-    } else if (value === "décroissant") {
+    } else {
       setSortOrder(-1);
-    } 
-    
+    }
   };
 
   return (
@@ -92,47 +90,47 @@ const HistoriqueDeTransaction = () => {
             Historique des transactions envoyées
           </AccordionHeader>
           <AccordionBody accordionId="1">
-          <Row className="row-cols-lg-auto  d-flex justify-content-between align-items-center mb-3">
-        <Col className=" d-flex align-items-center  gap-2">
-          <Col>
-            {/* <div className=" d-flex align-items-center gap-3 mb-5"> */}
-            <Label for="priceOrder">
-              <i className="ri-sort-asc"></i> Trier par
-            </Label>
-          </Col>
-          <Col>
-            <Input
-              type="select"
-              id="priceOrder"
-              onChange={handleSortChange}
-              style={{ width: "fit-content" }}
-            >
-              <option value="defaut">defaut (les plus resent)</option>
-              <option value="croissant">Prix croissant</option>
-              <option value="décroissant">Prix décroissant</option>
-            </Input>
-          </Col>
-        </Col>
+            <Row className="row-cols-lg-auto  d-flex justify-content-between align-items-center mb-3">
+              <Col className=" d-flex align-items-center  gap-2">
+                <Col>
+                  {/* <div className=" d-flex align-items-center gap-3 mb-5"> */}
+                  <Label for="priceOrder">
+                    <i className="ri-sort-asc"></i> Trier par
+                  </Label>
+                </Col>
+                <Col>
+                  <Input
+                    type="select"
+                    id="priceOrder"
+                    onChange={handleSortChange}
+                    style={{ width: "fit-content" }}
+                  >
+                    <option value="décroissant">les plus récent</option>
+                    <option value="croissant">les plus ancien</option>
+                  </Input>
+                </Col>
+              </Col>
 
-        <Col className=" d-flex align-items-center gap-1">
-          <Col>
-            <Input
-              type="select"
-              id="perPageSelect"
-              value={transactionPerPage}
-              onChange={handlePerPageChange}
-              style={{ width: "fit-content" }}
-            >
-              <option value={12}> 12 </option>
-              <option value={20}> 20 </option>
-              <option value={32}> 32 </option>
-            </Input>
-          </Col>
-          <Col>
-            <Label for="perPageSelect">par page</Label>
-          </Col>
-        </Col>
-      </Row>
+              <Col className=" d-flex align-items-center gap-1">
+                <Col>
+                  <Input
+                    type="select"
+                    id="perPageSelect"
+                    value={transactionPerPage}
+                    onChange={handlePerPageChange}
+                    style={{ width: "fit-content" }}
+                  >
+                    <option value={10}> 10 </option>
+                    <option value={20}> 20 </option>
+                    <option value={35}> 35 </option>
+                    <option value={50}> 50 </option>
+                  </Input>
+                </Col>
+                <Col>
+                  <Label for="perPageSelect">par page</Label>
+                </Col>
+              </Col>
+            </Row>
             <Table bordered striped>
               <thead>
                 <tr>

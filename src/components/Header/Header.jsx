@@ -34,12 +34,12 @@ const navLinks = [
     display: "Nos Experts",
   },
   {
-    path: "/contact",
-    display: "Contact",
-  },
-  {
     path: "/about",
     display: "About",
+  },
+  {
+    path: "/contact",
+    display: "Contact",
   },
 ];
 
