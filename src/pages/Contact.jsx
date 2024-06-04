@@ -44,7 +44,7 @@ const Contact = () => {
     e.preventDefault();
     try {
       const response = await axios.post(
-        "http://localhost:8000/contact",
+        "http://localhost:8000/contacts",
         formData
       );
       console.log(response.data);

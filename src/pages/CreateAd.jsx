@@ -451,7 +451,7 @@ const CreateAdForm = () => {
         </FormGroup> */}
         <FormGroup>
           <Label for="licensePlateImage">
-            Image du véhicule avec plaque d'immatriculation
+            Image du véhicule avec floutage de plaque d'immatriculation
           </Label>
           <Input
             type="file"
