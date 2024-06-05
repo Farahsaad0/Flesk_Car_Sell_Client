@@ -19,6 +19,7 @@ import Loader from "../loader/Loader";
 import * as cv from "../../opencv/opencv";
 import Utils from "../../assets/utils";
 import SponsorshipItemAlt from "../sponsorship/SponsorshipItemAlt";
+import { toast } from "sonner";
 
 const EditCarAd = () => {
   const { id } = useParams();
@@ -55,6 +56,7 @@ const EditCarAd = () => {
       } catch (error) {
         console.error("Error fetching car ad:", error);
         setLoading(false);
+        toast.error("Un erreur s'est produite lors de la récupération des données de votre annonce")
       }
     };
 
@@ -64,6 +66,7 @@ const EditCarAd = () => {
         setSponsorships(response.data);
       } catch (error) {
         console.error("Error fetching sponsorships:", error);
+        toast.error("Un erreur s'est produite lors de la récupération des données de votre pack de sponsoring")
       }
     };
     fetchCarAd();
@@ -123,6 +126,7 @@ const EditCarAd = () => {
       );
 
       console.log("Server response:", response.data);
+      toast.success("Votre annonce a été mise à jour")
       navigate(`/myads`);
     } catch (error) {
       console.error("Error updating car ad:", error);

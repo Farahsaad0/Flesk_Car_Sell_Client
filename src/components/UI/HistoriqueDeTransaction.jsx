@@ -14,6 +14,7 @@ import {
 import axios from "../../api/axios";
 import useAuth from "../../hooks/useAuth";
 import ReactPaginate from "react-paginate";
+import { toast } from "sonner";
 
 const HistoriqueDeTransaction = () => {
   const [open, setOpen] = useState(1);
@@ -23,6 +24,10 @@ const HistoriqueDeTransaction = () => {
   const [transactionPerPage, setTransactionPerPage] = useState(10);
   const [totalPages, setTotalPages] = useState(0);
   const [sortOrder, setSortOrder] = useState(-1);
+  const [sentPageNumber, setSentPageNumber] = useState(0);
+  const [sentTransactionPerPage, setSentTransactionPerPage] = useState(10);
+  const [sentTotalPages, setSentTotalPages] = useState(0);
+  const [sentSortOrder, setSentSortOrder] = useState(-1);
   const [sentTransactions, setSentTransactions] = useState([]);
   const [receivedTransactions, setReceivedTransactions] = useState([]);
 
@@ -39,22 +44,30 @@ const HistoriqueDeTransaction = () => {
       try {
         const response = await axios.get(`/transactions/${userId}`, {
           params: {
-            page: pageNumber + 1,
-            limit: transactionPerPage,
-            sortOrder,
+            page: sentPageNumber + 1,
+            limit: sentTransactionPerPage,
+            sentSortOrder,
           },
         });
-        setSentTransactions(response?.data);
-        setTotalPages(response?.data?.totalPages);
+        setSentTransactions(response?.data?.transactions);
+        setSentTotalPages(response?.data?.totalPages);
       } catch (error) {
         console.error("Error fetching sent transactions", error);
+        toast.error("Une erreur s'est produite lors de la récupération de l'historique de vos transactions")
       }
     };
 
     const fetchReceivedTransactions = async () => {
       try {
-        const response = await axios.get(`/transactions/expert/${userId}`);
-        setReceivedTransactions(response.data);
+        const response = await axios.get(`/transactions/expert/${userId}`, {
+          params: {
+            page: pageNumber + 1,
+            limit: transactionPerPage,
+            sortOrder,
+          },
+        });
+        setReceivedTransactions(response?.data?.completedTransactions);
+        setTotalPages(response?.data?.totalPages);
       } catch (error) {
         console.error("Error fetching received transactions", error);
       }
@@ -62,15 +75,23 @@ const HistoriqueDeTransaction = () => {
 
     fetchSentTransactions();
     fetchReceivedTransactions();
-  }, [userId, sortOrder]);
+  }, [userId, sortOrder, pageNumber, transactionPerPage]);
 
   const handlePageClick = ({ selected }) => {
     setPageNumber(selected);
   };
 
+  const handleSentPageClick = ({ selected }) => {
+    setSentPageNumber(selected);
+  };
+
   const handlePerPageChange = (e) => {
     setTransactionPerPage(parseInt(e.target.value)); // Parse the selected value to an integer
     setPageNumber(0); // Reset page number when changing the number of users per page
+  };
+  const handleSentPerPageChange = (e) => {
+    setSentTransactionPerPage(parseInt(e.target.value)); // Parse the selected value to an integer
+    setSentPageNumber(0); // Reset page number when changing the number of users per page
   };
 
   const handleSortChange = (e) => {
@@ -79,6 +100,15 @@ const HistoriqueDeTransaction = () => {
       setSortOrder(1);
     } else {
       setSortOrder(-1);
+    }
+  };
+
+  const handleSentSortChange = (e) => {
+    const value = e.target.value;
+    if (value === "croissant") {
+      setSentSortOrder(1);
+    } else {
+      setSentSortOrder(-1);
     }
   };
 
@@ -102,7 +132,7 @@ const HistoriqueDeTransaction = () => {
                   <Input
                     type="select"
                     id="priceOrder"
-                    onChange={handleSortChange}
+                    onChange={handleSentSortChange}
                     style={{ width: "fit-content" }}
                   >
                     <option value="décroissant">les plus récent</option>
@@ -117,7 +147,7 @@ const HistoriqueDeTransaction = () => {
                     type="select"
                     id="perPageSelect"
                     value={transactionPerPage}
-                    onChange={handlePerPageChange}
+                    onChange={handleSentPerPageChange}
                     style={{ width: "fit-content" }}
                   >
                     <option value={10}> 10 </option>
@@ -143,20 +173,31 @@ const HistoriqueDeTransaction = () => {
                 </tr>
               </thead>
               <tbody>
-                {sentTransactions?.map((transaction, i) => (
-                  <tr key={transaction?._id}>
-                    <th scope="row">{i + 1}</th>
-                    <td>{transaction?.type}</td>
-                    <td>{transaction?.amount}</td>
-                    <td>{transaction?.paymentStatus}</td>
-                    <td>{transaction?.paymentDate}</td>
-                    <td>
-                      {transaction?.recipient?.Role === "Administrateur"
-                        ? "Flesk Car Sell"
-                        : `${transaction?.recipient?.Nom} ${transaction?.recipient?.Prenom}`}
+                {sentTransactions.length > 0 ? (
+                  sentTransactions?.map((transaction, i) => (
+                    <tr key={transaction?._id}>
+                      <th scope="row">{i + 1}</th>
+                      <td>{transaction?.type}</td>
+                      <td>{transaction?.amount}</td>
+                      <td>{transaction?.paymentStatus}</td>
+                      <td>{transaction?.paymentDate}</td>
+                      <td>
+                        {transaction?.recipient?.Role === "Administrateur"
+                          ? "Flesk Car Sell"
+                          : `${transaction?.recipient?.Nom} ${transaction?.recipient?.Prenom}`}
+                      </td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan="6">
+                      <center>
+                        Votre historique de transactions est vide pour le
+                        moment. Rien à voir ici.
+                      </center>
                     </td>
                   </tr>
-                ))}
+                )}
               </tbody>
             </Table>
             <Row>
@@ -166,8 +207,8 @@ const HistoriqueDeTransaction = () => {
                     breakLabel="..."
                     previousLabel={<div className="page-link">Previous</div>}
                     nextLabel={<div className="page-link">Next</div>}
-                    pageCount={totalPages}
-                    onPageChange={handlePageClick}
+                    pageCount={sentTotalPages}
+                    onPageChange={handleSentPageClick}
                     containerClassName={"pagination "}
                     pageRangeDisplayed={2}
                     activeClassName={" active"}
@@ -188,6 +229,47 @@ const HistoriqueDeTransaction = () => {
               Historique des transactions reçues
             </AccordionHeader>
             <AccordionBody accordionId="2">
+              <Row className="row-cols-lg-auto  d-flex justify-content-between align-items-center mb-3">
+                <Col className=" d-flex align-items-center  gap-2">
+                  <Col>
+                    {/* <div className=" d-flex align-items-center gap-3 mb-5"> */}
+                    <Label for="priceOrder">
+                      <i className="ri-sort-asc"></i> Trier par
+                    </Label>
+                  </Col>
+                  <Col>
+                    <Input
+                      type="select"
+                      id="priceOrder"
+                      onChange={handleSortChange}
+                      style={{ width: "fit-content" }}
+                    >
+                      <option value="décroissant">les plus récent</option>
+                      <option value="croissant">les plus ancien</option>
+                    </Input>
+                  </Col>
+                </Col>
+
+                <Col className=" d-flex align-items-center gap-1">
+                  <Col>
+                    <Input
+                      type="select"
+                      id="perPageSelect"
+                      value={transactionPerPage}
+                      onChange={handlePerPageChange}
+                      style={{ width: "fit-content" }}
+                    >
+                      <option value={10}> 10 </option>
+                      <option value={20}> 20 </option>
+                      <option value={35}> 35 </option>
+                      <option value={50}> 50 </option>
+                    </Input>
+                  </Col>
+                  <Col>
+                    <Label for="perPageSelect">par page</Label>
+                  </Col>
+                </Col>
+              </Row>
               <Table bordered striped>
                 <thead>
                   <tr>
@@ -200,21 +282,51 @@ const HistoriqueDeTransaction = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {receivedTransactions?.map((transaction, i) => (
-                    <tr key={transaction?._id}>
-                      <th scope="row">{i + 1}</th>
-                      <td>{transaction?.type}</td>
-                      <td>{transaction?.amount}</td>
-                      <td>{transaction?.paymentStatus}</td>
-                      <td>{transaction?.paymentDate}</td>
-                      <td>
-                        {transaction?.sender?.Nom} $
-                        {transaction?.sender?.Prenom}
+                  {receivedTransactions.length > 0 ? (
+                    receivedTransactions?.map((transaction, i) => (
+                      <tr key={transaction?._id}>
+                        <th scope="row">{i + 1}</th>
+                        <td>{transaction?.type}</td>
+                        <td>{transaction?.amount}</td>
+                        <td>{transaction?.paymentStatus}</td>
+                        <td>{transaction?.paymentDate}</td>
+                        <td>
+                          {transaction?.sender?.Nom}{" "}
+                          {transaction?.sender?.Prenom}
+                        </td>
+                      </tr>
+                    ))
+                  ) : (
+                    <tr>
+                      <td colSpan="6">
+                        <center>
+                          Votre historique de transactions est vide pour le
+                          moment. Rien à voir ici.
+                        </center>
                       </td>
                     </tr>
-                  ))}
+                  )}
                 </tbody>
               </Table>
+              <Row>
+                <nav aria-label="Page navigation ">
+                  <ul className="pagination justify-content-center">
+                    <ReactPaginate
+                      breakLabel="..."
+                      previousLabel={<div className="page-link">Previous</div>}
+                      nextLabel={<div className="page-link">Next</div>}
+                      pageCount={totalPages}
+                      onPageChange={handlePageClick}
+                      containerClassName={"pagination "}
+                      pageRangeDisplayed={2}
+                      activeClassName={" active"}
+                      pageClassName={"page-item"}
+                      pageLinkClassName={"page-link"}
+                      renderOnZeroPageCount={null}
+                    />
+                  </ul>
+                </nav>
+              </Row>
             </AccordionBody>
           </AccordionItem>
         </Accordion>

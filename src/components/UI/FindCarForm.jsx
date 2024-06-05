@@ -17,7 +17,7 @@ const FindCarForm = ({ cars }) => {
   const [modele, setModele] = useState("");
   const [searchResults, setSearchResults] = useState([]); // État pour stocker les résultats de la recherche
   const [pageNumber, setPageNumber] = useState(0);
-  const [adsPerPage, setAdsPerPage] = useState(10);
+  const [adsPerPage, setAdsPerPage] = useState(12);
   const [totalPages, setTotalPages] = useState(0);
 
   // Fonction de recherche des annonces de voiture
@@ -37,8 +37,8 @@ const FindCarForm = ({ cars }) => {
           adresse: adresse || undefined,
         },
       });
-
-      setTotalPages(response?.data?.page);
+      console.log(response.data);
+      setTotalPages(response?.data?.total);
       setSearchResults(response?.data?.data); // Mettre à jour les résultats de la recherche
     } catch (error) {
       console.error(
@@ -57,13 +57,17 @@ const FindCarForm = ({ cars }) => {
     setAdsPerPage(parseInt(e.target.value)); // Parse the selected value to an integer
     setPageNumber(0); // Reset page number when changing the number of users per page
   };
+
   useEffect(() => {
-    searchCars();
+    if (pageNumber > 0 || adsPerPage !== 12) {
+      searchCars();
+    }
   }, [pageNumber, adsPerPage]);
 
   // Fonction de gestion de la soumission du formulaire
   const handleSubmit = (e) => {
     e.preventDefault();
+    setPageNumber(0);
     searchCars(); // Appeler la fonction de recherche lors de la soumission du formulaire
   };
 

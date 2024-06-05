@@ -256,24 +256,47 @@ const ExpertsDemande = () => {
                             {job?.jobDescription}
                           </td>
                           <td className="button-group">
-                            <Button
-                              className="btn ms-3 w-auto "
-                              color="success"
-                              size="sm"
-                              onClick={() => acceptDemande(job?._id)}
-                              disabled={job.accepted === "accepted"}
-                            >
-                              Accepter
-                            </Button>
-                            <Button
-                              className="btn ms-3 w-auto "
-                              color="warning"
-                              size="sm"
-                              onClick={() => rejeterDemande(job?._id)}
-                              disabled={job.accepted === "accepted"}
-                            >
-                              Rejeter
-                            </Button>
+                            {job?.paymentStatus !== "completed" ? (
+                              job.accepted === "pending" ? (
+                                <div className="d-flex w-75">
+                                  <Button
+                                    className="btn ms-2 flex-fill"
+                                    color="success"
+                                    size="sm"
+                                    onClick={() => acceptDemande(job?._id)}
+                                    disabled={job.accepted === "accepted"}
+                                  >
+                                    Accepter
+                                  </Button>
+                                  <Button
+                                    className="btn ms-2 me-0 flex-fill"
+                                    color="warning"
+                                    size="sm"
+                                    onClick={() => rejeterDemande(job?._id)}
+                                    disabled={job.accepted === "accepted"}
+                                  >
+                                    Rejeter
+                                  </Button>
+                                </div>
+                              ) : (
+                                <Button
+                                  className="btn ms-2 w-75 btn-info"
+                                  // color="warning"
+                                  size="sm"
+                                >
+                                  En attente de paiement
+                                </Button>
+                              )
+                            ) : (
+                              <Button
+                                className="btn ms-2 w-75 btn-success"
+                                // color="warning"
+                                size="sm"
+                                onClick={() => goToChat(job._id)}
+                              >
+                                Discuter
+                              </Button>
+                            )}
                           </td>
                         </tr>
                       ))

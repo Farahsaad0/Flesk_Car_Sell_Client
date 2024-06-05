@@ -271,6 +271,7 @@ const CarDetails = () => {
                             expert={expert}
                             carAdId={id}
                             hiredExpertsForCar={hiredExpertsForCar}
+                            refreshExperts={() => fetchHiredExpertsForCar()}
                           />
                         ))
                     )}

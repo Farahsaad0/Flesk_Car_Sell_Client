@@ -16,8 +16,14 @@ import {
 import "../../styles/car-item.css";
 import axios from "../../api/axios";
 import useAuth from "../../hooks/useAuth";
+import { toast } from "sonner";
 
-const ExpertItem = ({ expert, carAdId, hiredExpertsForCar = [] }) => {
+const ExpertItem = ({
+  expert,
+  carAdId,
+  hiredExpertsForCar = [],
+  refreshExperts,
+}) => {
   const [modal, setModal] = useState(false);
   const { auth } = useAuth();
   const [disableExpert, setDisableExpert] = useState(false);
@@ -44,6 +50,11 @@ const ExpertItem = ({ expert, carAdId, hiredExpertsForCar = [] }) => {
       const carId = carAdId;
       const jobDescription = document.getElementById("jobDescription").value;
 
+      if (!jobDescription) {
+        toast.error("Une description est obligatoire");
+        return;
+      }
+
       const response = await axios.post("/createJob", {
         clientId,
         expertId,
@@ -53,12 +64,22 @@ const ExpertItem = ({ expert, carAdId, hiredExpertsForCar = [] }) => {
 
       if (response.data.success) {
         console.log("Job created successfully:", response.data.data);
+        toast.success(
+          "Votre demande d'expertise a été enregistrée. Dès que l'expert acceptera votre demande, vous recevrez un email."
+        );
+        refreshExperts();
         toggle(); // Close the modal
       } else {
         console.error("Failed to create job:", response.data.error);
+        toast.error(
+          "Une erreur s'est produite lors de l'enregistrement de votre demande."
+        );
       }
     } catch (error) {
       console.error("Error creating job:", error);
+      toast.error(
+        "Une erreur s'est produite lors de l'enregistrement de votre demande."
+      );
     }
   };
 
@@ -74,8 +95,6 @@ const ExpertItem = ({ expert, carAdId, hiredExpertsForCar = [] }) => {
                 <b>{`${expert.Nom} ${expert.Prenom}`}</b>
               </h2>
               <p className="text-muted text-sm">
-                
-                
                 <span>
                   <b>Adresse:</b> {expert?.Adresse}
                 </span>
@@ -91,9 +110,9 @@ const ExpertItem = ({ expert, carAdId, hiredExpertsForCar = [] }) => {
                 <span>
                   <b>Expérience:</b> {expert?.ExpertId?.experience} ans
                 </span>
-                <br/>
+                <br />
                 <span>
-                  <b>Spécialité:</b> {expert?.ExpertId?.specialite} 
+                  <b>Spécialité:</b> {expert?.ExpertId?.specialite}
                 </span>
               </p>
             </div>
@@ -108,7 +127,12 @@ const ExpertItem = ({ expert, carAdId, hiredExpertsForCar = [] }) => {
         </div>
         <div className="card-footer">
           <div className="text-right">
-            <Button disabled={disableExpert} style={{backgroundColor:"#cd2028"}} className="btn btn-sm" onClick={toggle}>
+            <Button
+              disabled={disableExpert}
+              style={{ backgroundColor: "#cd2028" }}
+              className="btn btn-sm"
+              onClick={toggle}
+            >
               Demander
             </Button>
           </div>
@@ -129,10 +153,10 @@ const ExpertItem = ({ expert, carAdId, hiredExpertsForCar = [] }) => {
           <Input id="jobDescription" name="text" type="textarea" />
         </ModalBody>
         <ModalFooter>
-          <Button style={{backgroundColor:"#cd2028"}} onClick={hireExpert}>
+          <Button style={{ backgroundColor: "#cd2028" }} onClick={hireExpert}>
             Confirmer la demande
           </Button>
-          <Button  color="secondary" onClick={toggle}>
+          <Button color="secondary" onClick={toggle}>
             Retour
           </Button>
         </ModalFooter>

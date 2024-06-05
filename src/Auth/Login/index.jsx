@@ -4,6 +4,7 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import styles from "./styles.module.css";
 import VerificationPage from "../Singup/verificationPage";
 import useAuth from "../../hooks/useAuth";
+import { toast } from "sonner";
 
 const LOGIN_URL = "/login";
 
@@ -37,6 +38,7 @@ const Login = () => {
       );
       if (response.data.User.Verified === false) {
         setIsNotVerified(true);
+
         return;
       }
       const { token, User } = response.data;
@@ -59,6 +61,11 @@ const Login = () => {
         setErrMsg("No server response.");
       } else if (err.response.status === 400) {
         setErrMsg("Missing email or password.");
+      } else if (err.response.status === 429) {
+        console.log(err.response);
+        console.log(err.response);
+        console.log(err.response);
+        toast.error(err.response.data.message);
       } else {
         setErrMsg("Invalid email or password.");
       }

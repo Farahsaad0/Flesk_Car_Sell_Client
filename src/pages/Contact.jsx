@@ -1,30 +1,39 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import { Container, Row, Col, Form, FormGroup, Input, Button } from "reactstrap";
+import {
+  Container,
+  Row,
+  Col,
+  Form,
+  FormGroup,
+  Input,
+  Button,
+} from "reactstrap";
 import Helmet from "../components/Helmet/Helmet";
 import CommonSection from "../components/UI/CommonSection";
 import axios from "axios";
 
 import "../styles/contact.css";
+import { toast } from "sonner";
 
-const socialLinks = [
-  {
-    url: "#",
-    icon: "ri-facebook-line",
-  },
-  {
-    url: "#",
-    icon: "ri-instagram-line",
-  },
-  {
-    url: "#",
-    icon: "ri-linkedin-line",
-  },
-  {
-    url: "#",
-    icon: "ri-twitter-line",
-  },
-];
+// const socialLinks = [
+//   {
+//     url: "#",
+//     icon: "ri-facebook-line",
+//   },
+//   {
+//     url: "#",
+//     icon: "ri-instagram-line",
+//   },
+//   {
+//     url: "#",
+//     icon: "ri-linkedin-line",
+//   },
+//   {
+//     url: "#",
+//     icon: "ri-twitter-line",
+//   },
+// ];
 
 const Contact = () => {
   const [formData, setFormData] = useState({
@@ -48,10 +57,14 @@ const Contact = () => {
         formData
       );
       console.log(response.data);
+      toast.success(
+        "Merci de nous avoir contactés ! Nous avons bien reçu votre message et vous répondrons bientôt"
+      );
       // Réinitialisez le formulaire après avoir envoyé les données avec succès
       setFormData({ Nom: "", Prénom: "", Email: "", Message: "" });
     } catch (error) {
       console.error(error);
+      toast.error("Un erreur s'est produite lors de l'envoi de votre message")
     }
   };
 
@@ -112,7 +125,7 @@ const Contact = () => {
 
             <Col lg="5" md="5">
               <div className="contact__info">
-                <h6 className="fw-bold">Nos Informations de Contact</h6>
+                <h6 className="fw-bold fs-3">Nos Informations de Contact</h6>
                 <p className="section__description mb-0">
                   Monastir , Rue Liberté
                 </p>
@@ -127,7 +140,6 @@ const Contact = () => {
                     Farah.saad505@gmail.com
                   </p>
                 </div>
-
               </div>
             </Col>
           </Row>

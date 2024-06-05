@@ -4,7 +4,7 @@ import useAuth from "../hooks/useAuth";
 import useAxiosPrivate from "../hooks/useAxiosPrivate";
 import Loader from "../components/loader/Loader";
 import Form from "react-bootstrap/Form";
-import { toast } from "sonner"; // Import toast function
+import { toast } from "sonner";
 import { Button, Col, Row } from "react-bootstrap";
 
 const ProfilePage = () => {
@@ -29,6 +29,12 @@ const ProfilePage = () => {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [oldPassword, setOldPassword] = useState("");
 
+  const [passwordErrors, setPasswordErrors] = useState({
+    oldPassword: "",
+    newPassword: "",
+    confirmPassword: "",
+  });
+
   useEffect(() => {
     fetchUserData();
   }, [auth]);
@@ -37,7 +43,7 @@ const ProfilePage = () => {
     try {
       const response = await axiosPrivate.get(`/getUserData/${auth._id}`);
       setUserData(response.data);
-      console.log(response.data)
+      console.log(response.data);
     } catch (error) {
       console.error("Error fetching user data:", error);
     }
@@ -47,38 +53,54 @@ const ProfilePage = () => {
     ? `http://localhost:8000/images/${userData.photo}`
     : null;
 
+  const validatePasswords = () => {
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/;
+    const errors = {
+      oldPassword: "",
+      newPassword: "",
+      confirmPassword: "",
+    };
+
+    if (!oldPassword) {
+      errors.oldPassword = "L'ancien mot de passe est requis.";
+    }
+    if (newPassword) {
+      if (newPassword !== confirmPassword) {
+        errors.confirmPassword = "Les mots de passe ne correspondent pas.";
+      }
+      if (!passwordRegex.test(newPassword)) {
+        errors.newPassword =
+          "Le mot de passe doit contenir au moins 8 caractères, une lettre majuscule, une lettre minuscule et un chiffre.";
+      }
+    }
+
+    setPasswordErrors(errors);
+    return !Object.values(errors).some((error) => error);
+  };
+
+  useEffect(() => {
+    if (oldPassword.length > 0 || newPassword || confirmPassword) {
+      validatePasswords();
+    }
+  }, [oldPassword, newPassword, confirmPassword]);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const form = e.currentTarget;
-    if (form.checkValidity() === false) {
-      e.stopPropagation();
-    }
     setValidated(true);
-    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/;
+
+    if (!validatePasswords()) {
+      return;
+    }
 
     try {
-      if (!oldPassword) {
-        toast.error("Erreur! L'ancien mot de passe est requis.");
-        return;
-      }
-      if (newPassword) {
-        if (newPassword !== confirmPassword) {
-          toast.error("Erreur! Les mots de passe ne correspondent pas.");
-          return;
-        }
-        if (!passwordRegex.test(newPassword)) {
-          toast.error(
-            "Le mot de passe doit contenir au moins 8 caractères, une lettre majuscule, une lettre minuscule et un chiffre."
-          );
-          return;
-        }
-      }
       const formDataToSend = new FormData();
       for (let key in userData) {
         formDataToSend.append(key, userData[key]);
       }
       formDataToSend.append("oldPassword", oldPassword);
       formDataToSend.append("newPassword", newPassword);
+      console.log(formDataToSend);
+      console.log(formDataToSend);
       const response = await axiosPrivate.put(
         `/updateUserData/${userData._id}`,
         formDataToSend,
@@ -95,9 +117,10 @@ const ProfilePage = () => {
       setOldPassword("");
       setNewPassword("");
       setConfirmPassword("");
+      setPasswordErrors({});
     } catch (error) {
       console.error("Error submitting form:", error);
-      toast.error("Erreur! Échec de la mise à jour du profil.");
+      toast.error(error.response.data);
     }
   };
 
@@ -112,6 +135,12 @@ const ProfilePage = () => {
         [name]: files[0],
         photoURL: photoURL,
       }));
+    } else if (name === "oldPassword") {
+      setOldPassword(value);
+    } else if (name === "newPassword") {
+      setNewPassword(value);
+    } else if (name === "confirmPassword") {
+      setConfirmPassword(value);
     } else {
       setUserData((prevData) => ({
         ...prevData,
@@ -138,10 +167,15 @@ const ProfilePage = () => {
                         src={userData?.photoURL || imageUrl}
                         className="img-radius"
                         alt="User"
+                        style={{
+                          borderRadius: "50%",
+                          width: "100px",
+                          height: "100px",objectFit: "cover"
+                        }}
                       />
                     </div>
                     <h6 className="f-w-600">
-                    {userData?.Prenom} {userData?.Nom} 
+                      {userData?.Prenom} {userData?.Nom}
                     </h6>
                     <p>{userData?.Role}</p>
                     <i className="mdi mdi-square-edit-outline feather icon-edit m-t-10 f-16"></i>
@@ -158,7 +192,7 @@ const ProfilePage = () => {
                       onSubmit={handleSubmit}
                     >
                       <Row className="mb-3">
-                      <Form.Group as={Col} md="6">
+                        <Form.Group as={Col} md="6">
                           <Form.Label htmlFor="prenom">Prénom*</Form.Label>
                           <Form.Control
                             type="text"
@@ -186,7 +220,6 @@ const ProfilePage = () => {
                             Veuillez fournir un nom valide.
                           </Form.Control.Feedback>
                         </Form.Group>
-                        
                       </Row>
                       <Row className="mb-3">
                         <Form.Group as={Col} md="6">
@@ -199,7 +232,6 @@ const ProfilePage = () => {
                             onChange={handleChange}
                             required
                           />
-
                           <Form.Control.Feedback type="invalid">
                             Veuillez fournir un email valide.
                           </Form.Control.Feedback>
@@ -231,7 +263,6 @@ const ProfilePage = () => {
                             onChange={handleChange}
                             required
                           />
-
                           <Form.Control.Feedback type="invalid">
                             Veuillez fournir un numéro valide.
                           </Form.Control.Feedback>
@@ -251,10 +282,8 @@ const ProfilePage = () => {
                           </Form.Control.Feedback>
                         </Form.Group>
                       </Row>
-
-                      {userData.Role === "Expert" && (
+                      {userData?.Role === "medecin" && (
                         <div>
-                          <hr className="mt-4" />
                           <Row className="mb-3">
                             <Col>
                               <Form.Group md="6">
@@ -313,27 +342,27 @@ const ProfilePage = () => {
                           </Row>
                         </div>
                       )}
-
                       <Row className="mb-3">
                         <hr className="mt-4" />
                         <Form.Group as={Col} md="12">
-                          <Form.Label htmlFor="Password">
+                          <Form.Label htmlFor="oldPassword">
                             Mot de passe actuel*
                           </Form.Label>
                           <Form.Control
                             type="password"
-                            id="Password"
-                            name="Password"
+                            id="oldPassword"
+                            name="oldPassword"
                             value={oldPassword}
-                            onChange={(e) => setOldPassword(e.target.value)}
+                            onChange={handleChange}
+                            isInvalid={!!passwordErrors.oldPassword}
                             required
                           />
                           <Form.Control.Feedback type="invalid">
-                            Veuillez fournir un mot de passe valide.
+                            {passwordErrors.oldPassword ||
+                              "Veuillez fournir un mot de passe valide."}
                           </Form.Control.Feedback>
                         </Form.Group>
                       </Row>
-
                       <Row className="border rounded-2 pb-3">
                         <Form.Group md="6">
                           <Form.Label htmlFor="newPassword">
@@ -344,10 +373,11 @@ const ProfilePage = () => {
                             id="newPassword"
                             name="newPassword"
                             value={newPassword}
-                            onChange={(e) => setNewPassword(e.target.value)}
+                            onChange={handleChange}
+                            isInvalid={!!passwordErrors.newPassword}
                           />
                           <Form.Control.Feedback type="invalid">
-                            Veuillez fournir un nouveau mot de passe valide.
+                            {passwordErrors.newPassword}
                           </Form.Control.Feedback>
                         </Form.Group>
                         <Form.Group md="6">
@@ -359,14 +389,14 @@ const ProfilePage = () => {
                             id="confirmPassword"
                             name="confirmPassword"
                             value={confirmPassword}
-                            onChange={(e) => setConfirmPassword(e.target.value)}
+                            onChange={handleChange}
+                            isInvalid={!!passwordErrors.confirmPassword}
                           />
                           <Form.Control.Feedback type="invalid">
-                            Veuillez confirmer le nouveau mot de passe.
+                            {passwordErrors.confirmPassword}
                           </Form.Control.Feedback>
                         </Form.Group>
                       </Row>
-
                       <div className="d-flex justify-content-end mt-3">
                         <Button
                           type="submit"

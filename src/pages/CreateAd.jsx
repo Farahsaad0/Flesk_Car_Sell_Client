@@ -21,6 +21,7 @@ import * as cv from "../opencv/opencv";
 
 import useOpenCV from "../hooks/useOpenCV"; // Import the useOpenCV hook
 import Utils from "../assets/utils";
+import { toast } from "sonner";
 
 const CreateAdForm = () => {
   const navigate = useNavigate();
@@ -125,10 +126,11 @@ const CreateAdForm = () => {
       });
 
       console.log("Réponse du serveur:", response.data);
+      toast.success("Votre annonce a été crée avec succès.")
       navigate("/");
     } catch (error) {
       console.error("Erreur lors de l'envoi du formulaire:", error);
-      // Gérer les erreurs ici
+      toast.error("Une erreur s'est produite lors de la création de votre annonce")
     }
   };
 

@@ -103,7 +103,7 @@ const CarList = () => {
               onChange={handleSortChange}
               style={{ width: "fit-content" }}
             >
-              <option value="defaut">defaut (les plus resent)</option>
+              <option value="defaut">défaut  (Les plus récents)</option>
               <option value="croissant">Prix croissant</option>
               <option value="décroissant">Prix décroissant</option>
             </Input>
@@ -141,7 +141,7 @@ const CarList = () => {
           <ul className="pagination justify-content-center">
             <ReactPaginate
               breakLabel="..."
-              previousLabel={<div className="page-link">Previous</div>}
+              previousLabel={<div className="page-link fst-normal">Previous</div>}
               nextLabel={<div className="page-link">Next</div>}
               pageCount={totalPages}
               onPageChange={handlePageClick}

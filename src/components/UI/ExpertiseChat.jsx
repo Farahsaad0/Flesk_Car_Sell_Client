@@ -26,6 +26,7 @@ import useAuth from "../../hooks/useAuth";
 import { formatDistanceToNow } from "date-fns";
 import { fr } from "date-fns/locale";
 import { io } from "socket.io-client";
+import { toast } from "sonner";
 
 const ExpertiseChat = () => {
   const { jobId } = useParams();
@@ -40,6 +41,10 @@ const ExpertiseChat = () => {
   const fetchJob = async () => {
     try {
       const res = await axios.get(`/job/${jobId}`);
+      console.log(res?.data?.data);
+      console.log(res?.data?.data);
+      console.log(res?.data?.data);
+      console.log(res?.data?.data);
       setJob(res?.data?.data);
       setDocuments(res?.data?.data?.documents || []);
     } catch (error) {
@@ -47,14 +52,15 @@ const ExpertiseChat = () => {
     }
   };
 
-  const fetchDocuments = async () => {
-    try {
-      const res = await axios.get(`/job/files`);
-      setDocuments(res?.data?.data || []);
-    } catch (error) {
-      console.error("Error fetching documents:", error);
-    }
-  };
+  // const fetchDocuments = async () => {
+  //   try {
+  //     const res = await axios.get(`/job/files`);
+  //     setDocuments(res?.data?.data || []);
+  //   } catch (error) {
+  //     console.error("Error fetching documents:", error);
+
+  //   }
+  // };
 
   useEffect(() => {
     socket.current = io("http://localhost:8001");
@@ -133,9 +139,11 @@ const ExpertiseChat = () => {
 
   const handleDelete = async (fileName) => {
     try {
-      await axios.get(`/job/${jobId}/files/${fileName}`);
+      await axios.delete(`/job/${jobId}/files/${fileName}`);
+      toast.success("Le document a été supprimé avec succès");
       fetchJob();
     } catch (error) {
+      toast.error("La suppression du document a échoué");
       console.error("Error deleting file:", error);
     }
   };
@@ -213,8 +221,13 @@ const ExpertiseChat = () => {
                     value={newMessageText}
                     onChange={handleMessageChange}
                     placeholder="Type your message..."
+                    disabled={job?.paymentStatus !== "completed"}
                   />
-                  <Button className="send-button" onClick={handleSendMessage}>
+                  <Button
+                    className="send-button"
+                    onClick={handleSendMessage}
+                    disabled={job?.paymentStatus !== "completed"}
+                  >
                     <i className="bi bi-send"></i>Envoyer
                   </Button>
                 </FormGroup>
@@ -258,7 +271,7 @@ const ExpertiseChat = () => {
                       >
                         {doc}
                       </a>
-                      {auth.Role === "Expert" && (
+                      {auth._id === job?.expert && (
                         <Button
                           color="danger"
                           size="sm"
@@ -278,13 +291,15 @@ const ExpertiseChat = () => {
                       name="file"
                       type="file"
                       onChange={handleFileChange}
+                    disabled={job?.paymentStatus !== "completed"}
                     />
                     <FormText>
                       Tous les fichiers nécessaires pour avoir un(e) client(e)
                       satisfait(e).
                     </FormText>
                     <br />
-                    <Button color="success" onClick={handleUpload}>
+                    <Button color="success" onClick={handleUpload} 
+                    disabled={job?.paymentStatus !== "completed"}>
                       télécharger
                     </Button>
                   </FormGroup>

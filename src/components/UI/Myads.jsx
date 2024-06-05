@@ -7,6 +7,7 @@ import axios from "../../api/axios";
 import useAuth from "../../hooks/useAuth";
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 import Loader from "../loader/Loader";
+import { toast } from "sonner";
 
 const UserCarList = () => {
   const [cars, setCars] = useState([]);
@@ -15,25 +16,28 @@ const UserCarList = () => {
   const { auth } = useAuth();
   const axiosPrivate = useAxiosPrivate();
 
-  useEffect(() => {
-    const fetchUserCars = async () => {
-      const userId = auth._id;
-      try {
-        if (!userId) {
-          throw new Error("User not authenticated");
-        }
-
-        const response = await axios.get(`/getCarAdByUserId/${userId}`);
-
-        console.log(response.data);
-        setCars(response.data);
-        setLoading(false);
-      } catch (error) {
-        console.error("Error fetching user cars:", error);
-        setLoading(false);
+  const fetchUserCars = async () => {
+    const userId = auth._id;
+    try {
+      if (!userId) {
+        throw new Error("User not authenticated");
       }
-    };
 
+      const response = await axios.get(`/getCarAdByUserId/${userId}`);
+
+      console.log(response.data);
+      setCars(response.data);
+      setLoading(false);
+    } catch (error) {
+      console.error("Error fetching user cars:", error);
+      setLoading(false);
+      toast.error(
+        "Un erreur s'est produite lors de la récupération de vos annonces"
+      );
+    }
+  };
+
+  useEffect(() => {
     fetchUserCars();
   }, []);
 
@@ -41,8 +45,12 @@ const UserCarList = () => {
     try {
       const response = await axiosPrivate.delete(`/carAds/${id}`);
       console.log(response.data);
-      setCars(cars.filter((car) => car._id !== id));
+      toast.success("Votre annonce a été supprimée avec succès");
+      fetchUserCars();
     } catch (error) {
+      toast.error(
+        "Un erreur s'est produite lors de la suppression de votre annonce"
+      );
       console.error("Error deleting car ad:", error);
     }
   };
@@ -62,13 +70,12 @@ const UserCarList = () => {
           <div>No car ads found.</div>
         ) : (
           cars.map((car) => (
-              <CarItem
-                key={car._id}
-                car={car}
-                onEdit={() => handleEdit(car._id)}
-                onDelete={() => handleDelete(car._id)}
-              />
-              
+            <CarItem
+              key={car._id}
+              car={car}
+              onEdit={() => handleEdit(car._id)}
+              onDelete={() => handleDelete(car._id)}
+            />
           ))
         )}
       </Row>
