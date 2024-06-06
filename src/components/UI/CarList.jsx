@@ -51,7 +51,7 @@ const CarList = () => {
             sortOrder,
           },
         });
-        setCars(response?.data?.ads);
+        setCars(response?.data?.sortedAds);
         setTotalPages(response?.data?.totalPages);
         setLoading(false);
       } catch (error) {
@@ -103,7 +103,7 @@ const CarList = () => {
               onChange={handleSortChange}
               style={{ width: "fit-content" }}
             >
-              <option value="defaut">défaut  (Les plus récents)</option>
+              <option value="defaut">défaut (Les plus récents)</option>
               <option value="croissant">Prix croissant</option>
               <option value="décroissant">Prix décroissant</option>
             </Input>
@@ -132,8 +132,15 @@ const CarList = () => {
       <Row className="car-list">
         {loading ? (
           <Loader />
-        ) : (
+        ) : cars.length > 0 ? (
           cars.map((car) => <CarItem key={car._id} car={car} />)
+        ) : (
+          <div>
+            <center className="fs-1 fw-light">
+              Pas d'annonces de voitures disponibles pour le moment. Revenez
+              plus tard !{" "}
+            </center>
+          </div>
         )}
       </Row>
       <Row>
@@ -141,7 +148,9 @@ const CarList = () => {
           <ul className="pagination justify-content-center">
             <ReactPaginate
               breakLabel="..."
-              previousLabel={<div className="page-link fst-normal">Previous</div>}
+              previousLabel={
+                <div className="page-link fst-normal">Previous</div>
+              }
               nextLabel={<div className="page-link">Next</div>}
               pageCount={totalPages}
               onPageChange={handlePageClick}

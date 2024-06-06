@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Slider from "react-slick";
 
-
 import "../../styles/testimonial.css";
 import axios from "../../api/axios";
 import { useNavigate } from "react-router-dom";
@@ -11,10 +10,10 @@ const Testimonial = () => {
   useEffect(() => {
     const fetchExperts = async () => {
       try {
-        const response = await axios.get('/experts');
+        const response = await axios.get("/experts");
         setExperts(response.data.approvedExperts);
       } catch (error) {
-        console.error('Error fetching experts:', error);
+        console.error("Error fetching experts:", error);
       }
     };
 
@@ -61,17 +60,20 @@ const Testimonial = () => {
       {experts.map((expert, index) => (
         <div key={expert._id} className="testimonial py-4 px-3">
           <div key={index} className="mt-3 d-flex align-items-center gap-4">
-            {/* Assuming you have a way to get the expert's photo, for now, we use a placeholder */}
-
             <img
-                    src={`http://localhost:8000/images/${expert.photo}`}
-                    className="w-25 h-25 rounded-2"
-                    alt=""  onClick={() => handleClick(expert)} 
-                  />
+              src={`http://localhost:8000/images/${expert.photo}`}
+              className="w-25 h-25 rounded-2"
+              alt=""
+              onClick={() => handleClick(expert)}
+            />
 
             <div>
-              <h6 className="mb-0 mt-3" onClick={() => handleClick(expert)} >{expert.Nom} {expert.Prenom}</h6>
-              <p className="section__description">{expert.ExpertId.spécialité}</p>
+              <h6 className="mb-0 mt-3" onClick={() => handleClick(expert)}>
+                {expert.Nom} {expert.Prenom}
+              </h6>
+              <p className="section__description">
+                {expert.ExpertId.spécialité}
+              </p>
             </div>
           </div>
         </div>

@@ -8,6 +8,8 @@ import {
   CardTitle,
   CardBody,
   Container,
+  Input,
+  Label,
 } from "reactstrap";
 import ReactPaginate from "react-paginate";
 import axios from "../../api/axios";
@@ -17,24 +19,54 @@ import { Link, useNavigate } from "react-router-dom";
 const ExpertsDemande = () => {
   const [expertJobs, setExpertJobs] = useState([]);
   const [clientJobs, setClientJobs] = useState([]);
-  const [pageNumber, setPageNumber] = useState(0); // Numéro de la page actuelle
-  const [totalPages, setTotalPages] = useState(0);
+  const [clientJobsPageNumber, setClientJobsPageNumber] = useState(0); // Numéro de la page actuelle
+  const [clientJobsTotalPages, setClientJobsTotalPages] = useState(0);
+  const [clientJobsPerPage, setClientJobsPerPage] = useState(5);
+  const [clientJobsSortBy, setClientJobsSortBy] = useState("submitDate");
+  const [clientJobsSortOrder, setClientJobsSortOrder] = useState(-1);
+  const [expertJobsPageNumber, setExpertJobsPageNumber] = useState(0); // Numéro de la page actuelle
+  const [expertJobsTotalPages, setExpertJobsTotalPages] = useState(0);
+  const [expertJobsPerPage, setExpertJobsPerPage] = useState(5);
+  const [expertJobsSortBy, setExpertJobsSortBy] = useState("submitDate");
+  const [expertJobsSortOrder, setExpertJobsSortOrder] = useState(-1);
   const { auth } = useAuth();
   const navigate = useNavigate();
   const userId = auth._id;
 
   useEffect(() => {
-    // Récupérer les données des demandes d'expertise depuis le serveur lorsque le composant est monté
-    console.log(userId + " <<<<<<<<<<< expert id");
-    fetchJobsAsExpert(userId);
     fetchJobsAsClient(userId);
-  }, [pageNumber]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [
+    clientJobsPageNumber,
+    clientJobsSortOrder,
+    clientJobsPerPage,
+    clientJobsPageNumber,
+  ]);
+
+  useEffect(() => {
+    fetchJobsAsExpert(userId);
+  }, [
+    expertJobsPageNumber,
+    expertJobsSortOrder,
+    expertJobsPerPage,
+    expertJobsPageNumber,
+  ]);
+
+  // useEffect(() => {
+  //   fetchJobsAsExpert(userId);
+  // }, [pageNumber]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const fetchJobsAsExpert = async (userId) => {
     try {
-      const response = await axios.get(`/jobs/expert/${userId}`);
+      const response = await axios.get(`/jobs/expert/${userId}`, {
+        params: {
+          page: expertJobsPageNumber + 1,
+          limit: expertJobsPerPage,
+          sortBy: expertJobsSortBy,
+          sortOrder: expertJobsSortOrder,
+        },
+      });
       setExpertJobs(response?.data?.data);
-      setTotalPages(response?.data?.totalPages); // Définir le nombre total de pages
+      setExpertJobsTotalPages(response?.data?.totalPages); // Définir le nombre total de pages
     } catch (error) {
       console.error(
         "Erreur lors de la récupération des demandes d'expertise en attente :",
@@ -44,9 +76,16 @@ const ExpertsDemande = () => {
   };
   const fetchJobsAsClient = async (userId) => {
     try {
-      const response = await axios.get(`/jobs/client/${userId}`);
+      const response = await axios.get(`/jobs/client/${userId}`, {
+        params: {
+          page: clientJobsPageNumber + 1,
+          limit: clientJobsPerPage,
+          sortBy: clientJobsSortBy,
+          sortOrder: clientJobsSortOrder,
+        },
+      });
       setClientJobs(response?.data?.data);
-      setTotalPages(response?.data?.totalPages); // Définir le nombre total de pages
+      setClientJobsTotalPages(response?.data?.totalPages); // Définir le nombre total de pages
     } catch (error) {
       console.error(
         "Erreur lors de la récupération des demandes d'expertise en attente :",
@@ -55,8 +94,11 @@ const ExpertsDemande = () => {
     }
   };
 
-  const handlePageClick = ({ selected }) => {
-    setPageNumber(selected);
+  const handleClientJobsPageClick = ({ selected }) => {
+    setClientJobsPageNumber(selected);
+  };
+  const handleExpertJobsPageClick = ({ selected }) => {
+    setExpertJobsPageNumber(selected);
   };
 
   const acceptDemande = async (jobId) => {
@@ -94,6 +136,34 @@ const ExpertsDemande = () => {
 
   const redirectToPaymentPage = async (link) => {
     window.location.href = link;
+  };
+
+  const handleClientPerPageChange = (e) => {
+    setClientJobsPerPage(parseInt(e.target.value)); // Parse the selected value to an integer
+    setClientJobsPageNumber(0); // Reset page number when changing the number of users per page
+  };
+
+  const handleExpertPerPageChange = (e) => {
+    setExpertJobsPerPage(parseInt(e.target.value)); // Parse the selected value to an integer
+    setExpertJobsPageNumber(0); // Reset page number when changing the number of users per page
+  };
+
+  const handleClientJobsSortChange = (e) => {
+    const value = e.target.value;
+    if (value === "croissant") {
+      setClientJobsSortOrder(1);
+    } else {
+      setClientJobsSortOrder(-1);
+    }
+  };
+
+  const handleExpertJobsSortChange = (e) => {
+    const value = e.target.value;
+    if (value === "croissant") {
+      setExpertJobsSortOrder(1);
+    } else {
+      setExpertJobsSortOrder(-1);
+    }
   };
 
   const renderButton = (job) => {
@@ -144,6 +214,48 @@ const ExpertsDemande = () => {
               Les demandes d'expertise que vous avez initiées:
             </CardTitle>
             <CardBody className="">
+              {" "}
+              <Row className="row-cols-lg-auto  d-flex justify-content-between align-items-center mb-3">
+                <Col className=" d-flex align-items-center  gap-2">
+                  <Col>
+                    {/* <div className=" d-flex align-items-center gap-3 mb-5"> */}
+                    <Label for="priceOrder">
+                      <i className="ri-sort-asc"></i> Trier par
+                    </Label>
+                  </Col>
+                  <Col>
+                    <Input
+                      type="select"
+                      id="priceOrder"
+                      onChange={handleClientJobsSortChange}
+                      style={{ width: "fit-content" }}
+                    >
+                      <option value="décroissant">les plus récent</option>
+                      <option value="croissant">les plus ancien</option>
+                    </Input>
+                  </Col>
+                </Col>
+
+                <Col className=" d-flex align-items-center gap-1">
+                  <Col>
+                    <Input
+                      type="select"
+                      id="perPageSelect"
+                      value={clientJobsPerPage}
+                      onChange={handleClientPerPageChange}
+                      style={{ width: "fit-content" }}
+                    >
+                      <option value={5}> 5 </option>
+                      <option value={10}> 10 </option>
+                      <option value={30}> 30 </option>
+                      <option value={50}> 50 </option>
+                    </Input>
+                  </Col>
+                  <Col>
+                    <Label for="perPageSelect">par page</Label>
+                  </Col>
+                </Col>
+              </Row>
               <Table bordered hover>
                 <thead>
                   <tr>
@@ -201,8 +313,8 @@ const ExpertsDemande = () => {
                     pageRangeDisplayed={4}
                     containerClassName={"pagination "}
                     activeClassName={" active"}
-                    pageCount={totalPages}
-                    onPageChange={handlePageClick}
+                    pageCount={clientJobsTotalPages}
+                    onPageChange={handleClientJobsPageClick}
                     pageClassName={"page-item"}
                     pageLinkClassName={"page-link"}
                     renderOnZeroPageCount={null}
@@ -222,6 +334,47 @@ const ExpertsDemande = () => {
                 Demandes d'expertise reçu:
               </CardTitle>
               <CardBody className="">
+                <Row className="row-cols-lg-auto  d-flex justify-content-between align-items-center mb-3">
+                  <Col className=" d-flex align-items-center  gap-2">
+                    <Col>
+                      {/* <div className=" d-flex align-items-center gap-3 mb-5"> */}
+                      <Label for="priceOrder">
+                        <i className="ri-sort-asc"></i> Trier par
+                      </Label>
+                    </Col>
+                    <Col>
+                      <Input
+                        type="select"
+                        id="priceOrder"
+                        onChange={handleExpertJobsSortChange}
+                        style={{ width: "fit-content" }}
+                      >
+                        <option value="décroissant">les plus récent</option>
+                        <option value="croissant">les plus ancien</option>
+                      </Input>
+                    </Col>
+                  </Col>
+
+                  <Col className=" d-flex align-items-center gap-1">
+                    <Col>
+                      <Input
+                        type="select"
+                        id="perPageSelect"
+                        value={expertJobsPerPage}
+                        onChange={handleExpertPerPageChange}
+                        style={{ width: "fit-content" }}
+                      >
+                        <option value={5}> 5 </option>
+                        <option value={10}> 10 </option>
+                        <option value={30}> 30 </option>
+                        <option value={50}> 50 </option>
+                      </Input>
+                    </Col>
+                    <Col>
+                      <Label for="perPageSelect">par page</Label>
+                    </Col>
+                  </Col>
+                </Row>
                 <Table bordered hover>
                   <thead>
                     <tr>
@@ -258,9 +411,9 @@ const ExpertsDemande = () => {
                           <td className="button-group">
                             {job?.paymentStatus !== "completed" ? (
                               job.accepted === "pending" ? (
-                                <div className="d-flex w-75">
+                                <div className="d-flex w-100 gap-2 space-between">
                                   <Button
-                                    className="btn ms-2 flex-fill"
+                                    className="btn  flex-fill"
                                     color="success"
                                     size="sm"
                                     onClick={() => acceptDemande(job?._id)}
@@ -269,7 +422,7 @@ const ExpertsDemande = () => {
                                     Accepter
                                   </Button>
                                   <Button
-                                    className="btn ms-2 me-0 flex-fill"
+                                    className="btn  flex-fill"
                                     color="warning"
                                     size="sm"
                                     onClick={() => rejeterDemande(job?._id)}
@@ -280,7 +433,7 @@ const ExpertsDemande = () => {
                                 </div>
                               ) : (
                                 <Button
-                                  className="btn ms-2 w-75 btn-info"
+                                  className="btn w-100 btn-info"
                                   // color="warning"
                                   size="sm"
                                 >
@@ -289,7 +442,7 @@ const ExpertsDemande = () => {
                               )
                             ) : (
                               <Button
-                                className="btn ms-2 w-75 btn-success"
+                                className="btn  w-100 btn-success"
                                 // color="warning"
                                 size="sm"
                                 onClick={() => goToChat(job._id)}
@@ -318,8 +471,8 @@ const ExpertsDemande = () => {
                       pageRangeDisplayed={4}
                       containerClassName={"pagination "}
                       activeClassName={" active"}
-                      pageCount={totalPages}
-                      onPageChange={handlePageClick}
+                      pageCount={expertJobsTotalPages}
+                      onPageChange={handleExpertJobsPageClick}
                       pageClassName={"page-item"}
                       pageLinkClassName={"page-link"}
                       renderOnZeroPageCount={null}

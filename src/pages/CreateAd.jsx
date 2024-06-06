@@ -68,6 +68,9 @@ const CreateAdForm = () => {
       setSponsorships(response.data);
     } catch (error) {
       console.error("Error fetching sponsorships:", error);
+      toast.error(
+        "Un erreur s'est produite lors de la récupération des données des packs de sponsorship valables"
+      );
     }
   };
 
@@ -83,9 +86,15 @@ const CreateAdForm = () => {
   const fetchInactivatedSponsorship = async () => {
     try {
       const response = await axios.get(`/sponsorships/available/${userId}`);
-      setSponsorship(response.data);
+      if (response && response.data && response.data.length > 0) {
+        setSponsorship(response.data);
+        setFormData((prevFormData) => ({
+          ...prevFormData,
+          sponsorship: response.data[0]._id,
+        }));
+      }
     } catch (error) {
-      console.error();
+      console.log("error: ", error);
     }
   };
 
@@ -111,13 +120,11 @@ const CreateAdForm = () => {
         formDataToSend.append(key, formData[key]);
       }
 
-      if (photos.length >0) {
-        
-      
-      photos.forEach((photo, index) => {
-        formDataToSend.append(`photos`, photo);
-      });
-    }
+      if (photos.length > 0) {
+        photos.forEach((photo, index) => {
+          formDataToSend.append(`photos`, photo);
+        });
+      }
 
       const response = await axios.post("/carAds", formDataToSend, {
         headers: {
@@ -126,11 +133,13 @@ const CreateAdForm = () => {
       });
 
       console.log("Réponse du serveur:", response.data);
-      toast.success("Votre annonce a été crée avec succès.")
+      toast.success("Votre annonce a été crée avec succès.");
       navigate("/");
     } catch (error) {
       console.error("Erreur lors de l'envoi du formulaire:", error);
-      toast.error("Une erreur s'est produite lors de la création de votre annonce")
+      toast.error(
+        "Un erreur s'est produite lors de la création de votre annonce"
+      );
     }
   };
 
@@ -360,7 +369,7 @@ const CreateAdForm = () => {
             value={formData.description}
             onChange={handleChange}
             placeholder="Description du véhicule"
-            style={{maxHeight:"20rem"}}
+            style={{ maxHeight: "20rem" }}
             required
           />
         </FormGroup>
@@ -511,7 +520,11 @@ const CreateAdForm = () => {
               onChange={handleSponsorshipChange}
             >
               {sponsorship.map((sponsorship) => (
-                <option key={sponsorship._id} value={sponsorship._id} defaultValue>
+                <option
+                  key={sponsorship._id}
+                  value={sponsorship._id}
+                  defaultValue
+                >
                   {sponsorship.sponsorship}
                 </option>
               ))}

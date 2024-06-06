@@ -227,7 +227,10 @@ const CarDetails = () => {
                     </span>
                   </div>
 
-                  <p className="section__description"  style={{ whiteSpace:"pre"}}>
+                  <p
+                    className="section__description"
+                    style={{ whiteSpace: "pre" }}
+                  >
                     {singleCarItem.description || (
                       <small>aucune description donnee</small>
                     )}
@@ -247,7 +250,7 @@ const CarDetails = () => {
                       {singleCarItem?.utilisateur?.Prenom}{" "}
                       {singleCarItem?.utilisateur?.Nom}
                     </div>
-                    <p>{singleCarItem?.utilisateur?.Numéro}</p>
+                    <p>{singleCarItem?.utilisateur?.Numero}</p>
                   </div>
                 </div>
               </Col>
