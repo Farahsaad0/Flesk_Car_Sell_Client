@@ -247,7 +247,7 @@ const CarDetails = () => {
                       {singleCarItem?.utilisateur?.Prenom}{" "}
                       {singleCarItem?.utilisateur?.Nom}
                     </div>
-                    <p>{singleCarItem?.utilisateur?.Numéro}</p>
+                    <p>{singleCarItem?.utilisateur?.Numero}</p>
                   </div>
                 </div>
               </Col>

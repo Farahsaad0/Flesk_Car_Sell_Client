@@ -282,7 +282,7 @@ const ProfilePage = () => {
                           </Form.Control.Feedback>
                         </Form.Group>
                       </Row>
-                      {userData?.Role === "medecin" && (
+                      {userData?.Role === "Expert" && (
                         <div>
                           <Row className="mb-3">
                             <Col>

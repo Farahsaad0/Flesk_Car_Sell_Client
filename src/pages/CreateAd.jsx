@@ -84,8 +84,12 @@ const CreateAdForm = () => {
     try {
       const response = await axios.get(`/sponsorships/available/${userId}`);
       setSponsorship(response.data);
+      setFormData((prevFormData) => ({
+        ...prevFormData,
+        sponsorship: response?.data?.[0]._id,
+      }));
     } catch (error) {
-      console.error();
+      
     }
   };
 

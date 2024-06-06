@@ -51,7 +51,7 @@ const CarList = () => {
             sortOrder,
           },
         });
-        setCars(response?.data?.ads);
+        setCars(response?.data?.sortedAds);
         setTotalPages(response?.data?.totalPages);
         setLoading(false);
       } catch (error) {

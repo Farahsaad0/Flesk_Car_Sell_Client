@@ -67,7 +67,7 @@ const Login = () => {
         console.log(err.response);
         toast.error(err.response.data.message);
       } else {
-        setErrMsg("Invalid email or password.");
+        toast.error(err.response.data.message);
       }
     }
   };
