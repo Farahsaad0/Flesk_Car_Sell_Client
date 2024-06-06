@@ -140,7 +140,7 @@ const ExpertItem = ({
       </div>
       <Modal isOpen={modal} toggle={toggle} centered size="lg">
         <ModalHeader toggle={toggle}>
-          Hire {expert?.Nom} {expert?.Prenom}
+          Demander: {expert?.Nom} {expert?.Prenom}
         </ModalHeader>
         <ModalBody>
           <p>Email: {expert?.Email}</p>

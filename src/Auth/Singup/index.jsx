@@ -81,7 +81,7 @@ const Signup = () => {
         toast.success(response.data.message);
         setIsRegistered(true);
       } else {
-        toast.error("Registration failed.");
+        toast.error("Registration est échoué.");
       }
     } catch (error) {
       if (
@@ -91,7 +91,7 @@ const Signup = () => {
       ) {
         toast.error(error.response.data.message);
       } else {
-        toast.error("Registration failed. Please try again later.");
+        toast.error("Registration a échoué. try again.");
       }
     }
   };
