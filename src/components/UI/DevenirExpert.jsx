@@ -4,6 +4,7 @@ import "../../styles/Devenir.css";
 import useAuth from "../../hooks/useAuth";
 import axios from "../../api/axios";
 import { toast } from "sonner";
+import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 
 const ApplyForAnExpertRoleForm = () => {
   const { auth } = useAuth();
@@ -15,6 +16,7 @@ const ApplyForAnExpertRoleForm = () => {
   });
   const [error, setError] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
+  const axiosPrivate = useAxiosPrivate();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -48,7 +50,7 @@ const ApplyForAnExpertRoleForm = () => {
         formData.append(key, data[key]); // Append each field to the formData
       });
 
-      const response = await axios.post(
+      const response = await axiosPrivate.post(
         "/demandeExpert",
         {
           userId: auth._id,

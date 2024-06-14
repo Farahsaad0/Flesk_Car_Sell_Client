@@ -22,6 +22,7 @@ import * as cv from "../opencv/opencv";
 import useOpenCV from "../hooks/useOpenCV"; // Import the useOpenCV hook
 import Utils from "../assets/utils";
 import { toast } from "sonner";
+import useAxiosPrivate from "../hooks/useAxiosPrivate";
 
 const CreateAdForm = () => {
   const navigate = useNavigate();
@@ -31,6 +32,7 @@ const CreateAdForm = () => {
   // const [open, setOpen] = useState(1);
   const [modal, setModal] = useState(false);
   const canvasRef = useRef(null);
+  const axiosPrivate = useAxiosPrivate();
 
   let licensePlateCascade = null;
   const toggle = () => setModal(!modal);
@@ -76,7 +78,7 @@ const CreateAdForm = () => {
 
   const fetchCarAdCache = async () => {
     try {
-      const response = await axios.get(`/carAdCache/${userId}`);
+      const response = await axiosPrivate.get(`/carAdCache/${userId}`);
       setFormData(response.data);
     } catch (error) {
       console.error();
@@ -85,7 +87,7 @@ const CreateAdForm = () => {
 
   const fetchInactivatedSponsorship = async () => {
     try {
-      const response = await axios.get(`/sponsorships/available/${userId}`);
+      const response = await axiosPrivate.get(`/sponsorships/available/${userId}`);
       if (response && response.data && response.data.length > 0) {
         setSponsorship(response.data);
         setFormData((prevFormData) => ({
@@ -126,7 +128,7 @@ const CreateAdForm = () => {
         });
       }
 
-      const response = await axios.post("/carAds", formDataToSend, {
+      const response = await axiosPrivate.post("/carAds", formDataToSend, {
         headers: {
           "Content-Type": "multipart/form-data",
         },

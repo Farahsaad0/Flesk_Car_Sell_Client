@@ -15,6 +15,7 @@ import ReactPaginate from "react-paginate";
 import axios from "../../api/axios";
 import useAuth from "../../hooks/useAuth";
 import { Link, useNavigate } from "react-router-dom";
+import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 
 const ExpertsDemande = () => {
   const [expertJobs, setExpertJobs] = useState([]);
@@ -32,6 +33,7 @@ const ExpertsDemande = () => {
   const { auth } = useAuth();
   const navigate = useNavigate();
   const userId = auth._id;
+  const axiosPrivate = useAxiosPrivate();
 
   useEffect(() => {
     fetchJobsAsClient(userId);
@@ -57,7 +59,7 @@ const ExpertsDemande = () => {
 
   const fetchJobsAsExpert = async (userId) => {
     try {
-      const response = await axios.get(`/jobs/expert/${userId}`, {
+      const response = await axiosPrivate.get(`/jobs/expert/${userId}`, {
         params: {
           page: expertJobsPageNumber + 1,
           limit: expertJobsPerPage,
@@ -76,7 +78,7 @@ const ExpertsDemande = () => {
   };
   const fetchJobsAsClient = async (userId) => {
     try {
-      const response = await axios.get(`/jobs/client/${userId}`, {
+      const response = await axiosPrivate.get(`/jobs/client/${userId}`, {
         params: {
           page: clientJobsPageNumber + 1,
           limit: clientJobsPerPage,
@@ -103,7 +105,7 @@ const ExpertsDemande = () => {
 
   const acceptDemande = async (jobId) => {
     try {
-      await axios.put(`/jobs/accept/${jobId}`);
+      await axiosPrivate.put(`/jobs/accept/${jobId}`);
       fetchJobsAsExpert(userId);
       fetchJobsAsClient(userId);
     } catch (error) {
@@ -113,7 +115,7 @@ const ExpertsDemande = () => {
 
   const rejeterDemande = async (jobId) => {
     try {
-      await axios.put(`/jobs/reject/${jobId}`);
+      await axiosPrivate.put(`/jobs/reject/${jobId}`);
       fetchJobsAsExpert(userId);
       fetchJobsAsClient(userId);
     } catch (error) {
@@ -122,7 +124,7 @@ const ExpertsDemande = () => {
   };
   const cancelDemande = async (jobId) => {
     try {
-      await axios.put(`/jobs/cancel/${jobId}`);
+      await axiosPrivate.put(`/jobs/cancel/${jobId}`);
       fetchJobsAsExpert(userId);
       fetchJobsAsClient(userId);
     } catch (error) {

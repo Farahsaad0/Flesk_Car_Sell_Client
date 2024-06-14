@@ -11,10 +11,10 @@ import {
   Row,
   Table,
 } from "reactstrap";
-import axios from "../../api/axios";
 import useAuth from "../../hooks/useAuth";
 import ReactPaginate from "react-paginate";
 import { toast } from "sonner";
+import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 
 const HistoriqueDeTransaction = () => {
   const [open, setOpen] = useState(1);
@@ -30,6 +30,7 @@ const HistoriqueDeTransaction = () => {
   const [sentSortOrder, setSentSortOrder] = useState(-1);
   const [sentTransactions, setSentTransactions] = useState([]);
   const [receivedTransactions, setReceivedTransactions] = useState([]);
+  const axiosPrivate = useAxiosPrivate();
 
   const toggle = (id) => {
     if (open === id) {
@@ -42,7 +43,7 @@ const HistoriqueDeTransaction = () => {
   useEffect(() => {
     const fetchSentTransactions = async () => {
       try {
-        const response = await axios.get(`/transactions/${userId}`, {
+        const response = await axiosPrivate.get(`/transactions/${userId}`, {
           params: {
             page: sentPageNumber + 1,
             limit: sentTransactionPerPage,
@@ -59,7 +60,7 @@ const HistoriqueDeTransaction = () => {
 
     const fetchReceivedTransactions = async () => {
       try {
-        const response = await axios.get(`/transactions/expert/${userId}`, {
+        const response = await axiosPrivate.get(`/transactions/expert/${userId}`, {
           params: {
             page: pageNumber + 1,
             limit: transactionPerPage,

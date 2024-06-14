@@ -27,6 +27,7 @@ import { formatDistanceToNow } from "date-fns";
 import { fr } from "date-fns/locale";
 import { io } from "socket.io-client";
 import { toast } from "sonner";
+import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 
 const ExpertiseChat = () => {
   const { jobId } = useParams();
@@ -37,10 +38,11 @@ const ExpertiseChat = () => {
   const socket = useRef(null);
   const [documents, setDocuments] = useState([]);
   const [selectedFile, setSelectedFile] = useState(null);
+  const axiosPrivate = useAxiosPrivate();
 
   const fetchJob = async () => {
     try {
-      const res = await axios.get(`/job/${jobId}`);
+      const res = await axiosPrivate.get(`/job/${jobId}`);
       console.log(res?.data?.data);
       console.log(res?.data?.data);
       console.log(res?.data?.data);
@@ -125,7 +127,7 @@ const ExpertiseChat = () => {
     formData.append("documents", selectedFile);
 
     try {
-      await axios.post(`/job/${jobId}/upload`, formData, {
+      await axiosPrivate.post(`/job/${jobId}/upload`, formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
@@ -139,7 +141,7 @@ const ExpertiseChat = () => {
 
   const handleDelete = async (fileName) => {
     try {
-      await axios.delete(`/job/${jobId}/files/${fileName}`);
+      await axiosPrivate.delete(`/job/${jobId}/files/${fileName}`);
       toast.success("Le document a été supprimé avec succès");
       fetchJob();
     } catch (error) {

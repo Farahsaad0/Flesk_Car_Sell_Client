@@ -17,6 +17,7 @@ import "../../styles/car-item.css";
 import axios from "../../api/axios";
 import useAuth from "../../hooks/useAuth";
 import { toast } from "sonner";
+import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 
 const ExpertItem = ({
   expert,
@@ -27,6 +28,7 @@ const ExpertItem = ({
   const [modal, setModal] = useState(false);
   const { auth } = useAuth();
   const [disableExpert, setDisableExpert] = useState(false);
+  const axiosPrivate = useAxiosPrivate();
 
   const toggle = () => setModal(!modal);
   useEffect(() => {
@@ -55,7 +57,7 @@ const ExpertItem = ({
         return;
       }
 
-      const response = await axios.post("/createJob", {
+      const response = await axiosPrivate.post("/createJob", {
         clientId,
         expertId,
         carId,
