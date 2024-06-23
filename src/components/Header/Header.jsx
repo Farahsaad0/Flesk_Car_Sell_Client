@@ -9,12 +9,12 @@ import useLogout from "../../hooks/useLogout";
 const navLinks = [
   {
     path: "/home",
-    display: "Home",
+    display: "Accueil",
   },
 
   {
     path: "/cars",
-    display: "Cars",
+    display: "Nos voitures",
   },
 
   {
@@ -35,7 +35,7 @@ const navLinks = [
   },
   {
     path: "/about",
-    display: "About",
+    display: "À propos",
   },
   {
     path: "/contact",
@@ -98,11 +98,11 @@ const Header = () => {
       <div className="header__top">
         <Container>
           <Row>
-            <Col lg="6" md="6" sm="6">
+            <Col lg="6" md="6" sm="6" style={{marginBlock:"auto"}}>
               <div className="header__top__left">
-                <span>Need Help?</span>
+                <span>Besoin d'assistance ?</span>
                 <span className="header__top__help">
-                  <i className="ri-phone-fill"></i> +216-50 400 500
+                  <i className="ri-phone-fill"></i> +216-55 555 555
                 </span>
               </div>
             </Col>
@@ -198,7 +198,7 @@ const Header = () => {
             >
               <button className="header__btn btn ">
                 <Link to="/contact">
-                  <i className="ri-phone-line"></i> Request a call
+                  <i className="ri-phone-line"></i> Contactez-nous
                 </Link>
               </button>
             </Col>

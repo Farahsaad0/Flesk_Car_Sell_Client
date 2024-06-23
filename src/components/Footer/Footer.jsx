@@ -10,19 +10,17 @@ const quickLinks = [
     display: "About",
   },
 
-  
-
   {
     path: "/cars",
     display: "Nos voitures",
   },
-  
+
   {
     path: "/Experts",
     display: "Nos Experts",
   },
   {
-    path: "/DevenirExpert",
+    path: "/demandez_un_poste_d_expert",
     display: "Demande d'expertise",
   },
   {
@@ -30,7 +28,6 @@ const quickLinks = [
     display: "Contact",
   },
 ];
-  
 
 const Footer = () => {
   const date = new Date();
@@ -45,17 +42,27 @@ const Footer = () => {
                 <Link to="/home" className=" d-flex align-items-center gap-2">
                   <i className="ri-car-line"></i>
                   <span>
-                    Rent Car <br /> Service
+                    Flesk car Sell <br />
                   </span>
                 </Link>
               </h1>
             </div>
             <p className="footer__logo-content">
-            Flesk Car Sell ,Votre destination de confiance pour l'achat de voitures de qualité supérieure. Fondée avec une passion pour l'automobile et un engagement envers l'excellence du service à la clientèle, notre équipe chez FLESK Car s'efforce de rendre votre expérience d'achat de voiture aussi agréable et transparente que possible. Avec notre vaste sélection de véhicules soigneusement inspectés et notre approche personnalisée, nous sommes déterminés à vous aider à trouver la voiture parfaite qui répond à vos besoins et à votre style de vie. Chez AutoMondo, nous ne vendons pas seulement des voitures, nous créons des expériences mémorables sur la route.
+              Flesk Car Sell ,Votre destination de confiance pour l'achat de
+              voitures de qualité supérieure. Fondée avec une passion pour
+              l'automobile et un engagement envers l'excellence du service à la
+              clientèle, notre équipe chez FLESK Car Sell s'efforce de rendre
+              votre expérience d'achat de voiture aussi agréable et transparente
+              que possible. Avec notre vaste sélection de véhicules
+              soigneusement inspectés et notre approche personnalisée, nous
+              sommes déterminés à vous aider à trouver la voiture parfaite qui
+              répond à vos besoins et à votre style de vie. Chez Flesk car Sell,
+              nous ne vendons pas seulement des voitures, nous créons des
+              expériences mémorables sur la route.
             </p>
           </Col>
 
-          <Col lg="2" md="4" sm="6"  className="ms-5">
+          <Col lg="2" md="4" sm="6" className="ms-5">
             <div className="mb-4">
               <h5 className="footer__link-title">Lien Rapides</h5>
               <ListGroup>
@@ -68,7 +75,7 @@ const Footer = () => {
             </div>
           </Col>
 
-          <Col lg="3" md="4" sm="6"  className="ms-5">
+          <Col lg="3" md="4" sm="6" className="ms-5">
             <div className="mb-4">
               <h5 className="footer__link-title mb-4">Notre agence central</h5>
               <p className="office__info">Monastir , rue de la liberté </p>
@@ -96,7 +103,8 @@ const Footer = () => {
           <Col lg="12">
             <div className="footer__bottom">
               <p className="section__description d-flex align-items-center justify-content-center gap-1 pt-4">
-                <i className="ri-copyright-line"></i>Copyright {year}, Flesk car Sell , Developped by FLESK. All rights reserved.
+                <i className="ri-copyright-line"></i>Copyright {year}, Flesk car
+                Sell , Developped by FLESK. All rights reserved.
               </p>
             </div>
           </Col>

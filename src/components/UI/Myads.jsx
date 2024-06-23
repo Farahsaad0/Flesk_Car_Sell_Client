@@ -67,7 +67,11 @@ const UserCarList = () => {
         {loading ? (
           <Loader />
         ) : cars.length === 0 ? (
-          <div>No car ads found.</div>
+          <div>
+            <center className="fs-1 fw-light">
+              Vous avez acun annonces de voitures pour le moment!
+            </center>
+          </div>
         ) : (
           cars.map((car) => (
             <CarItem

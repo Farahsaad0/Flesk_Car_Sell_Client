@@ -56,7 +56,7 @@
   color: #000d6b;
 }
 
-.btn:hover.reserve__btn:hover.mt-4:hover {
+.reserve__btn:hover.mt-4:hover {
   background: #d3d3d3 !important;
   color: #fff;
 }

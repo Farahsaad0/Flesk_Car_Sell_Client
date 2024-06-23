@@ -59,10 +59,16 @@ const Testimonial = () => {
     <Slider {...settings}>
       {experts.map((expert, index) => (
         <div key={expert._id} className="testimonial py-4 px-3">
-          <div key={index} className="mt-3 d-flex align-items-center gap-4">
+          <div key={index} className="mt-3 d-flex align-items-center  round gap-4">
             <img
               src={`http://localhost:8000/images/${expert.photo}`}
-              className="w-25 h-25 rounded-2"
+              // className="w-25 h-25 rounded-2"
+              style={{
+                borderRadius: "50%",
+                width: "100px",
+                height: "100px",
+                objectFit: "cover",
+              }}
               alt=""
               onClick={() => handleClick(expert)}
             />

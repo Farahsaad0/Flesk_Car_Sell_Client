@@ -49,6 +49,7 @@ const ExpertItem = ({
     try {
       const clientId = auth._id;
       const expertId = expert._id;
+      const expertEmail = expert.Email;
       const carId = carAdId;
       const jobDescription = document.getElementById("jobDescription").value;
 
@@ -61,6 +62,7 @@ const ExpertItem = ({
         clientId,
         expertId,
         carId,
+        expertEmail,
         jobDescription,
       });
 
@@ -78,10 +80,14 @@ const ExpertItem = ({
         );
       }
     } catch (error) {
-      console.error("Error creating job:", error);
-      toast.error(
-        "Une erreur s'est produite lors de l'enregistrement de votre demande."
-      );
+      if (error?.response?.status === 401) {
+        toast.error("Rejoignez-nous pour soumettre une demande d'expertise");
+      } else {
+        console.error("Error creating job:", error);
+        toast.error(
+          "Une erreur s'est produite lors de l'enregistrement de votre demande."
+        );
+      }
     }
   };
 

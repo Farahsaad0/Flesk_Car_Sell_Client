@@ -69,6 +69,7 @@ function ExpertProfile() {
         const response = await axios.get(`/nbExpertisme/${expert._id}`);
         setJobsCountByExpert(response.data.jobCount);
       } catch (error) {
+        // setJobsCountByExpert("0");
         console.log(error);
       }
     };
@@ -87,12 +88,12 @@ function ExpertProfile() {
           <div className="profile-nav col col-md-3">
             <div className="panel">
               <div className="user-heading round">
-                <a href="#">
+                <div className="img-container">
                   <img
                     src={`http://localhost:8000/images/${expert.photo}`}
                     alt=""
                   />
-                </a>
+                </div>
                 <h1>
                   <b>{`${expert.Nom} ${expert.Prenom}`}</b>
                 </h1>
@@ -205,9 +206,9 @@ function ExpertProfile() {
                   </div>
                 </div>
                 <div className="bio-desk">
-                  <h4 className="red">Nombre de jobs acceptés</h4>
+                  <h4 className="red">Nombre de demandes d'expertise effectuées :</h4>
                   <p>
-                    {jobsCountByExpert ? jobsCountByExpert : "Chargement..."}
+                    {jobsCountByExpert  ? jobsCountByExpert : "0"}
                   </p>
                 </div>
               </div>

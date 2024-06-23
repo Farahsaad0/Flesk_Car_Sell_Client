@@ -170,7 +170,8 @@ const ProfilePage = () => {
                         style={{
                           borderRadius: "50%",
                           width: "100px",
-                          height: "100px",objectFit: "cover"
+                          height: "100px",
+                          objectFit: "cover",
                         }}
                       />
                     </div>
@@ -285,6 +286,7 @@ const ProfilePage = () => {
                       {userData?.Role === "Expert" && (
                         <div>
                           <Row className="mb-3">
+                            <hr className="mt-4" />
                             <Col>
                               <Form.Group md="6">
                                 <Form.Label htmlFor="experience">

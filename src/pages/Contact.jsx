@@ -131,7 +131,7 @@ const Contact = () => {
                 </p>
                 <div className=" d-flex align-items-center gap-2">
                   <h6 className="fs-6 mb-0">Numéro de Téléphone:</h6>
-                  <p className="section__description mb-0">+216 56937619</p>
+                  <p className="section__description mb-0">+216 55 555 555</p>
                 </div>
 
                 <div className=" d-flex align-items-center gap-2">
