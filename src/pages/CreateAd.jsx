@@ -76,7 +76,7 @@ const CreateAdForm = () => {
     }
   };
 
-  const fetchCarAdCache = async () => {
+  const fetchCarAdCache = async () => { // pour s'il y a cache sera affiché
     try {
       const response = await axiosPrivate.get(`/carAdCache/${userId}`);
       setFormData(response.data);
@@ -85,7 +85,7 @@ const CreateAdForm = () => {
     }
   };
 
-  const fetchInactivatedSponsorship = async () => {
+  const fetchInactivatedSponsorship = async () => { // recherche s'il ya sponsor payer mais pas activé
     try {
       const response = await axiosPrivate.get(`/sponsorships/available/${userId}`);
       if (response && response.data && response.data.length > 0) {
@@ -262,7 +262,7 @@ const CreateAdForm = () => {
     });
   };
   // Function to handle photos change and process each photo
-  const handlePhotosChange = async (e) => {
+  const handlePhotosChange = async (e) => {  
     const { files } = e.target;
     const selectedPhotos = Array.from(files);
     const xmlURL = "cascade_number_woaen.xml";
@@ -299,7 +299,7 @@ const CreateAdForm = () => {
       );
 
       // Filter out any null values (in case of errors)
-      const validProcessedPhotos = processedPhotos.filter(
+      const validProcessedPhotos = processedPhotos.filter( 
         (photo) => photo !== null
       );
 

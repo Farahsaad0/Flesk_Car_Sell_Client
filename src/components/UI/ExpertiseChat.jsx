@@ -80,7 +80,7 @@ const ExpertiseChat = () => {
     return () => {
       socket.current.disconnect();
     };
-  }, [jobId]);
+  }, [jobId]); //chat en temps réelle
 
   useEffect(() => {
     fetchJob();
