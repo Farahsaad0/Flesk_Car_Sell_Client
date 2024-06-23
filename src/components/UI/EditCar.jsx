@@ -134,7 +134,7 @@ const EditCarAd = () => {
   };
 
   // Function to load the cascade file asynchronously
-  const loadCascadeFile = async (xmlURL) => {
+  const loadCascadeFile = async (xmlURL) => { // load fichier cascade
     return new Promise((resolve, reject) => {
       console.log("111111111111");
       licensePlateCascade = new cv.CascadeClassifier();
@@ -167,7 +167,7 @@ const EditCarAd = () => {
     });
   };
   // Function to process a single image
-  const processImage = async (file, licensePlateCascade) => {
+  const processImage = async (file, licensePlateCascade) => { // utilise le fichier cascade pour le floutage
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
       reader.onload = async () => {
@@ -239,7 +239,7 @@ const EditCarAd = () => {
     });
   };
   // Function to handle photos change and process each photo
-  const handlePhotosChange = async (e) => {
+  const handlePhotosChange = async (e) => { //le floutage des nouvelle photo
     const { files } = e.target;
     const selectedPhotos = Array.from(files);
     const xmlURL = "cascade_numero_uno.xml";

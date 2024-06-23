@@ -82,6 +82,7 @@ const Header = () => {
 
   const handleLogout = async () => {
     await deconnecter();
+  
     setUserData({
       Nom: "",
       Prenom: "",

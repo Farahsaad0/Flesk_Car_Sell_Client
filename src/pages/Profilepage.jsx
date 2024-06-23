@@ -129,7 +129,7 @@ const ProfilePage = () => {
     const newValue = name === "photo" ? files[0] : value;
 
     if (name === "photo" && files.length > 0) {
-      const photoURL = URL.createObjectURL(files[0]);
+      const photoURL = URL.createObjectURL(files[0]); // convertir la photo en object url et l'afficher dans la photo
       setUserData((prevData) => ({
         ...prevData,
         [name]: files[0],

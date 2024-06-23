@@ -57,7 +57,7 @@ const ExpertsDemande = () => {
   //   fetchJobsAsExpert(userId);
   // }, [pageNumber]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  const fetchJobsAsExpert = async (userId) => {
+  const fetchJobsAsExpert = async (userId) => { // les demandes d'expertise eli weslou ll expert 
     try {
       const response = await axiosPrivate.get(`/jobs/expert/${userId}`, {
         params: {
@@ -76,7 +76,7 @@ const ExpertsDemande = () => {
       );
     }
   };
-  const fetchJobsAsClient = async (userId) => {
+  const fetchJobsAsClient = async (userId) => { // les demandes d'expertise eli b3athhom l client
     try {
       const response = await axiosPrivate.get(`/jobs/client/${userId}`, {
         params: {
